@@ -1,7 +1,7 @@
 {
-    "xp": 3550,
-    "coin": 730,
-    "level": 18,
+    "xp": 3610,
+    "coin": 742,
+    "level": 19,
     "danh_hieu": "Chuyên gia EduVerse",
     "danh_sach_huy_hieu": [
         "Huy hiệu Khởi đầu",
@@ -21,6 +21,7 @@
         "Huy hiệu Cấp độ 15",
         "Huy hiệu Cấp độ 16",
         "Huy hiệu Cấp độ 17",
-        "Huy hiệu Cấp độ 18"
+        "Huy hiệu Cấp độ 18",
+        "Huy hiệu Cấp độ 19"
     ]
 }
