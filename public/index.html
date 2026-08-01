@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #001F3F; color: #FFFFFF; min-height: 100vh; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container { max-width: 1050px; margin: 0 auto; }
         .header-box { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; }
         h1 { color: #00FFCC; font-size: 24px; margin-bottom: 8px; }
         p { font-size: 15px; color: #E0E0E0; }
@@ -17,8 +17,8 @@
         .card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .form-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
         label { font-weight: bold; font-size: 14px; color: #FFFFFF; }
-        select, input, button { padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; border: none; outline: none; }
-        select, input { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; }
+        select, input, button, textarea { padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; border: none; outline: none; }
+        select, input, textarea { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; }
         .btn-primary { background-color: #00A2FF; color: #FFFFFF; cursor: pointer; }
         .btn-primary:hover { background-color: #0084FF; }
         .btn-success { background-color: #2ECC71; color: #FFFFFF; cursor: pointer; }
@@ -31,26 +31,29 @@
         .section-pane { display: none; }
         .section-pane.active { display: block; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-box">
             <h1>SIÊU CLUB HỌC TẬP - VERCEL ALL-IN-ONE EDITION</h1>
-            <p>Tích hợp Toàn bộ 16 Phần: Lớp 1-12, Tập Thi IELTS, Gemini AI, World Cup, Cúp C1, Đua Xe & Minigames</p>
+            <p>Nền tảng Học tập Trực tuyến Tích hợp 100% 16 Phần Tính Năng & 5 Phân Môn Tập Thi IELTS</p>
         </div>
 
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchSection('ielts')">Tập Thi IELTS</button>
-            <button class="tab-btn" onclick="switchSection('ai')">Gemini AI Tạo Đề</button>
-            <button class="tab-btn" onclick="switchSection('hoc')">Nội Dung Học Tập</button>
-            <button class="tab-btn" onclick="switchSection('luyen')">Luyện Tập Tương Tác</button>
-            <button class="tab-btn" onclick="switchSection('games')">Đấu Trường Trò Chơi</button>
+            <button class="tab-btn" onclick="switchSection('hoc')">Nội Dung Học Tập Lớp 1-12</button>
+            <button class="tab-btn" onclick="switchSection('ai')">Gemini AI Tạo Đề & Chấm Bài</button>
+            <button class="tab-btn" onclick="switchSection('formula')">Sổ Tay Công Thức</button>
+            <button class="tab-btn" onclick="switchSection('sports')">Đấu Trường Thể Thao & Đua Xe</button>
+            <button class="tab-btn" onclick="switchSection('games')">Minigames Thư Giãn</button>
+            <button class="tab-btn" onclick="switchSection('stats')">Thống Kê & Giấy Chứng Nhận</button>
             <button class="tab-btn" onclick="switchSection('settings')">Cài Đặt Điểm Mong Muốn</button>
-            <button class="tab-btn" onclick="switchSection('notebook')">Sổ Lỗi Sai</button>
+            <button class="tab-btn" onclick="switchSection('notebook')">Sổ Lỗi Sai Bài Khó</button>
         </div>
 
-        <!-- Section 1: Tập Thi IELTS -->
+        <!-- 1. Tập Thi IELTS -->
         <div id="pane-ielts" class="section-pane active">
             <div class="card">
                 <div class="form-group">
@@ -93,10 +96,36 @@
             </div>
         </div>
 
-        <!-- Section 2: Gemini AI -->
+        <!-- 2. Nội Dung Học Tập Lớp 1-12 -->
+        <div id="pane-hoc" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">NỘI DUNG HỌC TẬP & BÀI TẬP CỐT LÕI LỚP 1-12</h3>
+                <div class="form-group">
+                    <label>Chọn Lớp:</label>
+                    <select id="selLopHoc" onchange="loadStudyContent()">
+                        <option value="Lớp 6" selected>Lớp 6</option>
+                        <option value="Lớp 7">Lớp 7</option>
+                        <option value="Lớp 8">Lớp 8</option>
+                        <option value="Lớp 9">Lớp 9</option>
+                    </select>
+                    <label>Môn học:</label>
+                    <select id="selMonHoc" onchange="loadStudyContent()">
+                        <option value="Toán" selected>Toán</option>
+                        <option value="Vật lý">Vật lý</option>
+                        <option value="Hóa học">Hóa học</option>
+                        <option value="Tin học">Tin học</option>
+                    </select>
+                </div>
+                <div id="studyContentDisplay" style="background-color: #001F3F; border: 1px solid #00A2FF; padding: 15px; border-radius: 8px; margin-top: 10px; line-height: 1.6;">
+                    Chọn lớp và môn học để tải chi tiết 5 bài học cốt lõi.
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Gemini AI -->
         <div id="pane-ai" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">TỰ ĐỘNG SINH BÀI TẬP & CHẤM BÀI BẰNG AI</h3>
                 <div class="form-group">
                     <label>Lớp học:</label>
                     <select id="selAiLop">
@@ -105,26 +134,76 @@
                         <option value="Lớp 8">Lớp 8</option>
                         <option value="Lớp 9">Lớp 9</option>
                     </select>
-
                     <label>Môn học:</label>
                     <select id="selAiMon">
                         <option value="Toán" selected>Toán</option>
                         <option value="Vật lý">Vật lý</option>
                         <option value="Hóa học">Hóa học</option>
-                        <option value="Sinh học">Sinh học</option>
                         <option value="Tin học">Tin học</option>
                     </select>
-
                     <button class="btn-primary" onclick="generateAiExam()">Sinh Đề AI Ngay</button>
                 </div>
                 <div id="aiStatus" style="font-weight: bold; margin-top: 10px; color: #00FFCC;"></div>
+
+                <hr style="border-color: #00A2FF; margin: 20px 0;">
+                <h4 style="color: #00FFCC; margin-bottom: 10px;">AI Chấm Bài Tự Luận & Nhận Xét Lỗi Sai</h4>
+                <div class="form-group">
+                    <textarea id="txtAiBaiLam" placeholder="Nhập bài làm tự luận của em vào đây..." style="width: 100%; height: 80px;"></textarea>
+                    <button class="btn-primary" onclick="gradeEssayAi()">AI Chấm Bài Ngay</button>
+                </div>
+                <div id="aiGradingResult" style="margin-top: 10px; background-color: #001F3F; padding: 12px; border-radius: 8px; border: 1px solid #2ECC71;"></div>
             </div>
         </div>
 
-        <!-- Section 3: Games Engine -->
+        <!-- 4. Sổ Tay Công Thức -->
+        <div id="pane-formula" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">SỔ TAY CÔNG THỨC TOÁN - LÝ - HÓA - SINH - TIN HỌC</h3>
+                <div class="form-group">
+                    <label>Chọn Môn Công Thức:</label>
+                    <select id="selMonFormula" onchange="loadFormulas()">
+                        <option value="Toán" selected>Toán học</option>
+                        <option value="Vật lý">Vật lý</option>
+                        <option value="Hóa học">Hóa học</option>
+                        <option value="Sinh học">Sinh học</option>
+                        <option value="Tin học">Tin học</option>
+                    </select>
+                </div>
+                <div id="formulaDisplay">Đang tải danh sách công thức...</div>
+            </div>
+        </div>
+
+        <!-- 5. Đấu Trường Thể Thao & Đua Xe -->
+        <div id="pane-sports" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP, CÚP C1 & GIẢI ĐUA XE</h3>
+                <div class="grid-3">
+                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                        <h4>World Cup</h4>
+                        <p style="margin: 10px 0;">Thi đấu các đội tuyển quốc gia.</p>
+                        <button class="btn-primary" onclick="playMatch('world_cup')">Thi Đấu Ngay</button>
+                        <div id="resMatchWc" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    </div>
+                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                        <h4>Champions League</h4>
+                        <p style="margin: 10px 0;">Cúp C1 Châu Âu kịch tính.</p>
+                        <button class="btn-primary" onclick="playMatch('champions_league')">Thi Đấu Ngay</button>
+                        <div id="resMatchC1" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    </div>
+                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                        <h4>Roblox Grand Prix</h4>
+                        <p style="margin: 10px 0;">Đua xe siêu cấp Roblox XP.</p>
+                        <button class="btn-primary" onclick="playRacing()">Khởi Động Đua Xe</button>
+                        <div id="resRacing" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Minigames Thư Giãn -->
         <div id="pane-games" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">ĐẤU TRƯỜNG TRÒ CHƠI & MINIGAMES THƯ GIÃN</h3>
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
                 <div class="grid-2">
                     <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
                         <h4>Vòng Quay May Mắn</h4>
@@ -144,7 +223,15 @@
             </div>
         </div>
 
-        <!-- Section 4: Cài đặt điểm mong muốn -->
+        <!-- 7. Thống kê & Giấy chứng nhận -->
+        <div id="pane-stats" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">THỐNG KÊ TIẾN ĐỘ & GIẤY CHỨNG NHẬN ĐÃ ĐẠT</h3>
+                <div id="statsSummary" style="line-height: 1.8; font-size: 16px;">Đang tải thông số thống kê...</div>
+            </div>
+        </div>
+
+        <!-- 8. Cài đặt điểm mong muốn -->
         <div id="pane-settings" class="section-pane">
             <div class="card">
                 <h3 style="color: #00FFCC; margin-bottom: 15px;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
@@ -167,7 +254,7 @@
             </div>
         </div>
 
-        <!-- Section 5: Sổ lỗi sai -->
+        <!-- 9. Sổ lỗi sai -->
         <div id="pane-notebook" class="section-pane">
             <div class="card">
                 <h3 style="color: #00FFCC; margin-bottom: 15px;">SỔ LỖI SAI BÀI KHÓ</h3>
@@ -188,6 +275,9 @@
             document.getElementById(`pane-${secId}`).classList.add('active');
             
             if (secId === 'ielts') loadIeltsQuestions();
+            if (secId === 'hoc') loadStudyContent();
+            if (secId === 'formula') loadFormulas();
+            if (secId === 'stats') loadStats();
             if (secId === 'notebook') loadNotebook();
         }
 
@@ -260,10 +350,16 @@
             const res = await fetch('/api/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ questions: ieltsQuestions, answers: userAnswers })
+                body: JSON.stringify({ questions: ieltsQuestions, answers: userAnswers, title: "Bài Thi IELTS" })
             });
             const r = await res.json();
-            alert(`KẾT QUẢ TẬP THI IELTS:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nSố câu đúng: ${r.correct} / ${r.total}\nXếp loại: ${r.rating}\nNhận thưởng: +${r.xp_reward} XP!`);
+            alert(`KẾT QUẢ TẬP THI IELTS:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nSố câu đúng: ${r.correct} / ${r.total}\nXếp loại: ${r.rating}\nPhần thưởng: +${r.xp_reward} XP!`);
+        }
+
+        async function loadStudyContent() {
+            const lop = document.getElementById('selLopHoc').value;
+            const mon = document.getElementById('selMonHoc').value;
+            document.getElementById('studyContentDisplay').innerText = `Bài học cốt lõi môn ${mon} (${lop}): 1. Kiến thức cơ bản | 2. Các phép tính nâng cao | 3. Phương pháp tư duy logic | 4. Bài tập thực hành | 5. Tổng kết bài học.`;
         }
 
         async function generateAiExam() {
@@ -277,6 +373,37 @@
             document.getElementById('aiStatus').innerText = `Sinh đề thành công! Đã tạo ${data.total} câu hỏi từ Gemini AI!`;
         }
 
+        async function gradeEssayAi() {
+            const text = document.getElementById('txtAiBaiLam').value;
+            const res = await fetch('/api/ai-generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: 'essay_grading', bai_lam: text })
+            });
+            const data = await res.json();
+            document.getElementById('aiGradingResult').innerText = `AI Nhận xét: ${data.grading.nhan_xet} (Điểm số: ${data.grading.diem_so}/10)`;
+        }
+
+        async function loadFormulas() {
+            const mon = document.getElementById('selMonFormula').value;
+            const res = await fetch(`/api/questions?skill=formula&mon=${encodeURIComponent(mon)}`);
+            const d = await res.json();
+            document.getElementById('formulaDisplay').innerHTML = d.questions.map(f => `<div style="background-color: #001F3F; padding: 10px; margin-top: 8px; border-radius: 6px; border: 1px solid #00A2FF;"><b>${f.ten}:</b> ${f.cong_thuc}<br><small>${f.mo_ta}</small></div>`).join('');
+        }
+
+        async function playMatch(type) {
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: type })
+            });
+            const d = await res.json();
+            const text = `Kết quả trận đấu: ${d.match.doi_a} ${d.match.ty_so} ${d.match.doi_b}`;
+            if (type === 'world_cup') document.getElementById('resMatchWc').innerText = text;
+            else document.getElementById('resMatchC1').innerText = text;
+        }
+
+        function playRacing() { document.getElementById('resRacing').innerText = "Giải Đua Xe Siêu Cấp Roblox Grand Prix: Đang dẫn đầu Vòng 1!"; }
         async function playWheel() {
             const res = await fetch('/api/games', {
                 method: 'POST',
@@ -295,6 +422,12 @@
             });
             const d = await res.json();
             document.getElementById('penaltyResult').innerText = d.result.thong_bao;
+        }
+
+        async function loadStats() {
+            const res = await fetch('/api/settings');
+            const d = await res.json();
+            document.getElementById('statsSummary').innerText = `Học sinh: ${d.user_name} | Roblox Level: ${d.rewards.level} | XP: ${d.rewards.xp} | Chuỗi Streak: ${d.progress.streak} ngày liên tiếp | Số Giấy Chứng Nhận: ${d.certificates.length}`;
         }
 
         async function saveSettings() {
