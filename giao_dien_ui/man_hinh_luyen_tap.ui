@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhLuyenTap</class>
+ <widget class="QWidget" name="ManHinhLuyenTap">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Luyen tap 10 dang bai tap - EduVerse AI</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayoutMain">
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>HE THONG LUYEN TAP PHAN DANG BAI TAP</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <layout class="QVBoxLayout" name="verticalLayoutCard"/>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

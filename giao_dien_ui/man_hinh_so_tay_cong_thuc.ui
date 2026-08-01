@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhSoTayCongThucUI</class>
+ <widget class="QWidget" name="ManHinhSoTayCongThucUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SỔ TAY CÔNG THỨC VÀ KHÁI NIỆM TRỌNG TÂM THCS</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>SỔ TAY CÔNG THỨC VÀ KHÁI NIỆM TRỌNG TÂM SGK THCS</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 20px; font-weight: bold; color: #FFFFFF;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="filterFrame">
+     <property name="styleSheet">
+      <string notr="true">background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 12px;</string>
+     </property>
+     <layout class="QHBoxLayout" name="filterLayout">
+      <item>
+       <widget class="QLabel" name="lblLop">
+        <property name="text">
+         <string>Khối Lớp:</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold; color: #FFFFFF; font-size: 15px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cboLop">
+        <property name="styleSheet">
+         <string notr="true">color: #FFFFFF; font-weight: bold; font-size: 15px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblMon">
+        <property name="text">
+         <string>Môn học:</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold; color: #FFFFFF; font-size: 15px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cboMon">
+        <property name="styleSheet">
+         <string notr="true">color: #FFFFFF; font-weight: bold; font-size: 15px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtSearch">
+        <property name="placeholderText">
+         <string>Nhập từ khóa tìm kiếm công thức...</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #001F3F; color: #FFFFFF; font-size: 14px; border: 1px solid #00A2FF; border-radius: 6px; padding: 6px 12px;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollArea { border: none; background-color: transparent; }</string>
+     </property>
+     <widget class="QWidget" name="scrollWidget">
+      <layout class="QVBoxLayout" name="scrollLayout"/>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

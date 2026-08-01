@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIÊU CLUB HỌC TẬP - Tập Thi IELTS Vercel Edition</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #001F3F; color: #FFFFFF; min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header-box { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        h1 { color: #00FFCC; font-size: 24px; margin-bottom: 8px; }
+        p { font-size: 15px; color: #E0E0E0; }
+        .filter-card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+        .form-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+        label { font-weight: bold; font-size: 14px; color: #FFFFFF; }
+        select, button { padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: bold; border: none; outline: none; }
+        select { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; cursor: pointer; }
+        .btn-primary { background-color: #00A2FF; color: #FFFFFF; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { background-color: #0084FF; }
+        .btn-secondary { background-color: #393B3D; color: #FFFFFF; cursor: pointer; }
+        .skill-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+        .exam-card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .question-title { font-size: 17px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; color: #FFFFFF; }
+        .options-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .option-btn { background-color: #001F3F; border: 2px solid #00A2FF; color: #FFFFFF; padding: 12px 16px; text-align: left; border-radius: 8px; font-size: 15px; cursor: pointer; transition: 0.2s; }
+        .option-btn:hover { background-color: #00A2FF; }
+        .option-btn.selected { background-color: #00A2FF; border-color: #00FFCC; }
+        .nav-actions { display: flex; justify-content: space-between; align-items: center; }
+        .result-modal { background-color: #002B4D; border: 2px solid #2ECC71; border-radius: 12px; padding: 20px; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-box">
+            <h1>SIÊU CLUB HỌC TẬP & TẬP THI IELTS (VERCEL EDITION)</h1>
+            <p>Nền tảng Học tập, Kiểm tra tự động, Gemini AI Sinh đề thi và Tập thi IELTS trực tuyến trên Cloud.</p>
+        </div>
+
+        <div class="filter-card">
+            <div class="form-group">
+                <label>Chọn Band IELTS Target:</label>
+                <select id="selBand" onchange="loadQuestions()">
+                    <option value="Band 4.5 - 5.0">Band 4.5 - 5.0 (Cơ bản)</option>
+                    <option value="Band 5.5 - 6.0" selected>Band 5.5 - 6.0 (Trung cấp)</option>
+                    <option value="Band 6.5 - 7.0">Band 6.5 - 7.0 (Nâng cao)</option>
+                    <option value="Band 7.5 - 8.5+">Band 7.5 - 8.5+ (Xuất sắc)</option>
+                </select>
+            </div>
+            <div class="skill-bar">
+                <button class="btn-primary" onclick="setSkill('tu_vung')">KT Từ Vựng</button>
+                <button class="btn-secondary" onclick="setSkill('ngu_phap')">Ngữ Pháp & Các Thì</button>
+                <button class="btn-secondary" onclick="setSkill('doc')">Đọc Hiểu Reading</button>
+                <button class="btn-secondary" onclick="setSkill('nghe')">Luyện Nghe Listening</button>
+                <button class="btn-secondary" onclick="setSkill('tong_hop')">Đề Thi IELTS Tổng Hợp</button>
+            </div>
+        </div>
+
+        <div class="exam-card">
+            <div class="nav-actions" style="margin-bottom: 15px;">
+                <span id="lblProgress" style="font-weight: bold; font-size: 16px;">Câu 1 / 10</span>
+                <span id="lblTimer" style="background-color: #001F3F; border: 1px solid #00A2FF; padding: 4px 12px; border-radius: 10px;">Thời gian: 15:00</span>
+            </div>
+
+            <div id="audioControls" style="display: none; margin-bottom: 15px;">
+                <button class="btn-primary" onclick="speakAudio()">Phát Âm Thanh Nghe (Listen to Audio)</button>
+                <button class="btn-secondary" onclick="stopAudio()">Dừng Âm Thanh</button>
+            </div>
+
+            <div class="question-title" id="lblQuestion">Đang tải câu hỏi Tập Thi IELTS...</div>
+            <div class="options-group" id="optionsContainer"></div>
+
+            <div class="nav-actions">
+                <button class="btn-secondary" onclick="prevQuestion()">Câu trước</button>
+                <button class="btn-secondary" onclick="nextQuestion()">Câu sau</button>
+                <button class="btn-primary" style="background-color: #2ECC71;" onclick="submitExam()">Nộp bài & Chấm điểm</button>
+            </div>
+        </div>
+
+        <div class="result-modal" id="resultCard">
+            <h2 style="color: #2ECC71; margin-bottom: 10px;">KẾT QUẢ TẬP THI IELTS ONLINE</h2>
+            <p id="resultText">Chi tiết điểm số...</p>
+        </div>
+    </div>
+
+    <script>
+        let currentSkill = 'tu_vung';
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+
+        function setSkill(skill) {
+            currentSkill = skill;
+            loadQuestions();
+        }
+
+        async function loadQuestions() {
+            const band = document.getElementById('selBand').value;
+            try {
+                const res = await fetch(`/api/questions?skill=${currentSkill}&band=${encodeURIComponent(band)}`);
+                const data = await res.json();
+                currentQuestions = data.questions || [];
+                currentIndex = 0;
+                userAnswers = {};
+                document.getElementById('resultCard').style.display = 'none';
+                renderQuestion();
+            } catch (err) {
+                console.error("Lỗi tải câu hỏi:", err);
+            }
+        }
+
+        function renderQuestion() {
+            if (!currentQuestions || currentQuestions.length === 0) return;
+            const q = currentQuestions[currentIndex];
+            document.getElementById('lblProgress').innerText = `Câu ${currentIndex + 1} / ${currentQuestions.length}`;
+            
+            const isListening = q.is_listening || currentSkill === 'nghe';
+            const audioBox = document.getElementById('audioControls');
+            if (isListening) {
+                audioBox.style.display = 'block';
+                document.getElementById('lblQuestion').innerText = `[BÀI NGHE IELTS LISTENING - Hãy bấm nút 'Phát Âm Thanh Nghe' để nghe kịch bản và trả lời câu hỏi bên dưới]\n\n${q.cau_hoi}`;
+                speakAudio();
+            } else {
+                audioBox.style.display = 'none';
+                window.speechSynthesis.cancel();
+                document.getElementById('lblQuestion').innerText = q.cau_hoi;
+            }
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            const saved = userAnswers[currentIndex] || '';
+
+            q.dap_an.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn ${opt === saved ? 'selected' : ''}`;
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    userAnswers[currentIndex] = opt;
+                    renderQuestion();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function speakAudio() {
+            if (!currentQuestions[currentIndex]) return;
+            const q = currentQuestions[currentIndex];
+            const text = q.script_audio || q.cau_hoi;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopAudio() {
+            window.speechSynthesis.cancel();
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            }
+        }
+
+        async function submitExam() {
+            window.speechSynthesis.cancel();
+            try {
+                const res = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ questions: currentQuestions, answers: userAnswers })
+                });
+                const result = await res.json();
+                document.getElementById('resultText').innerText = 
+                    `Điểm số: ${result.score} / 10 (${result.percentage}%) | Số câu đúng: ${result.correct} / ${result.total} | Xếp loại: ${result.rating} | Phần thưởng: +${result.xp_reward} XP!`;
+                document.getElementById('resultCard').style.display = 'block';
+            } catch (err) {
+                alert("Lỗi khi nộp bài!");
+            }
+        }
+
+        window.onload = loadQuestions;
+    </script>
+</body>
+</html>

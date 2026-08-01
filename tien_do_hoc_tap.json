@@ -1,0 +1,36 @@
+{
+    "bai_hoc_da_mo": [
+        "Lớp 1_Toán_Bài 1",
+        "Lớp 6_Toán_Số nguyên"
+    ],
+    "lich_su_diem": [
+        {
+            "id": 1785157642,
+            "ten_bai": "So nguyen va Phep tinh",
+            "mon_hoc": "Toan",
+            "lop": "Lop 6",
+            "phan_tram": 90.0,
+            "diem_so": 9.0,
+            "so_cau_dung": 9,
+            "tong_cau": 10,
+            "che_do": "Kiem tra nhanh",
+            "ngay": "2026-07-27",
+            "gio": "20:07"
+        },
+        {
+            "id": 1785157843,
+            "ten_bai": "So nguyen va Phep tinh",
+            "mon_hoc": "Toan",
+            "lop": "Lop 6",
+            "phan_tram": 90.0,
+            "diem_so": 9.0,
+            "so_cau_dung": 9,
+            "tong_cau": 10,
+            "che_do": "Kiem tra nhanh",
+            "ngay": "2026-07-27",
+            "gio": "20:10"
+        }
+    ],
+    "streak": 7,
+    "ngay_hoc_cuoi": "2026-08-01"
+}

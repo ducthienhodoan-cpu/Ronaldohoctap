@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhTroChoiForm</class>
+ <widget class="QWidget" name="ManHinhTroChoiForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>980</width>
+    <height>680</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Trò chơi và Ứng dụng Học tập Roblox</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayoutMain">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="lblTieuDeChinh">
+     <property name="styleSheet">
+      <string notr="true">font-size: 22px; font-weight: bold; color: #FFFFFF;</string>
+     </property>
+     <property name="text">
+      <string>TRUNG TÂM TRÒ CHƠI MINIGAME VÀ ỨNG DỤNG HỌC TẬP</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidgetTroChoi">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabMinigame">
+      <attribute name="title">
+       <string>Trò chơi Minigame Giáo dục</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutTab1"/>
+     </widget>
+     <widget class="QWidget" name="tabUngDung">
+      <attribute name="title">
+       <string>Ứng dụng Tiện ích Học tập</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutTab2"/>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

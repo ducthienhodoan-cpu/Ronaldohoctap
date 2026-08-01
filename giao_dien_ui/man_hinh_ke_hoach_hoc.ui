@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhKeHoachHocUI</class>
+ <widget class="QWidget" name="ManHinhKeHoachHocUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>LỊCH HỌC TẬP VÀ MỤC TIÊU ROBLOX STREAK</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>LỊCH HỌC TẬP HÀNG NGÀY &amp; CHUỖI ROBLOX STREAK</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 20px; font-weight: bold; color: #FFFFFF;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="streakFrame">
+     <property name="styleSheet">
+      <string notr="true">background-color: #002B4D; border: 3px solid #00A2FF; border-radius: 15px; padding: 15px;</string>
+     </property>
+     <layout class="QHBoxLayout" name="streakLayout">
+      <item>
+       <widget class="QLabel" name="lblStreakCount">
+        <property name="text">
+         <string>Chuỗi ngày học liên tục: 5 ngày Streak</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 18px; font-weight: bold; color: #FFFFFF;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollArea { border: none; background-color: transparent; }</string>
+     </property>
+     <widget class="QWidget" name="scrollWidget">
+      <layout class="QVBoxLayout" name="scrollLayout"/>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

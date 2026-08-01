@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhHocTap</class>
+ <widget class="QWidget" name="ManHinhHocTap">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Noi dung hoc theo Lop - EduVerse AI</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayoutMain">
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>NOI DUNG HOC CUA TUNG MON</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="filterLayout">
+     <item>
+      <widget class="QLabel" name="lblLop">
+       <property name="text">
+        <string>Chon Lop:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cboLop"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="lblMon">
+       <property name="text">
+        <string>Chon Mon:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cboMon"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="lblHocKy">
+       <property name="text">
+        <string>Hoc ky:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cboHocKy"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="contentLayout">
+     <item>
+      <widget class="QFrame" name="leftFrame">
+       <layout class="QVBoxLayout" name="verticalLayoutLeft">
+        <item>
+         <widget class="QListWidget" name="listChuong"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="rightFrame">
+       <layout class="QVBoxLayout" name="verticalLayoutRight">
+        <item>
+         <widget class="QTextEdit" name="txtNoiDung"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

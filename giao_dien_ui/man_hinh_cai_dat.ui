@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhCaiDatUI</class>
+ <widget class="QWidget" name="ManHinhCaiDatUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayoutMain">
+   <property name="spacing">
+    <number>20</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="cardThongTin">
+     <property name="styleSheet">
+      <string notr="true">background-color: #FFFFFF; border-radius: 14px; border: 2px solid #E2E8F0; padding: 20px;</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayoutCard1">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lblTieuDeCard1">
+        <property name="text">
+         <string>Thông tin tài khoản học sinh</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 18px; font-weight: bold; color: #1E1B4B;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblTenHienTai">
+        <property name="text">
+         <string>Họ và tên: Học sinh Siêu Club</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 15px; color: #334155;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="cardDoiTen">
+     <property name="styleSheet">
+      <string notr="true">background-color: #FFFFFF; border-radius: 14px; border: 2px solid #E2E8F0; padding: 20px;</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayoutCard2">
+      <property name="spacing">
+       <number>15</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lblTieuDeCard2">
+        <property name="text">
+         <string>Cài đặt &amp; Đổi tên học sinh</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 18px; font-weight: bold; color: #1E1B4B;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtTenMoi">
+        <property name="placeholderText">
+         <string>Nhập họ và tên mới...</string>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>42</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnLuuTen">
+        <property name="text">
+         <string>Lưu thay đổi tên</string>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>42</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblThongBao">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold; font-size: 13px;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

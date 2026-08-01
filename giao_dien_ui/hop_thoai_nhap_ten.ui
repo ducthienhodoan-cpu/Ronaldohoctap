@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HopThoaiNhapTenUI</class>
+ <widget class="QDialog" name="HopThoaiNhapTenUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CHÀO MỪNG BẠN ĐẾN VỚI SIÊU CLUB HỌC TẬP</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayoutMain">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>25</number>
+   </property>
+   <property name="topMargin">
+    <number>25</number>
+   </property>
+   <property name="rightMargin">
+    <number>25</number>
+   </property>
+   <property name="bottomMargin">
+    <number>25</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="cardMain">
+     <property name="styleSheet">
+      <string notr="true">background-color: #FFFFFF; border-radius: 14px; border: 2px solid #E2E8F0; padding: 15px;</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayoutCard">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lblTieuDe">
+        <property name="text">
+         <string>CHÀO MỪNG EM ĐẾN VỚI SIÊU CLUB HỌC TẬP</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 17px; font-weight: bold; color: #4F46E5;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblHuongDan">
+        <property name="text">
+         <string>Vui lòng nhập họ và tên của em để cá nhân hóa hệ thống học tập:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 13px; color: #475569;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtHoTen">
+        <property name="placeholderText">
+         <string>Nhập họ và tên đầy đủ (Ví dụ: Nguyễn Văn An)...</string>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblLoi">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #EF4444; font-size: 12px; font-weight: bold;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnXacNhan">
+        <property name="text">
+         <string>Xác nhận &amp; Bắt đầu học ngay</string>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>42</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

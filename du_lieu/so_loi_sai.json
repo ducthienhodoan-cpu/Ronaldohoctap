@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "cau_hoi": "Câu 1 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Tìm giá trị x biết x - 14 = 105 trong bài học Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) (Lớp 6):",
+    "dap_an": [
+      "119",
+      "105",
+      "125",
+      "115"
+    ],
+    "dap_an_dung": "119",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Tính giá trị vế phải: 35 x 3 = 105.\nStep 2: Chuyển -14 sang vế phải thành +14.\nStep 3: x = 105 + 14 = 119.\n-> Đáp số đúng là 119.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": "125"
+  },
+  {
+    "id": 2,
+    "cau_hoi": "Câu 2 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Cho hình chữ nhật thuộc bài Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) có chiều dài 14 cm, chiều rộng 7 cm. Diện tích là:",
+    "dap_an": [
+      "98 cm²",
+      "108 cm²",
+      "94 cm²",
+      "110 cm²"
+    ],
+    "dap_an_dung": "98 cm²",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Công thức diện tích hình chữ nhật: S = Chiều dài x Chiều rộng.\nStep 2: Thay số: S = 14 x 7.\nStep 3: Kết quả: S = 98 cm².\n-> Đáp số đúng là 98 cm².",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 3,
+    "cau_hoi": "Câu 3 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Giá trị của biểu thức P = 29 x 5 + 6 x 2 thuộc chủ đề Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) là bao nhiêu?",
+    "dap_an": [
+      "157",
+      "162",
+      "154",
+      "167"
+    ],
+    "dap_an_dung": "157",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Thực hiện các phép nhân trước: 29 x 5 = 145 và 6 x 2 = 12.\nStep 2: Thực hiện phép cộng hai kết quả: 145 + 12 = 157.\n-> Đáp số đúng là 157.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 4,
+    "cau_hoi": "Câu 4 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Trong bài học Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) (Lớp 6), 90% của số 60 bằng bao nhiêu?",
+    "dap_an": [
+      "54",
+      "59",
+      "52",
+      "64"
+    ],
+    "dap_an_dung": "54",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Nhân số ban đầu với tỷ lệ phần trăm: 60 x 90 = 5400.\nStep 2: Chia cho 100: 5400 / 100 = 54.\n-> Đáp số đúng là 54.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 5,
+    "cau_hoi": "Câu 5 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Chu vi hình chữ nhật trong bài Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) (Lớp 6) có chiều dài 17 cm, chiều rộng 11 cm là bao nhiêu?",
+    "dap_an": [
+      "56 cm",
+      "60 cm",
+      "54 cm",
+      "64 cm"
+    ],
+    "dap_an_dung": "56 cm",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Áp dụng công thức chu vi P = (Chiều dài + Chiều rộng) x 2.\nStep 2: Thay số: P = (17 + 11) x 2 = 28 x 2.\nStep 3: Kết quả P = 56 cm.\n-> Đáp số đúng là 56 cm.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 6,
+    "cau_hoi": "Câu 6 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Diện tích hình vuông thuộc Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) có độ dài cạnh 10 cm là bao nhiêu?",
+    "dap_an": [
+      "100 cm²",
+      "104 cm²",
+      "98 cm²",
+      "108 cm²"
+    ],
+    "dap_an_dung": "100 cm²",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Áp dụng công thức diện tích hình vuông S = Cạnh x Cạnh.\nStep 2: Thay số: S = 10 x 10 = 100 cm².\n-> Đáp số đúng là 100 cm².",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 7,
+    "cau_hoi": "Câu 7 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Tính giá trị biểu thức đại số P = 12a + 22 khi a = 3 thuộc Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) (Lớp 6):",
+    "dap_an": [
+      "58",
+      "62",
+      "55",
+      "66"
+    ],
+    "dap_an_dung": "58",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Thay giá trị a = 3 vào biểu thức P.\nStep 2: Thực hiện phép nhân trước: 12 x 3 = 36.\nStep 3: Thực hiện phép cộng: 36 + 22 = 58.\n-> Đáp số đúng là 58.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 8,
+    "cau_hoi": "Câu 8 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Tìm giá trị Q biết Q - 7 = 21 trong bài học Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) (Lớp 6):",
+    "dap_an": [
+      "28",
+      "21",
+      "34",
+      "24"
+    ],
+    "dap_an_dung": "28",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Tính giá trị vế phải: 7 x 3 = 21.\nStep 2: Chuyển -7 sang vế phải thành +7.\nStep 3: Q = 21 + 7 = 28.\n-> Đáp số đúng là 28.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 9,
+    "cau_hoi": "Câu 9 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Cho hình chữ nhật thuộc bài Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) có chiều dài 12 cm, chiều rộng 4 cm. Diện tích là:",
+    "dap_an": [
+      "48 cm²",
+      "58 cm²",
+      "44 cm²",
+      "60 cm²"
+    ],
+    "dap_an_dung": "48 cm²",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Công thức diện tích hình chữ nhật: S = Chiều dài x Chiều rộng.\nStep 2: Thay số: S = 12 x 4.\nStep 3: Kết quả: S = 48 cm².\n-> Đáp số đúng là 48 cm².",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  },
+  {
+    "id": 10,
+    "cau_hoi": "Câu 10 [Lớp 6 - Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)]: Giá trị của biểu thức P = 11 x 5 + 7 x 2 thuộc chủ đề Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6) là bao nhiêu?",
+    "dap_an": [
+      "69",
+      "74",
+      "66",
+      "79"
+    ],
+    "dap_an_dung": "69",
+    "giai_thich": "Bài giải chi tiết:\nStep 1: Thực hiện các phép nhân trước: 11 x 5 = 55 và 7 x 2 = 14.\nStep 2: Thực hiện phép cộng hai kết quả: 55 + 14 = 69.\n-> Đáp số đúng là 69.",
+    "chuong": "Chủ đề 1: Số học, Đại số và Các phép tính (Lớp 6)",
+    "nguon": "JavaScript Engine & Internet API",
+    "dap_an_da_chon_sai": ""
+  }
+]
