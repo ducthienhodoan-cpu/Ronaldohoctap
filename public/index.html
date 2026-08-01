@@ -3,148 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIÊU CLUB HỌC TẬP - Tập Thi IELTS Vercel Edition</title>
+    <title>SIÊU CLUB HỌC TẬP - Vercel All-In-One Edition</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #001F3F; color: #FFFFFF; min-height: 100vh; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 0 auto; }
         .header-box { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; }
         h1 { color: #00FFCC; font-size: 24px; margin-bottom: 8px; }
         p { font-size: 15px; color: #E0E0E0; }
-        .filter-card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+        .nav-tabs { display: flex; gap: 8px; flex-wrap: wrap; background-color: #002B4D; padding: 12px; border-radius: 12px; border: 1px solid #00A2FF; margin-bottom: 20px; }
+        .tab-btn { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; padding: 10px 14px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .tab-btn.active, .tab-btn:hover { background-color: #00A2FF; color: #FFFFFF; }
+        .card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .form-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
         label { font-weight: bold; font-size: 14px; color: #FFFFFF; }
-        select, button { padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: bold; border: none; outline: none; }
-        select { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; cursor: pointer; }
-        .btn-primary { background-color: #00A2FF; color: #FFFFFF; cursor: pointer; transition: 0.2s; }
+        select, input, button { padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; border: none; outline: none; }
+        select, input { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; }
+        .btn-primary { background-color: #00A2FF; color: #FFFFFF; cursor: pointer; }
         .btn-primary:hover { background-color: #0084FF; }
+        .btn-success { background-color: #2ECC71; color: #FFFFFF; cursor: pointer; }
         .btn-secondary { background-color: #393B3D; color: #FFFFFF; cursor: pointer; }
-        .skill-bar { display: flex; gap: 10px; flex-wrap: wrap; }
-        .exam-card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .question-title { font-size: 17px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; color: #FFFFFF; }
         .options-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .option-btn { background-color: #001F3F; border: 2px solid #00A2FF; color: #FFFFFF; padding: 12px 16px; text-align: left; border-radius: 8px; font-size: 15px; cursor: pointer; transition: 0.2s; }
-        .option-btn:hover { background-color: #00A2FF; }
-        .option-btn.selected { background-color: #00A2FF; border-color: #00FFCC; }
+        .option-btn { background-color: #001F3F; border: 2px solid #00A2FF; color: #FFFFFF; padding: 12px 16px; text-align: left; border-radius: 8px; font-size: 15px; cursor: pointer; }
+        .option-btn:hover, .option-btn.selected { background-color: #00A2FF; border-color: #00FFCC; }
         .nav-actions { display: flex; justify-content: space-between; align-items: center; }
-        .result-modal { background-color: #002B4D; border: 2px solid #2ECC71; border-radius: 12px; padding: 20px; margin-top: 20px; display: none; }
+        .section-pane { display: none; }
+        .section-pane.active { display: block; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-box">
-            <h1>SIÊU CLUB HỌC TẬP & TẬP THI IELTS (VERCEL EDITION)</h1>
-            <p>Nền tảng Học tập, Kiểm tra tự động, Gemini AI Sinh đề thi và Tập thi IELTS trực tuyến trên Cloud.</p>
+            <h1>SIÊU CLUB HỌC TẬP - VERCEL ALL-IN-ONE EDITION</h1>
+            <p>Tích hợp Toàn bộ 16 Phần: Lớp 1-12, Tập Thi IELTS, Gemini AI, World Cup, Cúp C1, Đua Xe & Minigames</p>
         </div>
 
-        <div class="filter-card">
-            <div class="form-group">
-                <label>Chọn Band IELTS Target:</label>
-                <select id="selBand" onchange="loadQuestions()">
-                    <option value="Band 4.5 - 5.0">Band 4.5 - 5.0 (Cơ bản)</option>
-                    <option value="Band 5.5 - 6.0" selected>Band 5.5 - 6.0 (Trung cấp)</option>
-                    <option value="Band 6.5 - 7.0">Band 6.5 - 7.0 (Nâng cao)</option>
-                    <option value="Band 7.5 - 8.5+">Band 7.5 - 8.5+ (Xuất sắc)</option>
-                </select>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchSection('ielts')">Tập Thi IELTS</button>
+            <button class="tab-btn" onclick="switchSection('ai')">Gemini AI Tạo Đề</button>
+            <button class="tab-btn" onclick="switchSection('hoc')">Nội Dung Học Tập</button>
+            <button class="tab-btn" onclick="switchSection('luyen')">Luyện Tập Tương Tác</button>
+            <button class="tab-btn" onclick="switchSection('games')">Đấu Trường Trò Chơi</button>
+            <button class="tab-btn" onclick="switchSection('settings')">Cài Đặt Điểm Mong Muốn</button>
+            <button class="tab-btn" onclick="switchSection('notebook')">Sổ Lỗi Sai</button>
+        </div>
+
+        <!-- Section 1: Tập Thi IELTS -->
+        <div id="pane-ielts" class="section-pane active">
+            <div class="card">
+                <div class="form-group">
+                    <label>Chọn Band IELTS Target:</label>
+                    <select id="selBandIelts" onchange="loadIeltsQuestions()">
+                        <option value="Band 4.5 - 5.0">Band 4.5 - 5.0 (Cơ bản)</option>
+                        <option value="Band 5.5 - 6.0" selected>Band 5.5 - 6.0 (Trung cấp)</option>
+                        <option value="Band 6.5 - 7.0">Band 6.5 - 7.0 (Nâng cao)</option>
+                        <option value="Band 7.5 - 8.5+">Band 7.5 - 8.5+ (Xuất sắc)</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn-primary" onclick="setIeltsSkill('tu_vung')">KT Từ Vựng</button>
+                    <button class="btn-secondary" onclick="setIeltsSkill('ngu_phap')">Ngữ Pháp & Các Thì</button>
+                    <button class="btn-secondary" onclick="setIeltsSkill('doc')">Đọc Hiểu Reading</button>
+                    <button class="btn-secondary" onclick="setIeltsSkill('nghe')">Luyện Nghe Listening TTS</button>
+                    <button class="btn-secondary" onclick="setIeltsSkill('ielts_tong_hop')">Đề Thi Tổng Hợp</button>
+                </div>
             </div>
-            <div class="skill-bar">
-                <button class="btn-primary" onclick="setSkill('tu_vung')">KT Từ Vựng</button>
-                <button class="btn-secondary" onclick="setSkill('ngu_phap')">Ngữ Pháp & Các Thì</button>
-                <button class="btn-secondary" onclick="setSkill('doc')">Đọc Hiểu Reading</button>
-                <button class="btn-secondary" onclick="setSkill('nghe')">Luyện Nghe Listening</button>
-                <button class="btn-secondary" onclick="setSkill('tong_hop')">Đề Thi IELTS Tổng Hợp</button>
+
+            <div class="card">
+                <div class="nav-actions" style="margin-bottom: 15px;">
+                    <span id="lblIeltsProgress" style="font-weight: bold;">Câu 1 / 10</span>
+                    <span style="background-color: #001F3F; border: 1px solid #00A2FF; padding: 4px 12px; border-radius: 8px;">Thời gian: 15:00</span>
+                </div>
+
+                <div id="audioControls" style="display: none; margin-bottom: 15px;">
+                    <button class="btn-primary" onclick="speakAudio()">Phát Âm Thanh Nghe (Listen)</button>
+                    <button class="btn-secondary" onclick="stopAudio()">Dừng Âm Thanh</button>
+                </div>
+
+                <div class="question-title" id="lblIeltsQuestion">Đang tải câu hỏi Tập Thi IELTS...</div>
+                <div class="options-group" id="ieltsOptionsContainer"></div>
+
+                <div class="nav-actions">
+                    <button class="btn-secondary" onclick="prevQuestion()">Câu trước</button>
+                    <button class="btn-secondary" onclick="nextQuestion()">Câu sau</button>
+                    <button class="btn-success" onclick="submitExam()">Nộp bài & Chấm điểm</button>
+                </div>
             </div>
         </div>
 
-        <div class="exam-card">
-            <div class="nav-actions" style="margin-bottom: 15px;">
-                <span id="lblProgress" style="font-weight: bold; font-size: 16px;">Câu 1 / 10</span>
-                <span id="lblTimer" style="background-color: #001F3F; border: 1px solid #00A2FF; padding: 4px 12px; border-radius: 10px;">Thời gian: 15:00</span>
-            </div>
+        <!-- Section 2: Gemini AI -->
+        <div id="pane-ai" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
+                <div class="form-group">
+                    <label>Lớp học:</label>
+                    <select id="selAiLop">
+                        <option value="Lớp 6" selected>Lớp 6</option>
+                        <option value="Lớp 7">Lớp 7</option>
+                        <option value="Lớp 8">Lớp 8</option>
+                        <option value="Lớp 9">Lớp 9</option>
+                    </select>
 
-            <div id="audioControls" style="display: none; margin-bottom: 15px;">
-                <button class="btn-primary" onclick="speakAudio()">Phát Âm Thanh Nghe (Listen to Audio)</button>
-                <button class="btn-secondary" onclick="stopAudio()">Dừng Âm Thanh</button>
-            </div>
+                    <label>Môn học:</label>
+                    <select id="selAiMon">
+                        <option value="Toán" selected>Toán</option>
+                        <option value="Vật lý">Vật lý</option>
+                        <option value="Hóa học">Hóa học</option>
+                        <option value="Sinh học">Sinh học</option>
+                        <option value="Tin học">Tin học</option>
+                    </select>
 
-            <div class="question-title" id="lblQuestion">Đang tải câu hỏi Tập Thi IELTS...</div>
-            <div class="options-group" id="optionsContainer"></div>
-
-            <div class="nav-actions">
-                <button class="btn-secondary" onclick="prevQuestion()">Câu trước</button>
-                <button class="btn-secondary" onclick="nextQuestion()">Câu sau</button>
-                <button class="btn-primary" style="background-color: #2ECC71;" onclick="submitExam()">Nộp bài & Chấm điểm</button>
+                    <button class="btn-primary" onclick="generateAiExam()">Sinh Đề AI Ngay</button>
+                </div>
+                <div id="aiStatus" style="font-weight: bold; margin-top: 10px; color: #00FFCC;"></div>
             </div>
         </div>
 
-        <div class="result-modal" id="resultCard">
-            <h2 style="color: #2ECC71; margin-bottom: 10px;">KẾT QUẢ TẬP THI IELTS ONLINE</h2>
-            <p id="resultText">Chi tiết điểm số...</p>
+        <!-- Section 3: Games Engine -->
+        <div id="pane-games" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">ĐẤU TRƯỜNG TRÒ CHƠI & MINIGAMES THƯ GIÃN</h3>
+                <div class="grid-2">
+                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                        <h4>Vòng Quay May Mắn</h4>
+                        <p style="margin: 10px 0;">Quay thưởng ngẫu nhiên nhận +50 đến +200 XP.</p>
+                        <button class="btn-primary" onclick="playWheel()">Quay Thưởng Ngay</button>
+                        <div id="wheelResult" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    </div>
+                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                        <h4>Sút Phạt Penalty</h4>
+                        <p style="margin: 10px 0;">Sút đền vượt thủ môn nhận ngay +60 XP.</p>
+                        <button class="btn-primary" onclick="playPenalty('Trái')">Sút Trái</button>
+                        <button class="btn-primary" onclick="playPenalty('Giữa')">Sút Giữa</button>
+                        <button class="btn-primary" onclick="playPenalty('Phải')">Sút Phải</button>
+                        <div id="penaltyResult" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Cài đặt điểm mong muốn -->
+        <div id="pane-settings" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
+                <div class="form-group">
+                    <label>Target Grade:</label>
+                    <select id="setDiem">
+                        <option value="9.0 - 10.0 điểm (Xuất sắc)">9.0 - 10.0 điểm (Xuất sắc)</option>
+                        <option value="8.0 - 8.9 điểm (Giỏi)">8.0 - 8.9 điểm (Giỏi)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Target Band IELTS:</label>
+                    <select id="setBand">
+                        <option value="Band 7.5 - 8.5+ (Xuất sắc)">Band 7.5 - 8.5+ (Xuất sắc)</option>
+                        <option value="Band 6.5 - 7.0 (Nâng cao)">Band 6.5 - 7.0 (Nâng cao)</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="saveSettings()">Lưu Cấu Hình Mục Tiêu</button>
+                <div id="settingsMsg" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+            </div>
+        </div>
+
+        <!-- Section 5: Sổ lỗi sai -->
+        <div id="pane-notebook" class="section-pane">
+            <div class="card">
+                <h3 style="color: #00FFCC; margin-bottom: 15px;">SỔ LỖI SAI BÀI KHÓ</h3>
+                <div id="notebookList">Đang tải danh sách câu hỏi làm sai...</div>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentSkill = 'tu_vung';
-        let currentQuestions = [];
-        let currentIndex = 0;
+        let currentIeltsSkill = 'tu_vung';
+        let ieltsQuestions = [];
+        let ieltsIndex = 0;
         let userAnswers = {};
 
-        function setSkill(skill) {
-            currentSkill = skill;
-            loadQuestions();
-        }
-
-        async function loadQuestions() {
-            const band = document.getElementById('selBand').value;
-            try {
-                const res = await fetch(`/api/questions?skill=${currentSkill}&band=${encodeURIComponent(band)}`);
-                const data = await res.json();
-                currentQuestions = data.questions || [];
-                currentIndex = 0;
-                userAnswers = {};
-                document.getElementById('resultCard').style.display = 'none';
-                renderQuestion();
-            } catch (err) {
-                console.error("Lỗi tải câu hỏi:", err);
-            }
-        }
-
-        function renderQuestion() {
-            if (!currentQuestions || currentQuestions.length === 0) return;
-            const q = currentQuestions[currentIndex];
-            document.getElementById('lblProgress').innerText = `Câu ${currentIndex + 1} / ${currentQuestions.length}`;
+        function switchSection(secId) {
+            document.querySelectorAll('.section-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`pane-${secId}`).classList.add('active');
             
-            const isListening = q.is_listening || currentSkill === 'nghe';
+            if (secId === 'ielts') loadIeltsQuestions();
+            if (secId === 'notebook') loadNotebook();
+        }
+
+        function setIeltsSkill(sk) {
+            currentIeltsSkill = sk;
+            loadIeltsQuestions();
+        }
+
+        async function loadIeltsQuestions() {
+            const band = document.getElementById('selBandIelts').value;
+            try {
+                const res = await fetch(`/api/questions?skill=${currentIeltsSkill}&band=${encodeURIComponent(band)}`);
+                const data = await res.json();
+                ieltsQuestions = data.questions || [];
+                ieltsIndex = 0;
+                userAnswers = {};
+                renderIeltsQuestion();
+            } catch (err) { console.error(err); }
+        }
+
+        function renderIeltsQuestion() {
+            if (!ieltsQuestions || ieltsQuestions.length === 0) return;
+            const q = ieltsQuestions[ieltsIndex];
+            document.getElementById('lblIeltsProgress').innerText = `Câu ${ieltsIndex + 1} / ${ieltsQuestions.length}`;
+
+            const isListening = q.is_listening || currentIeltsSkill === 'nghe';
             const audioBox = document.getElementById('audioControls');
             if (isListening) {
                 audioBox.style.display = 'block';
-                document.getElementById('lblQuestion').innerText = `[BÀI NGHE IELTS LISTENING - Hãy bấm nút 'Phát Âm Thanh Nghe' để nghe kịch bản và trả lời câu hỏi bên dưới]\n\n${q.cau_hoi}`;
+                document.getElementById('lblIeltsQuestion').innerText = `[BÀI NGHE IELTS LISTENING - Hãy bấm nút 'Phát Âm Thanh Nghe' để nghe kịch bản và trả lời câu hỏi bên dưới]\n\n${q.cau_hoi}`;
                 speakAudio();
             } else {
                 audioBox.style.display = 'none';
                 window.speechSynthesis.cancel();
-                document.getElementById('lblQuestion').innerText = q.cau_hoi;
+                document.getElementById('lblIeltsQuestion').innerText = q.cau_hoi;
             }
 
-            const container = document.getElementById('optionsContainer');
+            const container = document.getElementById('ieltsOptionsContainer');
             container.innerHTML = '';
-            const saved = userAnswers[currentIndex] || '';
+            const saved = userAnswers[ieltsIndex] || '';
 
             q.dap_an.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = `option-btn ${opt === saved ? 'selected' : ''}`;
                 btn.innerText = opt;
                 btn.onclick = () => {
-                    userAnswers[currentIndex] = opt;
-                    renderQuestion();
+                    userAnswers[ieltsIndex] = opt;
+                    renderIeltsQuestion();
                 };
                 container.appendChild(btn);
             });
         }
 
         function speakAudio() {
-            if (!currentQuestions[currentIndex]) return;
-            const q = currentQuestions[currentIndex];
+            if (!ieltsQuestions[ieltsIndex]) return;
+            const q = ieltsQuestions[ieltsIndex];
             const text = q.script_audio || q.cau_hoi;
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
@@ -152,42 +251,73 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        function stopAudio() {
-            window.speechSynthesis.cancel();
-        }
-
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderQuestion();
-            }
-        }
-
-        function nextQuestion() {
-            if (currentIndex < currentQuestions.length - 1) {
-                currentIndex++;
-                renderQuestion();
-            }
-        }
+        function stopAudio() { window.speechSynthesis.cancel(); }
+        function prevQuestion() { if (ieltsIndex > 0) { ieltsIndex--; renderIeltsQuestion(); } }
+        function nextQuestion() { if (ieltsIndex < ieltsQuestions.length - 1) { ieltsIndex++; renderIeltsQuestion(); } }
 
         async function submitExam() {
             window.speechSynthesis.cancel();
-            try {
-                const res = await fetch('/api/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ questions: currentQuestions, answers: userAnswers })
-                });
-                const result = await res.json();
-                document.getElementById('resultText').innerText = 
-                    `Điểm số: ${result.score} / 10 (${result.percentage}%) | Số câu đúng: ${result.correct} / ${result.total} | Xếp loại: ${result.rating} | Phần thưởng: +${result.xp_reward} XP!`;
-                document.getElementById('resultCard').style.display = 'block';
-            } catch (err) {
-                alert("Lỗi khi nộp bài!");
+            const res = await fetch('/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ questions: ieltsQuestions, answers: userAnswers })
+            });
+            const r = await res.json();
+            alert(`KẾT QUẢ TẬP THI IELTS:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nSố câu đúng: ${r.correct} / ${r.total}\nXếp loại: ${r.rating}\nNhận thưởng: +${r.xp_reward} XP!`);
+        }
+
+        async function generateAiExam() {
+            document.getElementById('aiStatus').innerText = "Đang kết nối Gemini AI Key để sinh đề...";
+            const res = await fetch('/api/ai-generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lop: document.getElementById('selAiLop').value, mon: document.getElementById('selAiMon').value })
+            });
+            const data = await res.json();
+            document.getElementById('aiStatus').innerText = `Sinh đề thành công! Đã tạo ${data.total} câu hỏi từ Gemini AI!`;
+        }
+
+        async function playWheel() {
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'wheel' })
+            });
+            const d = await res.json();
+            document.getElementById('wheelResult').innerText = `Phần thưởng: ${d.reward.ten}`;
+        }
+
+        async function playPenalty(dir) {
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'penalty', direction: dir })
+            });
+            const d = await res.json();
+            document.getElementById('penaltyResult').innerText = d.result.thong_bao;
+        }
+
+        async function saveSettings() {
+            await fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ diem_mong_muon: document.getElementById('setDiem').value, band_ielts_mong_muon: document.getElementById('setBand').value })
+            });
+            document.getElementById('settingsMsg').innerText = "Đã lưu thành công Cài đặt điểm số mong muốn!";
+        }
+
+        async function loadNotebook() {
+            const res = await fetch('/api/notebook');
+            const d = await res.json();
+            const box = document.getElementById('notebookList');
+            if (d.mistakes.length === 0) {
+                box.innerHTML = '<p style="color: #2ECC71; font-weight: bold;">Tuyệt vời! Bạn không có câu hỏi nào bị làm sai trong Sổ lỗi sai.</p>';
+            } else {
+                box.innerHTML = d.mistakes.map((m, i) => `<div style="background-color: #001F3F; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #E74C3C;"><b>Câu ${i+1}:</b> ${m.cau_hoi}<br><span style="color:#2ECC71;">Đáp án đúng: ${m.dap_an_dung}</span></div>`).join('');
             }
         }
 
-        window.onload = loadQuestions;
+        window.onload = loadIeltsQuestions;
     </script>
 </body>
 </html>
