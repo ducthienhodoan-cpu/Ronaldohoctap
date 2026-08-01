@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIÊU CLUB HỌC TẬP - Roblox & IELTS Edition</title>
+    <title>SIÊU CLUB HỌC TẬP - Full Interactive Edition</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,7 @@
             --accent-purple: #7B2CBF;
             --accent-green: #2ECC71;
             --accent-red: #E74C3C;
+            --accent-gold: #FFD700;
             --text-main: #FFFFFF;
             --text-sub: #E0E0E0;
         }
@@ -33,16 +34,12 @@
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1150px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1150px; margin: 0 auto; }
 
         /* Glassmorphism Header Bar */
         .header-bar {
             background: rgba(0, 43, 77, 0.7);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 2px solid var(--card-border);
             border-radius: 20px;
             padding: 24px;
@@ -61,14 +58,9 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .header-title-box p {
-            font-size: 15px;
-            color: var(--text-sub);
-            font-weight: 500;
-        }
+        .header-title-box p { font-size: 15px; color: var(--text-sub); }
 
         .profile-badge {
             background: linear-gradient(135deg, #001F3F, #004080);
@@ -88,11 +80,6 @@
             border: 2px solid var(--accent-cyan);
             object-fit: cover;
             background-color: #001226;
-        }
-
-        .user-info-text {
-            display: flex;
-            flex-direction: column;
         }
 
         .user-name { font-weight: 700; font-size: 15px; color: var(--accent-cyan); }
@@ -131,11 +118,10 @@
             transform: translateY(-2px);
         }
 
-        /* Glassmorphism Main Content Cards */
+        /* Glassmorphism Main Cards */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 2px solid var(--card-border);
             border-radius: 20px;
             padding: 24px;
@@ -216,8 +202,9 @@
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
 
-        /* Game Boards & Graphic Displays */
+        /* Game Displays */
         .game-stadium-card {
             background: linear-gradient(135deg, #001A35 0%, #002B4D 100%);
             border: 2px solid var(--accent-cyan);
@@ -226,32 +213,93 @@
             text-align: center;
         }
 
-        .game-stadium-card h4 {
-            font-size: 18px;
-            color: var(--accent-cyan);
-            margin-bottom: 10px;
-        }
+        .game-stadium-card h4 { font-size: 18px; color: var(--accent-cyan); margin-bottom: 10px; }
 
         .mascot-banner {
             width: 100%;
-            max-height: 180px;
+            max-height: 160px;
             object-fit: contain;
             margin-bottom: 15px;
             filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.5));
         }
 
-        /* Certificate Modal Display */
-        .cert-card {
-            background: linear-gradient(135deg, #001F3F, #003366);
-            border: 3px solid #FFD700;
-            border-radius: 20px;
-            padding: 25px;
+        /* 3D Flip Card Grid */
+        .memory-card {
+            height: 110px;
+            background: linear-gradient(135deg, #001226, #002B4D);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
             text-align: center;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
-            margin-top: 20px;
+            cursor: pointer;
+            padding: 10px;
+            user-select: none;
+            transition: all 0.3s ease;
         }
 
-        .cert-card h2 { color: #FFD700; font-size: 24px; margin-bottom: 10px; }
+        .memory-card.flipped {
+            background: linear-gradient(135deg, #00A2FF, #0055B3);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            border-color: #00FFCC;
+            opacity: 0.8;
+            cursor: default;
+        }
+
+        /* Soccer Penalty Pitch */
+        .soccer-pitch {
+            background: linear-gradient(180deg, #1B4D2E 0%, #27AE60 100%);
+            border: 3px solid #FFFFFF;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .goal-post {
+            width: 80%;
+            height: 80px;
+            border: 4px solid #FFFFFF;
+            border-bottom: none;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .goalkeeper {
+            width: 40px;
+            height: 50px;
+            background: #FFD700;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 11px;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* Canvas Wheel */
+        #canvasWheel {
+            border: 4px solid var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -264,7 +312,7 @@
             </div>
             <div class="profile-badge">
                 <img src="/hinh_anh_3d/roblox_anh_dai_dien_3d.png" alt="Avatar" class="avatar-img" onerror="this.src='/hinh_anh_3d/linh_vat_3d.png'">
-                <div class="user-info-text">
+                <div style="display: flex; flex-direction: column;">
                     <span class="user-name" id="hdrUserName">Học Sinh Roblox</span>
                     <span class="user-level" id="hdrUserLevel">Level 5 | 1250 XP</span>
                 </div>
@@ -274,6 +322,7 @@
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchSection('ielts')">Tập Thi IELTS</button>
+            <button class="tab-btn" onclick="switchSection('luyen')">Luyện Tập Tương Tác</button>
             <button class="tab-btn" onclick="switchSection('hoc')">Nội Dung Học Lớp 1-12</button>
             <button class="tab-btn" onclick="switchSection('ai')">Gemini AI Tạo Đề & Chấm Bài</button>
             <button class="tab-btn" onclick="switchSection('formula')">Sổ Tay Công Thức</button>
@@ -325,11 +374,48 @@
                     <button class="btn-success" onclick="submitExam()">Nộp bài & Chấm điểm</button>
                 </div>
             </div>
-
-            <div id="certContainer"></div>
         </div>
 
-        <!-- 2. Nội Dung Học Lớp 1-12 -->
+        <!-- 2. Phần Luyện Tập Tương Tác -->
+        <div id="pane-luyen" class="section-pane">
+            <div class="card">
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">LUYỆN TẬP TƯƠNG TÁC THEO LỚP & MÔN HỌC</h3>
+                <div class="form-group">
+                    <label>Lớp học:</label>
+                    <select id="selLuyenLop" onchange="loadPracticeQuiz()">
+                        <option value="Lớp 6" selected>Lớp 6</option>
+                        <option value="Lớp 7">Lớp 7</option>
+                        <option value="Lớp 8">Lớp 8</option>
+                        <option value="Lớp 9">Lớp 9</option>
+                    </select>
+                    <label>Môn học:</label>
+                    <select id="selLuyenMon" onchange="loadPracticeQuiz()">
+                        <option value="Toán" selected>Toán học</option>
+                        <option value="Vật lý">Vật lý</option>
+                        <option value="Hóa học">Hóa học</option>
+                        <option value="Tin học">Tin học</option>
+                    </select>
+                </div>
+
+                <div class="nav-actions" style="margin-bottom: 15px;">
+                    <span id="lblLuyenProgress" style="font-weight: 700; color: var(--accent-cyan);">Câu 1 / 5</span>
+                    <span style="background-color: #001226; padding: 4px 12px; border-radius: 8px; font-weight: 700; color: #2ECC71;">Điểm số: +50 XP</span>
+                </div>
+
+                <div class="question-title" id="lblLuyenQuestion">Đang tải bài luyện tập...</div>
+                <div class="options-group" id="luyenOptionsContainer"></div>
+
+                <div id="luyenSolutionBox" style="display: none; background-color: #001226; padding: 16px; border-radius: 12px; border: 1.5px solid var(--accent-cyan); margin-top: 15px;"></div>
+
+                <div class="nav-actions" style="margin-top: 15px;">
+                    <button class="btn-secondary" onclick="prevPracticeQuestion()">Câu trước</button>
+                    <button class="btn-secondary" onclick="nextPracticeQuestion()">Câu sau</button>
+                    <button class="btn-primary" onclick="showPracticeSolution()">Xem Lời Giải Chi Tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Nội Dung Học Lớp 1-12 -->
         <div id="pane-hoc" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">NỘI DUNG HỌC TẬP & BÀI TẬP CỐT LÕI LỚP 1-12</h3>
@@ -355,7 +441,7 @@
             </div>
         </div>
 
-        <!-- 3. Gemini AI -->
+        <!-- 4. Gemini AI -->
         <div id="pane-ai" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">TỰ ĐỘNG SINH BÀI TẬP & CHẤM BÀI BẰNG GEMINI AI</h3>
@@ -369,7 +455,7 @@
                     </select>
                     <label>Môn học:</label>
                     <select id="selAiMon">
-                        <option value="Toán" selected>Toán</option>
+                        <option value="Toán" selected>Toán học</option>
                         <option value="Vật lý">Vật lý</option>
                         <option value="Hóa học">Hóa học</option>
                         <option value="Tin học">Tin học</option>
@@ -388,7 +474,7 @@
             </div>
         </div>
 
-        <!-- 4. Sổ Tay Công Thức -->
+        <!-- 5. Sổ Tay Công Thức -->
         <div id="pane-formula" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">SỔ TAY CÔNG THỨC TOÁN - LÝ - HÓA - SINH - TIN HỌC</h3>
@@ -406,7 +492,7 @@
             </div>
         </div>
 
-        <!-- 5. Đấu Trường Thể Thao & Đua Xe -->
+        <!-- 6. Đấu Trường Thể Thao & Đua Xe -->
         <div id="pane-sports" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 20px;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP, CÚP C1 & ROBLOX GRAND PRIX</h3>
@@ -415,53 +501,71 @@
                         <h4>World Cup Tri Thức</h4>
                         <img src="/hinh_anh_3d/trang_chao_mung_3d.png" alt="World Cup" class="mascot-banner" onerror="this.style.display='none'">
                         <p style="margin-bottom: 12px; font-size: 14px;">Thi đấu 8 Đội tuyển Quốc gia kịch tính.</p>
-                        <button class="btn-primary" onclick="playMatch('world_cup')">Thi Đấu World Cup</button>
-                        <div id="resMatchWc" style="margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
+                        <button class="btn-primary" onclick="startTournament('world_cup')">Thi Đấu World Cup</button>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Champions League Cúp C1</h4>
                         <img src="/hinh_anh_3d/linh_vat_3d.png" alt="Champions League" class="mascot-banner" onerror="this.style.display='none'">
                         <p style="margin-bottom: 12px; font-size: 14px;">Chinh phục Cúp C1 Châu Âu đỉnh cao.</p>
-                        <button class="btn-primary" onclick="playMatch('champions_league')">Thi Đấu Cúp C1</button>
-                        <div id="resMatchC1" style="margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
+                        <button class="btn-primary" onclick="startTournament('champions_league')">Thi Đấu Cúp C1</button>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Roblox Grand Prix</h4>
                         <img src="/hinh_anh_3d/roblox_linh_vat_3d.png" alt="Racing" class="mascot-banner" onerror="this.style.display='none'">
                         <p style="margin-bottom: 12px; font-size: 14px;">Giải Đua Xe Siêu Cấp Roblox 1000m.</p>
-                        <button class="btn-primary" onclick="playRacing()">Khởi Động Đua Xe</button>
-                        <div id="resRacing" style="margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
+                        <button class="btn-primary" onclick="startRacingGame()">Khởi Động Đua Xe</button>
                     </div>
+                </div>
+
+                <div id="tournamentPlayBoard" style="display: none; margin-top: 24px; background: #001226; border: 2px solid var(--accent-cyan); padding: 20px; border-radius: 16px;">
+                    <div class="nav-actions" style="margin-bottom: 15px;">
+                        <h4 id="lblTourName" style="color: var(--accent-cyan);">Trận Thi Đấu</h4>
+                        <span id="lblTourScore" style="background-color: #002B4D; padding: 6px 14px; border-radius: 10px; font-weight: 700; color: #2ECC71;">Tỷ số: 0 - 0</span>
+                    </div>
+                    <div class="question-title" id="lblTourQuestion">Đang tải câu hỏi thi đấu...</div>
+                    <div class="options-group" id="tourOptionsContainer"></div>
                 </div>
             </div>
         </div>
 
-        <!-- 6. Minigames Thư Giãn -->
+        <!-- 7. Minigames Thư Giãn -->
         <div id="pane-games" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 20px;">MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY ROBLOX XP</h3>
-                <div class="grid-2">
+                <div class="grid-3" style="margin-bottom: 24px;">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
-                        <p style="margin: 12px 0;">Quay thưởng ngẫu nhiên nhận +50 đến +200 Roblox XP.</p>
-                        <button class="btn-primary" onclick="playWheel()">Quay Thưởng Ngay</button>
-                        <div id="wheelResult" style="margin-top: 12px; font-weight: 700; color: var(--accent-green);"></div>
+                        <canvas id="canvasWheel" width="180" height="180" style="margin: 10px 0;"></canvas><br>
+                        <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
+                        <div id="wheelResult" style="margin-top: 10px; font-weight: 700; color: var(--accent-green);"></div>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Sút Phạt Penalty</h4>
-                        <p style="margin: 12px 0;">Sút đền hiểm hóc vượt thủ môn nhận +60 XP.</p>
-                        <div style="display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn-primary" onclick="playPenalty('Trái')">Sút Trái</button>
-                            <button class="btn-primary" onclick="playPenalty('Giữa')">Sút Giữa</button>
-                            <button class="btn-primary" onclick="playPenalty('Phải')">Sút Phải</button>
+                        <div class="soccer-pitch" style="margin: 10px 0;">
+                            <div class="goal-post">
+                                <div class="goalkeeper" id="gkPos">Thủ Môn</div>
+                            </div>
                         </div>
-                        <div id="penaltyResult" style="margin-top: 12px; font-weight: 700; color: var(--accent-green);"></div>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn-primary" onclick="shootPenalty('Trái')">Sút Trái</button>
+                            <button class="btn-primary" onclick="shootPenalty('Giữa')">Sút Giữa</button>
+                            <button class="btn-primary" onclick="shootPenalty('Phải')">Sút Phải</button>
+                        </div>
+                        <div id="penaltyResult" style="margin-top: 10px; font-weight: 700; color: var(--accent-green);"></div>
+                    </div>
+                    <div class="game-stadium-card">
+                        <h4>Lật Thẻ Trí Nhớ</h4>
+                        <p style="margin: 10px 0; font-size: 13px;">Ghép đúng cặp thẻ từ vựng và công thức để nhận +100 XP.</p>
+                        <button class="btn-primary" onclick="initMemoryCards()">Bắt Đầu Lật Thẻ</button>
+                        <div id="memoryResult" style="margin-top: 10px; font-weight: 700; color: var(--accent-green);"></div>
                     </div>
                 </div>
+
+                <div id="memoryGridContainer" class="grid-4" style="display: none; background: #001226; padding: 20px; border-radius: 16px; border: 2px solid var(--accent-cyan);"></div>
             </div>
         </div>
 
-        <!-- 7. Thống kê & Chứng nhận -->
+        <!-- 8. Thống kê & Chứng nhận -->
         <div id="pane-stats" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">THỐNG KÊ TIẾN ĐỘ & BẢNG VÀNG GIẤY CHỨNG NHẬN</h3>
@@ -469,7 +573,7 @@
             </div>
         </div>
 
-        <!-- 8. Cài đặt điểm mong muốn -->
+        <!-- 9. Cài đặt điểm mong muốn -->
         <div id="pane-settings" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
@@ -492,7 +596,7 @@
             </div>
         </div>
 
-        <!-- 9. Sổ lỗi sai -->
+        <!-- 10. Sổ lỗi sai -->
         <div id="pane-notebook" class="section-pane">
             <div class="card">
                 <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">SỔ LỖI SAI BÀI KHÓ</h3>
@@ -507,14 +611,26 @@
         let ieltsIndex = 0;
         let userAnswers = {};
 
+        // Practice Quiz State
+        let practiceQuestions = [];
+        let practiceIndex = 0;
+
+        // Tournament Match State
+        let tourQuestions = [];
+        let tourIndex = 0;
+        let tourScoreUser = 0;
+        let tourScoreOpponent = 0;
+
         function switchSection(secId) {
             document.querySelectorAll('.section-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`pane-${secId}`).classList.add('active');
             
             if (secId === 'ielts') loadIeltsQuestions();
+            if (secId === 'luyen') loadPracticeQuiz();
             if (secId === 'hoc') loadStudyContent();
             if (secId === 'formula') loadFormulas();
+            if (secId === 'games') drawWheelCanvas();
             if (secId === 'stats') loadStats();
             if (secId === 'notebook') loadNotebook();
         }
@@ -591,19 +707,216 @@
                 body: JSON.stringify({ questions: ieltsQuestions, answers: userAnswers, title: "Bài Thi IELTS" })
             });
             const r = await res.json();
-            
-            let certHtml = "";
-            if (r.certificate) {
-                certHtml = `
-                    <div class="cert-card">
-                        <h2>GIẤY CHỨNG NHẬN THÀNH TÍCH XUẤT SẮC</h2>
-                        <p style="font-size: 18px; color: #FFFFFF; margin: 10px 0;">Chứng nhận học sinh đã hoàn thành <b>${r.certificate.ten_bai_thi}</b> với kết quả <b>${r.score}/10 điểm (${r.percentage}%)</b></p>
-                        <p style="font-size: 15px; color: #00FFCC;">Ngày cấp: ${r.certificate.ngay_cap} | Mã chứng nhận: ${r.certificate.ma_so}</p>
-                    </div>
-                `;
-            }
-            document.getElementById('certContainer').innerHTML = certHtml;
             alert(`KẾT QUẢ TẬP THI IELTS:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nSố câu đúng: ${r.correct} / ${r.total}\nXếp loại: ${r.rating}\nPhần thưởng: +${r.xp_reward} XP!`);
+        }
+
+        // --- PRACTICE QUIZ LOGIC ---
+        async function loadPracticeQuiz() {
+            const lop = document.getElementById('selLuyenLop').value;
+            const mon = document.getElementById('selLuyenMon').value;
+            const res = await fetch(`/api/questions?skill=luyen_tap&lop=${encodeURIComponent(lop)}&mon=${encodeURIComponent(mon)}`);
+            const d = await res.json();
+            practiceQuestions = d.questions || [];
+            practiceIndex = 0;
+            renderPracticeQuestion();
+        }
+
+        function renderPracticeQuestion() {
+            if (!practiceQuestions || practiceQuestions.length === 0) return;
+            const q = practiceQuestions[practiceIndex];
+            document.getElementById('lblLuyenProgress').innerText = `Câu ${practiceIndex + 1} / ${practiceQuestions.length}`;
+            document.getElementById('lblLuyenQuestion').innerText = q.cau_hoi;
+            document.getElementById('luyenSolutionBox').style.display = 'none';
+
+            const container = document.getElementById('luyenOptionsContainer');
+            container.innerHTML = '';
+
+            q.dap_an.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if (opt === q.dap_an_dung) {
+                        btn.style.backgroundColor = '#2ECC71';
+                        alert("ĐÚNG RỒI! Bạn nhận được +10 Roblox XP!");
+                    } else {
+                        btn.style.backgroundColor = '#E74C3C';
+                        alert(`Chưa chính xác! Đáp án đúng là: ${q.dap_an_dung}`);
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function prevPracticeQuestion() { if (practiceIndex > 0) { practiceIndex--; renderPracticeQuestion(); } }
+        function nextPracticeQuestion() { if (practiceIndex < practiceQuestions.length - 1) { practiceIndex++; renderPracticeQuestion(); } }
+        function showPracticeSolution() {
+            if (!practiceQuestions[practiceIndex]) return;
+            const q = practiceQuestions[practiceIndex];
+            const box = document.getElementById('luyenSolutionBox');
+            box.innerHTML = `<b>Lời Giải Chi Tiết:</b><br>${q.giai_thich || 'Đáp án đúng là ' + q.dap_an_dung}`;
+            box.style.display = 'block';
+        }
+
+        // --- TOURNAMENT MATCH LOGIC (WORLD CUP & CÚP C1) ---
+        async function startTournament(type) {
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: type, lop: 'Lớp 6', mon: 'Toán' })
+            });
+            const d = await res.json();
+            tourQuestions = d.match.cau_hoi || [];
+            tourIndex = 0;
+            tourScoreUser = 0;
+            tourScoreOpponent = 0;
+            
+            document.getElementById('tournamentPlayBoard').style.display = 'block';
+            document.getElementById('lblTourName').innerText = `${d.match.vong_info.ten} - Đối thủ: ${d.match.vong_info.doi_thu}`;
+            renderTourQuestion();
+        }
+
+        function renderTourQuestion() {
+            if (!tourQuestions || tourIndex >= tourQuestions.length) {
+                alert(`TRẬN ĐẤU KẾT THÚC!\nTỷ số chung cuộc: Học Sinh ${tourScoreUser} - ${tourScoreOpponent} Đối Thủ.\nNhận thưởng: +${tourScoreUser * 30} Roblox XP!`);
+                document.getElementById('tournamentPlayBoard').style.display = 'none';
+                return;
+            }
+            const q = tourQuestions[tourIndex];
+            document.getElementById('lblTourScore').innerText = `Tỷ số: Học sinh ${tourScoreUser} - ${tourScoreOpponent} Đối thủ`;
+            document.getElementById('lblTourQuestion').innerText = `[Lượt Sút Penalty ${tourIndex + 1}/${tourQuestions.length}]\n\n${q.cau_hoi}`;
+
+            const container = document.getElementById('tourOptionsContainer');
+            container.innerHTML = '';
+
+            q.dap_an.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if (opt === q.dap_an_dung) {
+                        tourScoreUser++;
+                        alert("VÀOOO! Sút phạt thành công vào lưới đối thủ!");
+                    } else {
+                        tourScoreOpponent++;
+                        alert(`BÓNG RA NGOÀI! Thủ môn đối thủ cản phá thành công. Đáp án đúng là: ${q.dap_an_dung}`);
+                    }
+                    tourIndex++;
+                    renderTourQuestion();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function startRacingGame() {
+            alert("ROBLOX GRAND PRIX: Khởi động xe đua trên đường đua 1000m! Trả lời đúng các hộp quà để tăng tốc về đích!");
+        }
+
+        // --- CANVAS LUCKY WHEEL ---
+        function drawWheelCanvas() {
+            const canvas = document.getElementById('canvasWheel');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const colors = ['#00A2FF', '#2ECC71', '#FFD700', '#E74C3C', '#7B2CBF', '#00FFCC'];
+            const labels = ['+50 XP', '+100 XP', '+150 XP', '+200 XP', 'Pet 3D', 'Hộp Quà'];
+            
+            ctx.clearRect(0, 0, 180, 180);
+            for (let i = 0; i < 6; i++) {
+                ctx.beginPath();
+                ctx.fillStyle = colors[i];
+                ctx.moveTo(90, 90);
+                ctx.arc(90, 90, 85, i * Math.PI / 3, (i + 1) * Math.PI / 3);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(90, 90);
+                ctx.rotate(i * Math.PI / 3 + Math.PI / 6);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 12px Outfit';
+                ctx.fillText(labels[i], 35, 4);
+                ctx.restore();
+            }
+        }
+
+        async function spinWheelCanvas() {
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'wheel' })
+            });
+            const d = await res.json();
+            document.getElementById('wheelResult').innerText = `Chúc mừng bạn trúng: ${d.reward.ten}!`;
+        }
+
+        // --- PENALTY SOCCER SHOOTOUT ---
+        async function shootPenalty(dir) {
+            const gk = document.getElementById('gkPos');
+            const positions = { 'Trái': 'translateX(-40px)', 'Giữa': 'translateX(0)', 'Phải': 'translateX(40px)' };
+            const gkDir = ['Trái', 'Giữa', 'Phải'][Math.floor(Math.random() * 3)];
+            gk.style.transform = positions[gkDir];
+
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'penalty', direction: dir })
+            });
+            const d = await res.json();
+            document.getElementById('penaltyResult').innerText = `${d.result.thong_bao} (Thủ môn bay người sang ${gkDir})`;
+        }
+
+        // --- MEMORY FLIP CARDS GAME ---
+        let memoryCardsData = [
+            { id: 1, text: "Present Simple", match: 1 },
+            { id: 2, text: "Thì Hiện Tại Đơn", match: 1 },
+            { id: 3, text: "Improve", match: 2 },
+            { id: 4, text: "Cải thiện, nâng cao", match: 2 },
+            { id: 5, text: "P = (a + b) x 2", match: 3 },
+            { id: 6, text: "Chu vi Hình Chữ Nhật", match: 3 },
+            { id: 7, text: "Crucial", match: 4 },
+            { id: 8, text: "Extremely important", match: 4 }
+        ];
+        let flippedCards = [];
+
+        function initMemoryCards() {
+            const container = document.getElementById('memoryGridContainer');
+            container.style.display = 'grid';
+            container.innerHTML = '';
+            flippedCards = [];
+
+            memoryCardsData.sort(() => Math.random() - 0.5);
+            memoryCardsData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerText = '?';
+                card.onclick = () => flipMemoryCard(card, item);
+                container.appendChild(card);
+            });
+        }
+
+        function flipMemoryCard(cardEl, item) {
+            if (cardEl.classList.contains('flipped') || cardEl.classList.contains('matched') || flippedCards.length >= 2) return;
+            cardEl.classList.add('flipped');
+            cardEl.innerText = item.text;
+            flippedCards.push({ cardEl, item });
+
+            if (flippedCards.length === 2) {
+                const [first, second] = flippedCards;
+                if (first.item.match === second.item.match && first.item.id !== second.item.id) {
+                    first.cardEl.classList.add('matched');
+                    second.cardEl.classList.add('matched');
+                    document.getElementById('memoryResult').innerText = "Ghép đúng cặp thẻ! +20 XP";
+                    flippedCards = [];
+                } else {
+                    setTimeout(() => {
+                        first.cardEl.classList.remove('flipped');
+                        second.cardEl.classList.remove('flipped');
+                        first.cardEl.innerText = '?';
+                        second.cardEl.innerText = '?';
+                        flippedCards = [];
+                    }, 800);
+                }
+            }
         }
 
         async function loadStudyContent() {
@@ -639,40 +952,6 @@
             const res = await fetch(`/api/questions?skill=formula&mon=${encodeURIComponent(mon)}`);
             const d = await res.json();
             document.getElementById('formulaDisplay').innerHTML = d.questions.map(f => `<div style="background-color: #001226; padding: 14px; margin-top: 10px; border-radius: 10px; border: 1.5px solid #00A2FF;"><b>${f.ten}:</b> ${f.cong_thuc}<br><small style="color: #E0E0E0;">${f.vi_du}</small></div>`).join('');
-        }
-
-        async function playMatch(type) {
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: type })
-            });
-            const d = await res.json();
-            const text = `Kết quả trận đấu: ${d.match.vong_info.ten} - Trận chiến kịch tính với ${d.match.vong_info.doi_thu}!`;
-            if (type === 'world_cup') document.getElementById('resMatchWc').innerText = text;
-            else document.getElementById('resMatchC1').innerText = text;
-        }
-
-        function playRacing() { document.getElementById('resRacing').innerText = "Giải Đua Xe Siêu Cấp Roblox Grand Prix: Đang tăng tốc với tốc độ 180km/h trên vạch đích!"; }
-        
-        async function playWheel() {
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'wheel' })
-            });
-            const d = await res.json();
-            document.getElementById('wheelResult').innerText = `Phần thưởng: ${d.reward.ten}`;
-        }
-
-        async function playPenalty(dir) {
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'penalty', direction: dir })
-            });
-            const d = await res.json();
-            document.getElementById('penaltyResult').innerText = d.result.thong_bao;
         }
 
         async function loadStats() {
