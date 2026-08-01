@@ -8,12 +8,20 @@
     {
       "src": "public/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "hinh_anh_3d/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/index.py"
+    },
+    {
+      "src": "/hinh_anh_3d/(.*)",
+      "dest": "/hinh_anh_3d/$1"
     },
     {
       "src": "/(.*)",

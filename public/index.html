@@ -3,52 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIÊU CLUB HỌC TẬP - Vercel All-In-One Edition</title>
+    <title>SIÊU CLUB HỌC TẬP - Roblox & IELTS Edition</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #001226;
+            --card-bg: rgba(0, 43, 77, 0.85);
+            --card-border: #00A2FF;
+            --accent-cyan: #00FFCC;
+            --accent-blue: #0084FF;
+            --accent-purple: #7B2CBF;
+            --accent-green: #2ECC71;
+            --accent-red: #E74C3C;
+            --text-main: #FFFFFF;
+            --text-sub: #E0E0E0;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #001F3F; color: #FFFFFF; min-height: 100vh; padding: 20px; }
-        .container { max-width: 1050px; margin: 0 auto; }
-        .header-box { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        h1 { color: #00FFCC; font-size: 24px; margin-bottom: 8px; }
-        p { font-size: 15px; color: #E0E0E0; }
-        .nav-tabs { display: flex; gap: 8px; flex-wrap: wrap; background-color: #002B4D; padding: 12px; border-radius: 12px; border: 1px solid #00A2FF; margin-bottom: 20px; }
-        .tab-btn { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; padding: 10px 14px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 13px; }
-        .tab-btn.active, .tab-btn:hover { background-color: #00A2FF; color: #FFFFFF; }
-        .card { background-color: #002B4D; border: 2px solid #00A2FF; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .form-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
-        label { font-weight: bold; font-size: 14px; color: #FFFFFF; }
-        select, input, button, textarea { padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; border: none; outline: none; }
-        select, input, textarea { background-color: #001F3F; color: #FFFFFF; border: 1px solid #00A2FF; }
-        .btn-primary { background-color: #00A2FF; color: #FFFFFF; cursor: pointer; }
-        .btn-primary:hover { background-color: #0084FF; }
-        .btn-success { background-color: #2ECC71; color: #FFFFFF; cursor: pointer; }
-        .btn-secondary { background-color: #393B3D; color: #FFFFFF; cursor: pointer; }
-        .question-title { font-size: 17px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; color: #FFFFFF; }
-        .options-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .option-btn { background-color: #001F3F; border: 2px solid #00A2FF; color: #FFFFFF; padding: 12px 16px; text-align: left; border-radius: 8px; font-size: 15px; cursor: pointer; }
-        .option-btn:hover, .option-btn.selected { background-color: #00A2FF; border-color: #00FFCC; }
+
+        body {
+            font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000B18 0%, #001F3F 50%, #002B4D 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Header Bar */
+        .header-bar {
+            background: rgba(0, 43, 77, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 162, 255, 0.25);
+        }
+
+        .header-title-box h1 {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #00FFCC, #00A2FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-title-box p {
+            font-size: 15px;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        .profile-badge {
+            background: linear-gradient(135deg, #001F3F, #004080);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 16px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+        }
+
+        .avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            object-fit: cover;
+            background-color: #001226;
+        }
+
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name { font-weight: 700; font-size: 15px; color: var(--accent-cyan); }
+        .user-level { font-size: 13px; color: #FFFFFF; }
+
+        /* Navigation Bar */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: rgba(0, 43, 77, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            background: rgba(0, 31, 63, 0.8);
+            color: #FFFFFF;
+            border: 1.5px solid var(--card-border);
+            padding: 11px 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: linear-gradient(135deg, #00A2FF, #0055B3);
+            color: #FFFFFF;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(0, 162, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Glassmorphism Main Content Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .form-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        label { font-weight: 700; font-size: 15px; color: #FFFFFF; }
+
+        select, input, button, textarea {
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        select, input, textarea {
+            background-color: #001226;
+            color: #FFFFFF;
+            border: 1.5px solid var(--card-border);
+        }
+
+        button { cursor: pointer; transition: all 0.25s ease; }
+        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        .btn-primary { background: linear-gradient(135deg, #00A2FF, #0055B3); color: #FFFFFF; }
+        .btn-success { background: linear-gradient(135deg, #2ECC71, #27AE60); color: #FFFFFF; }
+        .btn-secondary { background: #2A2D34; color: #FFFFFF; border: 1px solid #4A4E58; }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            line-height: 1.6;
+            color: #FFFFFF;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option-btn {
+            background-color: #001226;
+            border: 2px solid var(--card-border);
+            color: #FFFFFF;
+            padding: 14px 20px;
+            text-align: left;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .option-btn:hover, .option-btn.selected {
+            background: linear-gradient(135deg, #00A2FF, #0055B3);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+        }
+
         .nav-actions { display: flex; justify-content: space-between; align-items: center; }
         .section-pane { display: none; }
         .section-pane.active { display: block; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+        /* Game Boards & Graphic Displays */
+        .game-stadium-card {
+            background: linear-gradient(135deg, #001A35 0%, #002B4D 100%);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .game-stadium-card h4 {
+            font-size: 18px;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+        }
+
+        .mascot-banner {
+            width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.5));
+        }
+
+        /* Certificate Modal Display */
+        .cert-card {
+            background: linear-gradient(135deg, #001F3F, #003366);
+            border: 3px solid #FFD700;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            margin-top: 20px;
+        }
+
+        .cert-card h2 { color: #FFD700; font-size: 24px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-box">
-            <h1>SIÊU CLUB HỌC TẬP - VERCEL ALL-IN-ONE EDITION</h1>
-            <p>Nền tảng Học tập Trực tuyến Tích hợp 100% 16 Phần Tính Năng & 5 Phân Môn Tập Thi IELTS</p>
+        <!-- Top Profile Header Bar -->
+        <div class="header-bar">
+            <div class="header-title-box">
+                <h1>SIÊU CLUB HỌC TẬP & TẬP THI IELTS</h1>
+                <p>Nền tảng Luyện thi IELTS, Gemini AI, Roblox XP & Đấu Trường Trí Tuệ</p>
+            </div>
+            <div class="profile-badge">
+                <img src="/hinh_anh_3d/roblox_anh_dai_dien_3d.png" alt="Avatar" class="avatar-img" onerror="this.src='/hinh_anh_3d/linh_vat_3d.png'">
+                <div class="user-info-text">
+                    <span class="user-name" id="hdrUserName">Học Sinh Roblox</span>
+                    <span class="user-level" id="hdrUserLevel">Level 5 | 1250 XP</span>
+                </div>
+            </div>
         </div>
 
+        <!-- Navigation Tabs -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchSection('ielts')">Tập Thi IELTS</button>
-            <button class="tab-btn" onclick="switchSection('hoc')">Nội Dung Học Tập Lớp 1-12</button>
+            <button class="tab-btn" onclick="switchSection('hoc')">Nội Dung Học Lớp 1-12</button>
             <button class="tab-btn" onclick="switchSection('ai')">Gemini AI Tạo Đề & Chấm Bài</button>
             <button class="tab-btn" onclick="switchSection('formula')">Sổ Tay Công Thức</button>
             <button class="tab-btn" onclick="switchSection('sports')">Đấu Trường Thể Thao & Đua Xe</button>
             <button class="tab-btn" onclick="switchSection('games')">Minigames Thư Giãn</button>
-            <button class="tab-btn" onclick="switchSection('stats')">Thống Kê & Giấy Chứng Nhận</button>
+            <button class="tab-btn" onclick="switchSection('stats')">Thống Kê & Chứng Nhận</button>
             <button class="tab-btn" onclick="switchSection('settings')">Cài Đặt Điểm Mong Muốn</button>
             <button class="tab-btn" onclick="switchSection('notebook')">Sổ Lỗi Sai Bài Khó</button>
         </div>
@@ -65,7 +296,7 @@
                         <option value="Band 7.5 - 8.5+">Band 7.5 - 8.5+ (Xuất sắc)</option>
                     </select>
                 </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn-primary" onclick="setIeltsSkill('tu_vung')">KT Từ Vựng</button>
                     <button class="btn-secondary" onclick="setIeltsSkill('ngu_phap')">Ngữ Pháp & Các Thì</button>
                     <button class="btn-secondary" onclick="setIeltsSkill('doc')">Đọc Hiểu Reading</button>
@@ -75,13 +306,13 @@
             </div>
 
             <div class="card">
-                <div class="nav-actions" style="margin-bottom: 15px;">
-                    <span id="lblIeltsProgress" style="font-weight: bold;">Câu 1 / 10</span>
-                    <span style="background-color: #001F3F; border: 1px solid #00A2FF; padding: 4px 12px; border-radius: 8px;">Thời gian: 15:00</span>
+                <div class="nav-actions" style="margin-bottom: 18px;">
+                    <span id="lblIeltsProgress" style="font-weight: 700; font-size: 16px; color: var(--accent-cyan);">Câu 1 / 10</span>
+                    <span style="background-color: #001226; border: 1.5px solid #00A2FF; padding: 6px 16px; border-radius: 12px; font-weight: 700; color: #00FFCC;">Thời gian: 15:00</span>
                 </div>
 
-                <div id="audioControls" style="display: none; margin-bottom: 15px;">
-                    <button class="btn-primary" onclick="speakAudio()">Phát Âm Thanh Nghe (Listen)</button>
+                <div id="audioControls" style="display: none; margin-bottom: 18px;">
+                    <button class="btn-primary" onclick="speakAudio()">Phát Âm Thanh Nghe (Listen to Audio)</button>
                     <button class="btn-secondary" onclick="stopAudio()">Dừng Âm Thanh</button>
                 </div>
 
@@ -94,12 +325,14 @@
                     <button class="btn-success" onclick="submitExam()">Nộp bài & Chấm điểm</button>
                 </div>
             </div>
+
+            <div id="certContainer"></div>
         </div>
 
-        <!-- 2. Nội Dung Học Tập Lớp 1-12 -->
+        <!-- 2. Nội Dung Học Lớp 1-12 -->
         <div id="pane-hoc" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">NỘI DUNG HỌC TẬP & BÀI TẬP CỐT LÕI LỚP 1-12</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">NỘI DUNG HỌC TẬP & BÀI TẬP CỐT LÕI LỚP 1-12</h3>
                 <div class="form-group">
                     <label>Chọn Lớp:</label>
                     <select id="selLopHoc" onchange="loadStudyContent()">
@@ -110,14 +343,14 @@
                     </select>
                     <label>Môn học:</label>
                     <select id="selMonHoc" onchange="loadStudyContent()">
-                        <option value="Toán" selected>Toán</option>
+                        <option value="Toán" selected>Toán học</option>
                         <option value="Vật lý">Vật lý</option>
                         <option value="Hóa học">Hóa học</option>
                         <option value="Tin học">Tin học</option>
                     </select>
                 </div>
-                <div id="studyContentDisplay" style="background-color: #001F3F; border: 1px solid #00A2FF; padding: 15px; border-radius: 8px; margin-top: 10px; line-height: 1.6;">
-                    Chọn lớp và môn học để tải chi tiết 5 bài học cốt lõi.
+                <div id="studyContentDisplay" style="background-color: #001226; border: 1.5px solid #00A2FF; padding: 20px; border-radius: 14px; margin-top: 10px; line-height: 1.7; font-size: 15px;">
+                    Chọn lớp và môn học để hiển thị chi tiết bài học.
                 </div>
             </div>
         </div>
@@ -125,7 +358,7 @@
         <!-- 3. Gemini AI -->
         <div id="pane-ai" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">TỰ ĐỘNG SINH BÀI TẬP & CHẤM BÀI BẰNG AI</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">TỰ ĐỘNG SINH BÀI TẬP & CHẤM BÀI BẰNG GEMINI AI</h3>
                 <div class="form-group">
                     <label>Lớp học:</label>
                     <select id="selAiLop">
@@ -143,22 +376,22 @@
                     </select>
                     <button class="btn-primary" onclick="generateAiExam()">Sinh Đề AI Ngay</button>
                 </div>
-                <div id="aiStatus" style="font-weight: bold; margin-top: 10px; color: #00FFCC;"></div>
+                <div id="aiStatus" style="font-weight: 700; margin-top: 12px; color: var(--accent-cyan);"></div>
 
-                <hr style="border-color: #00A2FF; margin: 20px 0;">
-                <h4 style="color: #00FFCC; margin-bottom: 10px;">AI Chấm Bài Tự Luận & Nhận Xét Lỗi Sai</h4>
+                <hr style="border-color: #00A2FF; margin: 24px 0;">
+                <h4 style="color: var(--accent-cyan); margin-bottom: 12px;">AI Chấm Bài Tự Luận & Phân Tích Lỗi Sai Chi Tiết</h4>
                 <div class="form-group">
-                    <textarea id="txtAiBaiLam" placeholder="Nhập bài làm tự luận của em vào đây..." style="width: 100%; height: 80px;"></textarea>
+                    <textarea id="txtAiBaiLam" placeholder="Nhập câu hỏi và lời giải tự luận của em vào đây..." style="width: 100%; height: 90px;"></textarea>
                     <button class="btn-primary" onclick="gradeEssayAi()">AI Chấm Bài Ngay</button>
                 </div>
-                <div id="aiGradingResult" style="margin-top: 10px; background-color: #001F3F; padding: 12px; border-radius: 8px; border: 1px solid #2ECC71;"></div>
+                <div id="aiGradingResult" style="margin-top: 12px; background-color: #001226; padding: 16px; border-radius: 12px; border: 1.5px solid var(--accent-green);"></div>
             </div>
         </div>
 
         <!-- 4. Sổ Tay Công Thức -->
         <div id="pane-formula" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">SỔ TAY CÔNG THỨC TOÁN - LÝ - HÓA - SINH - TIN HỌC</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">SỔ TAY CÔNG THỨC TOÁN - LÝ - HÓA - SINH - TIN HỌC</h3>
                 <div class="form-group">
                     <label>Chọn Môn Công Thức:</label>
                     <select id="selMonFormula" onchange="loadFormulas()">
@@ -176,25 +409,28 @@
         <!-- 5. Đấu Trường Thể Thao & Đua Xe -->
         <div id="pane-sports" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP, CÚP C1 & GIẢI ĐUA XE</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 20px;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP, CÚP C1 & ROBLOX GRAND PRIX</h3>
                 <div class="grid-3">
-                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
-                        <h4>World Cup</h4>
-                        <p style="margin: 10px 0;">Thi đấu các đội tuyển quốc gia.</p>
-                        <button class="btn-primary" onclick="playMatch('world_cup')">Thi Đấu Ngay</button>
-                        <div id="resMatchWc" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    <div class="game-stadium-card">
+                        <h4>World Cup Tri Thức</h4>
+                        <img src="/hinh_anh_3d/trang_chao_mung_3d.png" alt="World Cup" class="mascot-banner" onerror="this.style.display='none'">
+                        <p style="margin-bottom: 12px; font-size: 14px;">Thi đấu 8 Đội tuyển Quốc gia kịch tính.</p>
+                        <button class="btn-primary" onclick="playMatch('world_cup')">Thi Đấu World Cup</button>
+                        <div id="resMatchWc" style="margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
                     </div>
-                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
-                        <h4>Champions League</h4>
-                        <p style="margin: 10px 0;">Cúp C1 Châu Âu kịch tính.</p>
-                        <button class="btn-primary" onclick="playMatch('champions_league')">Thi Đấu Ngay</button>
-                        <div id="resMatchC1" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                    <div class="game-stadium-card">
+                        <h4>Champions League Cúp C1</h4>
+                        <img src="/hinh_anh_3d/linh_vat_3d.png" alt="Champions League" class="mascot-banner" onerror="this.style.display='none'">
+                        <p style="margin-bottom: 12px; font-size: 14px;">Chinh phục Cúp C1 Châu Âu đỉnh cao.</p>
+                        <button class="btn-primary" onclick="playMatch('champions_league')">Thi Đấu Cúp C1</button>
+                        <div id="resMatchC1" style="margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
                     </div>
-                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                    <div class="game-stadium-card">
                         <h4>Roblox Grand Prix</h4>
-                        <p style="margin: 10px 0;">Đua xe siêu cấp Roblox XP.</p>
+                        <img src="/hinh_anh_3d/roblox_linh_vat_3d.png" alt="Racing" class="mascot-banner" onerror="this.style.display='none'">
+                        <p style="margin-bottom: 12px; font-size: 14px;">Giải Đua Xe Siêu Cấp Roblox 1000m.</p>
                         <button class="btn-primary" onclick="playRacing()">Khởi Động Đua Xe</button>
-                        <div id="resRacing" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                        <div id="resRacing" style="margin-top: 12px; font-weight: 700; color: var(--accent-cyan);"></div>
                     </div>
                 </div>
             </div>
@@ -203,30 +439,32 @@
         <!-- 6. Minigames Thư Giãn -->
         <div id="pane-games" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 20px;">MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY ROBLOX XP</h3>
                 <div class="grid-2">
-                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                    <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
-                        <p style="margin: 10px 0;">Quay thưởng ngẫu nhiên nhận +50 đến +200 XP.</p>
+                        <p style="margin: 12px 0;">Quay thưởng ngẫu nhiên nhận +50 đến +200 Roblox XP.</p>
                         <button class="btn-primary" onclick="playWheel()">Quay Thưởng Ngay</button>
-                        <div id="wheelResult" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                        <div id="wheelResult" style="margin-top: 12px; font-weight: 700; color: var(--accent-green);"></div>
                     </div>
-                    <div style="background-color: #001F3F; padding: 15px; border-radius: 8px; border: 1px solid #00A2FF;">
+                    <div class="game-stadium-card">
                         <h4>Sút Phạt Penalty</h4>
-                        <p style="margin: 10px 0;">Sút đền vượt thủ môn nhận ngay +60 XP.</p>
-                        <button class="btn-primary" onclick="playPenalty('Trái')">Sút Trái</button>
-                        <button class="btn-primary" onclick="playPenalty('Giữa')">Sút Giữa</button>
-                        <button class="btn-primary" onclick="playPenalty('Phải')">Sút Phải</button>
-                        <div id="penaltyResult" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                        <p style="margin: 12px 0;">Sút đền hiểm hóc vượt thủ môn nhận +60 XP.</p>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn-primary" onclick="playPenalty('Trái')">Sút Trái</button>
+                            <button class="btn-primary" onclick="playPenalty('Giữa')">Sút Giữa</button>
+                            <button class="btn-primary" onclick="playPenalty('Phải')">Sút Phải</button>
+                        </div>
+                        <div id="penaltyResult" style="margin-top: 12px; font-weight: 700; color: var(--accent-green);"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 7. Thống kê & Giấy chứng nhận -->
+        <!-- 7. Thống kê & Chứng nhận -->
         <div id="pane-stats" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">THỐNG KÊ TIẾN ĐỘ & GIẤY CHỨNG NHẬN ĐÃ ĐẠT</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">THỐNG KÊ TIẾN ĐỘ & BẢNG VÀNG GIẤY CHỨNG NHẬN</h3>
                 <div id="statsSummary" style="line-height: 1.8; font-size: 16px;">Đang tải thông số thống kê...</div>
             </div>
         </div>
@@ -234,7 +472,7 @@
         <!-- 8. Cài đặt điểm mong muốn -->
         <div id="pane-settings" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
                 <div class="form-group">
                     <label>Target Grade:</label>
                     <select id="setDiem">
@@ -250,14 +488,14 @@
                     </select>
                 </div>
                 <button class="btn-primary" onclick="saveSettings()">Lưu Cấu Hình Mục Tiêu</button>
-                <div id="settingsMsg" style="margin-top: 10px; font-weight: bold; color: #2ECC71;"></div>
+                <div id="settingsMsg" style="margin-top: 12px; font-weight: 700; color: var(--accent-green);"></div>
             </div>
         </div>
 
         <!-- 9. Sổ lỗi sai -->
         <div id="pane-notebook" class="section-pane">
             <div class="card">
-                <h3 style="color: #00FFCC; margin-bottom: 15px;">SỔ LỖI SAI BÀI KHÓ</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 20px;">SỔ LỖI SAI BÀI KHÓ</h3>
                 <div id="notebookList">Đang tải danh sách câu hỏi làm sai...</div>
             </div>
         </div>
@@ -353,13 +591,25 @@
                 body: JSON.stringify({ questions: ieltsQuestions, answers: userAnswers, title: "Bài Thi IELTS" })
             });
             const r = await res.json();
+            
+            let certHtml = "";
+            if (r.certificate) {
+                certHtml = `
+                    <div class="cert-card">
+                        <h2>GIẤY CHỨNG NHẬN THÀNH TÍCH XUẤT SẮC</h2>
+                        <p style="font-size: 18px; color: #FFFFFF; margin: 10px 0;">Chứng nhận học sinh đã hoàn thành <b>${r.certificate.ten_bai_thi}</b> với kết quả <b>${r.score}/10 điểm (${r.percentage}%)</b></p>
+                        <p style="font-size: 15px; color: #00FFCC;">Ngày cấp: ${r.certificate.ngay_cap} | Mã chứng nhận: ${r.certificate.ma_so}</p>
+                    </div>
+                `;
+            }
+            document.getElementById('certContainer').innerHTML = certHtml;
             alert(`KẾT QUẢ TẬP THI IELTS:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nSố câu đúng: ${r.correct} / ${r.total}\nXếp loại: ${r.rating}\nPhần thưởng: +${r.xp_reward} XP!`);
         }
 
         async function loadStudyContent() {
             const lop = document.getElementById('selLopHoc').value;
             const mon = document.getElementById('selMonHoc').value;
-            document.getElementById('studyContentDisplay').innerText = `Bài học cốt lõi môn ${mon} (${lop}): 1. Kiến thức cơ bản | 2. Các phép tính nâng cao | 3. Phương pháp tư duy logic | 4. Bài tập thực hành | 5. Tổng kết bài học.`;
+            document.getElementById('studyContentDisplay').innerHTML = `<b>Nội dung học chi tiết môn ${mon} (${lop}):</b><br>1. Bài 1: Khái niệm & Định nghĩa cơ bản<br>2. Bài 2: Phương pháp giải các dạng toán trọng tâm<br>3. Bài 3: Phân tích ví dụ mẫu từng bước chi tiết<br>4. Bài 4: Luyện tập tự luận và trắc nghiệm tương tác<br>5. Bài 5: Tổng kết kiến thức & Kiểm tra 15 phút`;
         }
 
         async function generateAiExam() {
@@ -381,14 +631,14 @@
                 body: JSON.stringify({ mode: 'essay_grading', bai_lam: text })
             });
             const data = await res.json();
-            document.getElementById('aiGradingResult').innerText = `AI Nhận xét: ${data.grading.nhan_xet} (Điểm số: ${data.grading.diem_so}/10)`;
+            document.getElementById('aiGradingResult').innerText = `AI Nhận xét: ${data.grading.danh_gia_chung} (Điểm số: ${data.grading.diem_so}/10 - Số câu đúng: ${data.grading.so_cau_dung}/${data.grading.so_cau_dung + data.grading.so_cau_sai})`;
         }
 
         async function loadFormulas() {
             const mon = document.getElementById('selMonFormula').value;
             const res = await fetch(`/api/questions?skill=formula&mon=${encodeURIComponent(mon)}`);
             const d = await res.json();
-            document.getElementById('formulaDisplay').innerHTML = d.questions.map(f => `<div style="background-color: #001F3F; padding: 10px; margin-top: 8px; border-radius: 6px; border: 1px solid #00A2FF;"><b>${f.ten}:</b> ${f.cong_thuc}<br><small>${f.mo_ta}</small></div>`).join('');
+            document.getElementById('formulaDisplay').innerHTML = d.questions.map(f => `<div style="background-color: #001226; padding: 14px; margin-top: 10px; border-radius: 10px; border: 1.5px solid #00A2FF;"><b>${f.ten}:</b> ${f.cong_thuc}<br><small style="color: #E0E0E0;">${f.vi_du}</small></div>`).join('');
         }
 
         async function playMatch(type) {
@@ -398,12 +648,13 @@
                 body: JSON.stringify({ type: type })
             });
             const d = await res.json();
-            const text = `Kết quả trận đấu: ${d.match.doi_a} ${d.match.ty_so} ${d.match.doi_b}`;
+            const text = `Kết quả trận đấu: ${d.match.vong_info.ten} - Trận chiến kịch tính với ${d.match.vong_info.doi_thu}!`;
             if (type === 'world_cup') document.getElementById('resMatchWc').innerText = text;
             else document.getElementById('resMatchC1').innerText = text;
         }
 
-        function playRacing() { document.getElementById('resRacing').innerText = "Giải Đua Xe Siêu Cấp Roblox Grand Prix: Đang dẫn đầu Vòng 1!"; }
+        function playRacing() { document.getElementById('resRacing').innerText = "Giải Đua Xe Siêu Cấp Roblox Grand Prix: Đang tăng tốc với tốc độ 180km/h trên vạch đích!"; }
+        
         async function playWheel() {
             const res = await fetch('/api/games', {
                 method: 'POST',
@@ -427,7 +678,16 @@
         async function loadStats() {
             const res = await fetch('/api/settings');
             const d = await res.json();
-            document.getElementById('statsSummary').innerText = `Học sinh: ${d.user_name} | Roblox Level: ${d.rewards.level} | XP: ${d.rewards.xp} | Chuỗi Streak: ${d.progress.streak} ngày liên tiếp | Số Giấy Chứng Nhận: ${d.certificates.length}`;
+            document.getElementById('hdrUserName').innerText = d.user_name;
+            document.getElementById('hdrUserLevel').innerText = `Level ${d.rewards.level} | ${d.rewards.xp} XP`;
+
+            document.getElementById('statsSummary').innerHTML = `
+                <p><b>Tên học sinh:</b> ${d.user_name}</p>
+                <p><b>Roblox Level:</b> Level ${d.rewards.level} (${d.rewards.xp} Roblox XP)</p>
+                <p><b>Số Roblox Coin:</b> ${d.rewards.coin} Coins</p>
+                <p><b>Chuỗi ngày học Streak:</b> ${d.progress.streak} ngày liên tiếp</p>
+                <p><b>Số Giấy Chứng Nhận Đã Đạt:</b> ${d.certificates.length} chứng nhận</p>
+            `;
         }
 
         async function saveSettings() {
@@ -444,13 +704,16 @@
             const d = await res.json();
             const box = document.getElementById('notebookList');
             if (d.mistakes.length === 0) {
-                box.innerHTML = '<p style="color: #2ECC71; font-weight: bold;">Tuyệt vời! Bạn không có câu hỏi nào bị làm sai trong Sổ lỗi sai.</p>';
+                box.innerHTML = '<p style="color: var(--accent-green); font-weight: 700;">Tuyệt vời! Bạn không có câu hỏi nào bị làm sai trong Sổ lỗi sai.</p>';
             } else {
-                box.innerHTML = d.mistakes.map((m, i) => `<div style="background-color: #001F3F; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #E74C3C;"><b>Câu ${i+1}:</b> ${m.cau_hoi}<br><span style="color:#2ECC71;">Đáp án đúng: ${m.dap_an_dung}</span></div>`).join('');
+                box.innerHTML = d.mistakes.map((m, i) => `<div style="background-color: #001226; padding: 14px; margin-bottom: 10px; border-radius: 10px; border: 1.5px solid #E74C3C;"><b>Câu ${i+1}:</b> ${m.cau_hoi}<br><span style="color:var(--accent-green);">Đáp án đúng: ${m.dap_an_dung}</span></div>`).join('');
             }
         }
 
-        window.onload = loadIeltsQuestions;
+        window.onload = () => {
+            loadIeltsQuestions();
+            loadStats();
+        };
     </script>
 </body>
 </html>
