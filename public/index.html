@@ -271,7 +271,16 @@
         .cert-card h2 { color: #FFD700; font-size: 24px; margin-bottom: 10px; }
     </style>
 </head>
-<body>
+<body onclick="enableAudioOnUserInteraction()">
+    <!-- Audio Elements for Background Music and Effects -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="/am_thanh_cache/Piano%20Sunrise%20(1).mp3" type="audio/mpeg">
+        <source src="/am_thanh_cache/nhac_nen.wav" type="audio/wav">
+    </audio>
+    <audio id="clickSfx" preload="auto">
+        <source src="/am_thanh_cache/dap_an.wav" type="audio/wav">
+    </audio>
+
     <div class="container">
         <!-- Header Bar -->
         <div class="header-bar">
@@ -279,9 +288,10 @@
                 <h1>SIÊU CLUB HỌC TẬP & TẬP THI IELTS</h1>
                 <p>Bản Gốc Đầy Đủ 16 Màn Hình: Học Tập, Gemini AI, World Cup, Cúp C1, Đua Xe & IELTS</p>
             </div>
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button id="btnToggleMusic" class="btn-primary" style="font-size: 13px; padding: 6px 12px;" onclick="toggleBgMusic()">Tắt Nhạc Nền</button>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <label style="font-size: 13px;">Âm lượng nhạc nền:</label>
+                    <label style="font-size: 13px;">Âm lượng 30%:</label>
                     <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 80px;" onchange="setVolume(this.value)">
                     <span id="volVal" style="font-size: 13px; font-weight: 700;">30%</span>
                 </div>
@@ -320,7 +330,7 @@
             <div class="card" style="text-align: center;">
                 <img src="/hinh_anh_3d/trang_chao_mung_3d.png" alt="Chào mừng" style="max-height: 220px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0, 162, 255, 0.5));" onerror="this.style.display='none'">
                 <h2 style="color: var(--accent-cyan); font-size: 26px; margin-bottom: 12px;">CHÀO MỪNG EM ĐẾN VỚI SIÊU CLUB HỌC TẬP!</h2>
-                <p style="font-size: 16px; max-width: 800px; margin: 0 auto 24px auto; line-height: 1.6;">Ứng dụng tích hợp 100% tất cả 16 phần tính năng từ bản Desktop: Học tập cốt lõi Lớp 1-12, Gemini AI sinh đề, Đấu trường Thể thao World Cup, Cúp C1, Đua xe Grand Prix và Tập Thi IELTS.</p>
+                <p style="font-size: 16px; max-width: 800px; margin: 0 auto 24px auto; line-height: 1.6;">Ứng dụng phát nhạc nền Piano Sunrise 30% thư giãn, tích hợp 100% tất cả 16 phần tính năng từ bản Desktop: Học tập cốt lõi Lớp 1-12, Gemini AI sinh đề, Đấu trường Thể thao World Cup, Cúp C1, Đua xe Grand Prix và Tập Thi IELTS.</p>
                 <div style="display: flex; gap: 14px; justify-content: center;">
                     <button class="btn-primary" style="font-size: 16px; padding: 14px 28px;" onclick="switchSection('hoc')">Bắt Đầu Học Ngay</button>
                     <button class="btn-secondary" style="font-size: 16px; padding: 14px 28px;" onclick="switchSection('ielts')">Tập Thi IELTS</button>
@@ -666,6 +676,62 @@
     </div>
 
     <script>
+        let isMusicPlaying = false;
+        let userHasInteracted = false;
+
+        function enableAudioOnUserInteraction() {
+            if (!userHasInteracted) {
+                userHasInteracted = true;
+                startBgMusic();
+            }
+        }
+
+        function startBgMusic() {
+            const bg = document.getElementById('bgMusic');
+            if (bg) {
+                bg.volume = 0.3;
+                bg.play().then(() => {
+                    isMusicPlaying = true;
+                    document.getElementById('btnToggleMusic').innerText = 'Tắt Nhạc Nền';
+                }).catch(e => {
+                    console.log("Audio autoplay prevented by browser:", e);
+                });
+            }
+        }
+
+        function toggleBgMusic() {
+            const bg = document.getElementById('bgMusic');
+            const btn = document.getElementById('btnToggleMusic');
+            if (!bg) return;
+
+            if (isMusicPlaying) {
+                bg.pause();
+                isMusicPlaying = false;
+                btn.innerText = 'Phát Nhạc Nền';
+            } else {
+                bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
+                bg.play();
+                isMusicPlaying = true;
+                btn.innerText = 'Tắt Nhạc Nền';
+            }
+        }
+
+        function setVolume(v) {
+            document.getElementById('volVal').innerText = v + '%';
+            const bg = document.getElementById('bgMusic');
+            if (bg) {
+                bg.volume = parseFloat(v) / 100;
+            }
+        }
+
+        function playClickSfx() {
+            const sfx = document.getElementById('clickSfx');
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(() => {});
+            }
+        }
+
         let currentIeltsSkill = 'tu_vung';
         let ieltsQuestions = [];
         let ieltsIndex = 0;
@@ -684,11 +750,8 @@
         let tourScoreOpponent = 0;
         let tourTypeCurrent = 'world_cup';
 
-        function setVolume(v) {
-            document.getElementById('volVal').innerText = v + '%';
-        }
-
         function switchSection(secId) {
+            playClickSfx();
             document.querySelectorAll('.section-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
@@ -750,6 +813,7 @@
                 btn.className = `option-btn ${opt === saved ? 'selected' : ''}`;
                 btn.innerText = opt;
                 btn.onclick = () => {
+                    playClickSfx();
                     userAnswers[ieltsIndex] = opt;
                     renderIeltsQuestion();
                 };
@@ -807,6 +871,7 @@
                 btn.className = 'option-btn';
                 btn.innerText = opt;
                 btn.onclick = () => {
+                    playClickSfx();
                     if (opt === q.dap_an_dung) {
                         btn.style.backgroundColor = '#2ECC71';
                         alert("ĐÚNG RỒI! Bạn nhận được +10 Roblox XP!");
@@ -855,6 +920,7 @@
                 btn.className = `option-btn ${opt === saved ? 'selected' : ''}`;
                 btn.innerText = opt;
                 btn.onclick = () => {
+                    playClickSfx();
                     examAnswers[examIndex] = opt;
                     renderExamQuestion();
                 };
@@ -942,6 +1008,7 @@
                 btn.className = 'option-btn';
                 btn.innerText = opt;
                 btn.onclick = () => {
+                    playClickSfx();
                     if (opt === q.dap_an_dung) {
                         tourScoreUser++;
                         alert("VÀOOO! Sút phạt thành công!");
@@ -957,6 +1024,7 @@
         }
 
         function startRaceGame() {
+            playClickSfx();
             alert("ROBLOX GRAND PRIX: Khởi động xe đua trên đường đua 1000m! Né tránh chướng ngại vật và thu thập Hộp Quà May Mắn để tăng tốc!");
         }
 
@@ -987,6 +1055,7 @@
         }
 
         async function spinWheelCanvas() {
+            playClickSfx();
             const res = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -997,6 +1066,7 @@
         }
 
         async function shootPenalty(dir) {
+            playClickSfx();
             const gk = document.getElementById('gkPos');
             const positions = { 'Trái': 'translateX(-40px)', 'Giữa': 'translateX(0)', 'Phải': 'translateX(40px)' };
             const gkDir = ['Trái', 'Giữa', 'Phải'][Math.floor(Math.random() * 3)];
@@ -1024,6 +1094,7 @@
         let flippedCards = [];
 
         function initMemoryCards() {
+            playClickSfx();
             const container = document.getElementById('memoryGridContainer');
             container.style.display = 'grid';
             container.innerHTML = '';
@@ -1040,6 +1111,7 @@
         }
 
         function flipMemoryCard(cardEl, item) {
+            playClickSfx();
             if (cardEl.classList.contains('flipped') || cardEl.classList.contains('matched') || flippedCards.length >= 2) return;
             cardEl.classList.add('flipped');
             cardEl.innerText = item.text;
@@ -1071,6 +1143,7 @@
         }
 
         function completeLesson() {
+            playClickSfx();
             alert("CHÚC MỪNG! Em đã hoàn thành bài học và nhận được +30 Roblox XP & Tăng 1 ngày Streak!");
         }
 

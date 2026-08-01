@@ -12,6 +12,10 @@
     {
       "src": "hinh_anh_3d/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "am_thanh_cache/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -22,6 +26,10 @@
     {
       "src": "/hinh_anh_3d/(.*)",
       "dest": "/hinh_anh_3d/$1"
+    },
+    {
+      "src": "/am_thanh_cache/(.*)",
+      "dest": "/am_thanh_cache/$1"
     },
     {
       "src": "/(.*)",
