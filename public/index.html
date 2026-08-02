@@ -37,7 +37,7 @@
             background-attachment: fixed;
         }
 
-        /* Rainbow Scrollbar */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FF6B00, #EC4899, #A855F7, #06B6D4, #10B981); border-radius: 6px; }
@@ -71,8 +71,6 @@
             justify-content: space-between;
             margin-bottom: 28px;
             animation: rainbowGlow 8s infinite alternate;
-            position: relative;
-            z-index: 100;
         }
 
         .header-title-box h1 {
@@ -141,8 +139,6 @@
             border-radius: 26px;
             border: 2px solid rgba(255, 255, 255, 0.2);
             margin-bottom: 28px;
-            position: relative;
-            z-index: 100;
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
         }
 
@@ -154,16 +150,11 @@
             font-weight: 800;
             border-radius: 18px;
             cursor: pointer !important;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             font-size: 14.5px;
-            position: relative;
-            z-index: 101 !important;
-            pointer-events: auto !important;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             user-select: none;
         }
-
-        .tab-btn * { pointer-events: none !important; }
 
         .tab-btn:nth-child(1) { background: linear-gradient(135deg, #06B6D4, #3B82F6); }
         .tab-btn:nth-child(2) { background: linear-gradient(135deg, #10B981, #059669); }
@@ -183,15 +174,13 @@
         .tab-btn:nth-child(16) { background: linear-gradient(135deg, #A855F7, #581C87); }
 
         .tab-btn:hover {
-            transform: translateY(-3px) scale(1.04);
-            filter: brightness(1.25);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            filter: brightness(1.2);
         }
 
         .tab-btn.active {
             border: 3px solid #FFFFFF;
-            box-shadow: 0 0 30px #FFFFFF;
-            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 25px #FFFFFF;
         }
 
         /* Glassmorphism Cards */
@@ -204,8 +193,6 @@
             padding: 32px;
             margin-bottom: 32px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            position: relative;
-            z-index: 10;
         }
 
         .form-group {
@@ -232,22 +219,17 @@
             background-color: #020617;
             color: #FFFFFF;
             border: 2px solid #06B6D4;
-            pointer-events: auto !important;
         }
 
         button {
             cursor: pointer !important;
-            transition: all 0.25s ease;
-            position: relative;
-            z-index: 200 !important;
-            pointer-events: auto !important;
+            transition: all 0.2s ease;
             font-family: var(--font-heading);
             font-weight: 900;
             user-select: none;
         }
 
-        button * { pointer-events: none !important; }
-        button:hover { transform: translateY(-3px) scale(1.03); filter: brightness(1.2); }
+        button:hover { transform: translateY(-2px); filter: brightness(1.2); }
 
         .btn-primary {
             background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
@@ -293,10 +275,7 @@
             font-size: 16.5px;
             font-weight: 700;
             cursor: pointer !important;
-            transition: all 0.25s ease;
-            position: relative;
-            z-index: 200 !important;
-            pointer-events: auto !important;
+            transition: all 0.2s ease;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
@@ -304,13 +283,11 @@
             user-select: none;
         }
 
-        .option-btn * { pointer-events: none !important; }
-
         .option-btn:hover {
             border-color: #06B6D4;
             background: rgba(6, 182, 212, 0.2);
             box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
-            transform: translateX(8px);
+            transform: translateX(6px);
         }
 
         .option-btn.selected {
@@ -319,7 +296,6 @@
             color: #FFFFFF;
             font-weight: 900;
             box-shadow: 0 0 35px rgba(6, 182, 212, 0.9);
-            transform: translateX(10px);
         }
 
         .option-badge {
@@ -334,6 +310,7 @@
             color: #FFFFFF;
             flex-shrink: 0;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            pointer-events: none;
         }
 
         .option-btn:nth-child(1) .option-badge { background: linear-gradient(135deg, #06B6D4, #0891B2); }
@@ -343,12 +320,7 @@
 
         .nav-actions { display: flex; justify-content: space-between; align-items: center; }
         .section-pane { display: none; }
-        .section-pane.active { display: block; animation: fadeIn 0.3s ease-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section-pane.active { display: block; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
@@ -372,11 +344,8 @@
             cursor: pointer !important;
             text-align: center;
             font-weight: 900;
-            pointer-events: auto !important;
             user-select: none;
         }
-
-        .team-badge-item * { pointer-events: none !important; }
 
         .team-badge-item:hover, .team-badge-item.active {
             border-color: #F59E0B;
@@ -398,10 +367,7 @@
             cursor: pointer !important;
             padding: 16px;
             user-select: none;
-            pointer-events: auto !important;
         }
-
-        .memory-card * { pointer-events: none !important; }
 
         .memory-card.flipped {
             background: linear-gradient(135deg, #06B6D4, #3B82F6);
@@ -463,22 +429,22 @@
 
         <!-- Navigation Tabs (16 Full Sections) -->
         <div class="nav-tabs">
-            <button class="tab-btn active" data-sec="menu">Menu Bắt Đầu</button>
-            <button class="tab-btn" data-sec="hoc">Nội Dung Học Tập</button>
-            <button class="tab-btn" data-sec="luyen">Luyện Tập Tương Tác</button>
-            <button class="tab-btn" data-sec="kiemtra">Kiểm Tra 15'-45'-Học Kỳ</button>
-            <button class="tab-btn" data-sec="ielts">Tập Thi IELTS</button>
-            <button class="tab-btn" data-sec="aitao">Gemini AI Sinh Đề</button>
-            <button class="tab-btn" data-sec="aicham">AI Chấm Bài Tự Luận</button>
-            <button class="tab-btn" data-sec="worldcup">Đấu Trường World Cup</button>
-            <button class="tab-btn" data-sec="c1">Cúp C1 Champions League</button>
-            <button class="tab-btn" data-sec="duaxe">Giải Đua Xe Grand Prix</button>
-            <button class="tab-btn" data-sec="minigames">Bộ 3 Minigames</button>
-            <button class="tab-btn" data-sec="formula">Sổ Tay Công Thức</button>
-            <button class="tab-btn" data-sec="notebook">Sổ Lỗi Sai Bài Khó</button>
-            <button class="tab-btn" data-sec="plan">Lịch Học & Streak</button>
-            <button class="tab-btn" data-sec="stats">Thống Kê & Bảng Vàng</button>
-            <button class="tab-btn" data-sec="settings">Cài Đặt Mục Tiêu</button>
+            <button class="tab-btn active" data-sec="menu" onclick="switchSection('menu', this)">Menu Bắt Đầu</button>
+            <button class="tab-btn" data-sec="hoc" onclick="switchSection('hoc', this)">Nội Dung Học Tập</button>
+            <button class="tab-btn" data-sec="luyen" onclick="switchSection('luyen', this)">Luyện Tập Tương Tác</button>
+            <button class="tab-btn" data-sec="kiemtra" onclick="switchSection('kiemtra', this)">Kiểm Tra 15'-45'-Học Kỳ</button>
+            <button class="tab-btn" data-sec="ielts" onclick="switchSection('ielts', this)">Tập Thi IELTS</button>
+            <button class="tab-btn" data-sec="aitao" onclick="switchSection('aitao', this)">Gemini AI Sinh Đề</button>
+            <button class="tab-btn" data-sec="aicham" onclick="switchSection('aicham', this)">AI Chấm Bài Tự Luận</button>
+            <button class="tab-btn" data-sec="worldcup" onclick="switchSection('worldcup', this)">Đấu Trường World Cup</button>
+            <button class="tab-btn" data-sec="c1" onclick="switchSection('c1', this)">Cúp C1 Champions League</button>
+            <button class="tab-btn" data-sec="duaxe" onclick="switchSection('duaxe', this)">Giải Đua Xe Grand Prix</button>
+            <button class="tab-btn" data-sec="minigames" onclick="switchSection('minigames', this)">Bộ 3 Minigames</button>
+            <button class="tab-btn" data-sec="formula" onclick="switchSection('formula', this)">Sổ Tay Công Thức</button>
+            <button class="tab-btn" data-sec="notebook" onclick="switchSection('notebook', this)">Sổ Lỗi Sai Bài Khó</button>
+            <button class="tab-btn" data-sec="plan" onclick="switchSection('plan', this)">Lịch Học & Streak</button>
+            <button class="tab-btn" data-sec="stats" onclick="switchSection('stats', this)">Thống Kê & Bảng Vàng</button>
+            <button class="tab-btn" data-sec="settings" onclick="switchSection('settings', this)">Cài Đặt Mục Tiêu</button>
         </div>
 
         <!-- 1. Menu Bắt Đầu -->
@@ -744,7 +710,7 @@
                 <div class="grid-3">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
-                        <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%; filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.6));"></canvas><br>
+                        <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%;"></canvas><br>
                         <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
                         <div id="wheelResult" style="margin-top: 16px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
                     </div>
@@ -862,25 +828,10 @@
         let raceSpeed = 0;
         let raceDistance = 0;
         let raceLives = 3;
-        let carLane = 1; // 0 = Left, 1 = Center, 2 = Right
+        let carLane = 1;
         let obstacles = [];
         let roadOffset = 0;
 
-        document.addEventListener('click', function(e) {
-            if (!userHasInteracted) {
-                userHasInteracted = true;
-                startBgMusic();
-            }
-
-            const tabBtn = e.target.closest('.tab-btn');
-            if (tabBtn) {
-                const secId = tabBtn.getAttribute('data-sec');
-                if (secId) switchSection(secId, tabBtn);
-                return;
-            }
-        });
-
-        // Keyboard Arrow Controls for Car Racing
         window.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowLeft') moveCarLane(0);
             if (e.key === 'ArrowUp') moveCarLane(1);
@@ -899,14 +850,16 @@
         }
 
         function startBgMusic() {
-            const bg = document.getElementById('bgMusic');
-            if (bg) {
-                bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
-                bg.play().then(() => {
-                    isMusicPlaying = true;
-                    document.getElementById('btnToggleMusic').innerText = 'Tắt Nhạc Nền';
-                }).catch(e => {});
-            }
+            try {
+                const bg = document.getElementById('bgMusic');
+                if (bg) {
+                    bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
+                    bg.play().then(() => {
+                        isMusicPlaying = true;
+                        document.getElementById('btnToggleMusic').innerText = 'Tắt Nhạc Nền';
+                    }).catch(e => {});
+                }
+            } catch(err) {}
         }
 
         function toggleBgMusic(e) {
@@ -956,31 +909,52 @@
         let tourTypeCurrent = 'world_cup';
 
         function switchSection(secId, btnEl) {
-            playClickSfx();
-            document.querySelectorAll('.section-pane').forEach(function(p) { p.classList.remove('active'); });
-            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-            
-            const targetPane = document.getElementById(`pane-${secId}`);
-            if (targetPane) targetPane.classList.add('active');
+            if (!userHasInteracted) {
+                userHasInteracted = true;
+                startBgMusic();
+            }
+
+            try { playClickSfx(); } catch(e) {}
+
+            const panes = document.querySelectorAll('.section-pane');
+            for (let i = 0; i < panes.length; i++) {
+                panes[i].classList.remove('active');
+                panes[i].style.display = 'none';
+            }
+
+            const btns = document.querySelectorAll('.tab-btn');
+            for (let i = 0; i < btns.length; i++) {
+                btns[i].classList.remove('active');
+            }
+
+            const targetPane = document.getElementById('pane-' + secId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+                targetPane.style.display = 'block';
+            }
 
             if (btnEl) {
                 btnEl.classList.add('active');
             } else {
-                const targetBtn = document.querySelector(`.tab-btn[data-sec="${secId}"]`);
-                if (targetBtn) targetBtn.classList.add('active');
+                const activeBtn = document.querySelector('.tab-btn[data-sec="' + secId + '"]');
+                if (activeBtn) activeBtn.classList.add('active');
             }
 
-            if (secId === 'ielts') loadIeltsQuestions();
-            if (secId === 'luyen') loadPracticeQuiz();
-            if (secId === 'hoc') loadStudyContent();
-            if (secId === 'formula') loadFormulas();
-            if (secId === 'minigames') drawWheelCanvas();
-            if (secId === 'worldcup') renderWcTeams();
-            if (secId === 'c1') renderC1Clubs();
-            if (secId === 'plan') loadPlan();
-            if (secId === 'stats') loadStats();
-            if (secId === 'notebook') loadNotebook();
-            if (secId === 'duaxe') initCanvasRaceGame();
+            try {
+                if (secId === 'ielts') loadIeltsQuestions();
+                if (secId === 'luyen') loadPracticeQuiz();
+                if (secId === 'hoc') loadStudyContent();
+                if (secId === 'formula') loadFormulas();
+                if (secId === 'minigames') drawWheelCanvas();
+                if (secId === 'worldcup') renderWcTeams();
+                if (secId === 'c1') renderC1Clubs();
+                if (secId === 'plan') loadPlan();
+                if (secId === 'stats') loadStats();
+                if (secId === 'notebook') loadNotebook();
+                if (secId === 'duaxe') initCanvasRaceGame();
+            } catch(err) {
+                console.error("Tab error:", err);
+            }
         }
 
         // CAR RACING ENGINE
@@ -1016,7 +990,6 @@
             roadOffset = (roadOffset + raceSpeed / 5) % 40;
             raceDistance = Math.min(1000, raceDistance + Math.round(raceSpeed / 30));
 
-            // Update DOM Stats
             document.getElementById('lblRaceSpeed').innerText = `Tốc độ: ${raceSpeed} km/h`;
             document.getElementById('lblRaceDistance').innerText = `Quãng đường: ${raceDistance}m / 1000m`;
             document.getElementById('lblRaceLives').innerText = `Số mạng: ${'❤️'.repeat(raceLives)}`;
@@ -1027,14 +1000,11 @@
                 return;
             }
 
-            // Draw Road Canvas
             ctx.clearRect(0, 0, 800, 380);
 
-            // Grass & Background
             ctx.fillStyle = '#0F291E';
             ctx.fillRect(0, 0, 800, 380);
 
-            // Road Perspective Trapezoid
             ctx.fillStyle = '#1E293B';
             ctx.beginPath();
             ctx.moveTo(250, 0);
@@ -1043,13 +1013,11 @@
             ctx.lineTo(50, 380);
             ctx.fill();
 
-            // Dynamic Road Lines
             ctx.strokeStyle = '#F59E0B';
             ctx.setLineDash([20, 20]);
             ctx.lineDashOffset = -roadOffset;
             ctx.lineWidth = 4;
 
-            // Lane Dividers
             ctx.beginPath();
             ctx.moveTo(350, 0);
             ctx.lineTo(280, 380);
@@ -1062,40 +1030,27 @@
 
             ctx.setLineDash([]);
 
-            // Draw Player Car
             const laneX = [180, 370, 560];
             const carX = laneX[carLane];
             const carY = 280;
 
-            // Player Car Body (Glowing Neon Red / Blue)
             ctx.fillStyle = '#06B6D4';
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#06B6D4';
             ctx.fillRect(carX, carY, 60, 80);
             ctx.fillStyle = '#020617';
             ctx.fillRect(carX + 10, carY + 15, 40, 30);
-            ctx.shadowBlur = 0;
 
-            // Spawn & Move Obstacles
             obstacles.forEach(obs => {
                 obs.y += raceSpeed / 8;
                 const obsX = laneX[obs.lane];
 
                 if (obs.type === 'block') {
                     ctx.fillStyle = '#EF4444';
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = '#EF4444';
                     ctx.fillRect(obsX + 5, obs.y, 50, 40);
-                    ctx.shadowBlur = 0;
                 } else {
                     ctx.fillStyle = '#F59E0B';
-                    ctx.shadowBlur = 12;
-                    ctx.shadowColor = '#F59E0B';
                     ctx.fillRect(obsX + 10, obs.y, 40, 40);
-                    ctx.shadowBlur = 0;
                 }
 
-                // Collision Detection
                 if (obs.y > 240 && obs.y < 340 && obs.lane === carLane) {
                     if (obs.type === 'block') {
                         raceLives--;
@@ -1103,7 +1058,7 @@
                         obs.y = 500;
                         if (raceLives <= 0) {
                             clearInterval(raceLoopInterval);
-                            alert("XE VÂẠT CẢN! Xe đua va chạm quá 3 lần. Nhấn Bắt Đầu để đua lại!");
+                            alert("XE VA CHẠM! Quá 3 lần va chạm. Nhấn Bắt Đầu để đua lại!");
                         }
                     } else if (obs.type === 'gift') {
                         obs.y = 500;
