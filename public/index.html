@@ -926,6 +926,11 @@
 
             try { playClickSfx(); } catch(e) {}
 
+            // Dung tro choi 3D dua xe neu nguoi dung chuyen sang sang muc khac
+            if (secId !== 'duaxe' && typeof isRace3DRunning !== 'undefined') {
+                isRace3DRunning = false;
+            }
+
             const panes = document.querySelectorAll('.section-pane');
             for (let i = 0; i < panes.length; i++) {
                 panes[i].classList.remove('active');
