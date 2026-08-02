@@ -44,7 +44,6 @@
 
         .container { max-width: 1260px; margin: 0 auto; position: relative; z-index: 10; }
 
-        /* Rainbow Shimmer Keyframes */
         @keyframes shimmerRainbow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -703,10 +702,10 @@
             </div>
         </div>
 
-        <!-- 10. Giải Đua Xe Grand Prix -->
+        <!-- 10. Màn Hình Trò Chơi Đua Xe 3D Canvas Interaktive -->
         <div id="pane-duaxe" class="section-pane">
             <div class="card">
-                <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">GIẢI ĐUA XE SIÊU CẤP ROBLOX GRAND PRIX (1000m)</h3>
+                <h3 style="color: #06B6D4; margin-bottom: 20px; font-size: 25px; font-weight: 900;">GIẢI ĐUA XE SIÊU CẤP ROBLOX GRAND PRIX (1000m)</h3>
                 <div class="form-group">
                     <label>Mức độ đường đua:</label>
                     <select id="selRacingMode">
@@ -714,10 +713,26 @@
                         <option value="Bình thường (50/50)" selected>Bình thường (50/50)</option>
                         <option value="Khó (30% Hộp quà / 70% Vật cản)">Khó (30% Hộp quà / 70% Vật cản)</option>
                     </select>
-                    <button class="btn-primary" onclick="startRaceGame()">Bắt Đầu Đua Xe 1000m</button>
+                    <button class="btn-primary" onclick="initCanvasRaceGame()">Bắt Đầu Đua Xe 3D Ngay</button>
                 </div>
-                <div id="raceTrackDisplay" style="margin-top: 22px; background: #020617; padding: 28px; border-radius: 22px; border: 2.5px solid #10B981; font-size: 17.5px; font-weight: 800; color: #10B981;">
-                    Tốc độ xe đua: 0 km/h | Quãng đường: 0m / 1000m | Số mạng: 3 tim.
+
+                <!-- Live 3D Race Canvas -->
+                <div id="raceGameCanvasBox" style="position: relative; background: #020617; border: 3px solid #06B6D4; border-radius: 22px; overflow: hidden; margin-top: 20px;">
+                    <div class="nav-actions" style="padding: 16px 24px; background: rgba(15, 23, 42, 0.9); border-bottom: 2px solid #06B6D4;">
+                        <span id="lblRaceSpeed" style="font-weight: 900; font-size: 18px; color: #06B6D4;">Tốc độ: 0 km/h</span>
+                        <span id="lblRaceDistance" style="font-weight: 900; font-size: 18px; color: #F59E0B;">Quãng đường: 0m / 1000m</span>
+                        <span id="lblRaceLives" style="font-weight: 900; font-size: 18px; color: #EF4444;">Số mạng: 3 tim</span>
+                    </div>
+
+                    <canvas id="canvasRacing3D" width="800" height="380" style="display: block; width: 100%; height: 380px; background: #070A13;"></canvas>
+
+                    <!-- In-Game Controls -->
+                    <div style="display: flex; gap: 14px; justify-content: center; padding: 18px; background: rgba(15, 23, 42, 0.9);">
+                        <button class="btn-secondary" onclick="moveCarLane(0)">Sang Làn Trái</button>
+                        <button class="btn-secondary" onclick="moveCarLane(1)">Vào Làn Giữa</button>
+                        <button class="btn-secondary" onclick="moveCarLane(2)">Sang Làn Phải</button>
+                        <button class="btn-primary" onclick="boostCarSpeed()">Tăng Tốc Turbo</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -729,7 +744,7 @@
                 <div class="grid-3">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
-                        <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%;"></canvas><br>
+                        <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%; filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.6));"></canvas><br>
                         <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
                         <div id="wheelResult" style="margin-top: 16px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
                     </div>
@@ -842,7 +857,15 @@
         let ieltsTimerInterval = null;
         let ieltsSecondsLeft = 900;
 
-        // BULLETPROOF EVENT DELEGATION FOR ALL CLICKS
+        // Interactive Car Racing Engine Variables
+        let raceLoopInterval = null;
+        let raceSpeed = 0;
+        let raceDistance = 0;
+        let raceLives = 3;
+        let carLane = 1; // 0 = Left, 1 = Center, 2 = Right
+        let obstacles = [];
+        let roadOffset = 0;
+
         document.addEventListener('click', function(e) {
             if (!userHasInteracted) {
                 userHasInteracted = true;
@@ -855,6 +878,14 @@
                 if (secId) switchSection(secId, tabBtn);
                 return;
             }
+        });
+
+        // Keyboard Arrow Controls for Car Racing
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') moveCarLane(0);
+            if (e.key === 'ArrowUp') moveCarLane(1);
+            if (e.key === 'ArrowRight') moveCarLane(2);
+            if (e.key === ' ') boostCarSpeed();
         });
 
         function playClickSfx() {
@@ -949,6 +980,144 @@
             if (secId === 'plan') loadPlan();
             if (secId === 'stats') loadStats();
             if (secId === 'notebook') loadNotebook();
+            if (secId === 'duaxe') initCanvasRaceGame();
+        }
+
+        // CAR RACING ENGINE
+        function initCanvasRaceGame() {
+            raceSpeed = 80;
+            raceDistance = 0;
+            raceLives = 3;
+            carLane = 1;
+            obstacles = [
+                { lane: 0, y: -100, type: 'block' },
+                { lane: 2, y: -300, type: 'gift' }
+            ];
+
+            if (raceLoopInterval) clearInterval(raceLoopInterval);
+            raceLoopInterval = setInterval(updateRaceFrame, 30);
+        }
+
+        function moveCarLane(l) {
+            playClickSfx();
+            carLane = l;
+        }
+
+        function boostCarSpeed() {
+            playClickSfx();
+            raceSpeed = Math.min(220, raceSpeed + 30);
+        }
+
+        function updateRaceFrame() {
+            const canvas = document.getElementById('canvasRacing3D');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            roadOffset = (roadOffset + raceSpeed / 5) % 40;
+            raceDistance = Math.min(1000, raceDistance + Math.round(raceSpeed / 30));
+
+            // Update DOM Stats
+            document.getElementById('lblRaceSpeed').innerText = `Tốc độ: ${raceSpeed} km/h`;
+            document.getElementById('lblRaceDistance').innerText = `Quãng đường: ${raceDistance}m / 1000m`;
+            document.getElementById('lblRaceLives').innerText = `Số mạng: ${'❤️'.repeat(raceLives)}`;
+
+            if (raceDistance >= 1000) {
+                clearInterval(raceLoopInterval);
+                alert("CHÚC MỪNG! Bạn đã hoàn thành 1000m Đua Xe Siêu Cấp Roblox và nhận được +300 XP!");
+                return;
+            }
+
+            // Draw Road Canvas
+            ctx.clearRect(0, 0, 800, 380);
+
+            // Grass & Background
+            ctx.fillStyle = '#0F291E';
+            ctx.fillRect(0, 0, 800, 380);
+
+            // Road Perspective Trapezoid
+            ctx.fillStyle = '#1E293B';
+            ctx.beginPath();
+            ctx.moveTo(250, 0);
+            ctx.lineTo(550, 0);
+            ctx.lineTo(750, 380);
+            ctx.lineTo(50, 380);
+            ctx.fill();
+
+            // Dynamic Road Lines
+            ctx.strokeStyle = '#F59E0B';
+            ctx.setLineDash([20, 20]);
+            ctx.lineDashOffset = -roadOffset;
+            ctx.lineWidth = 4;
+
+            // Lane Dividers
+            ctx.beginPath();
+            ctx.moveTo(350, 0);
+            ctx.lineTo(280, 380);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(450, 0);
+            ctx.lineTo(520, 380);
+            ctx.stroke();
+
+            ctx.setLineDash([]);
+
+            // Draw Player Car
+            const laneX = [180, 370, 560];
+            const carX = laneX[carLane];
+            const carY = 280;
+
+            // Player Car Body (Glowing Neon Red / Blue)
+            ctx.fillStyle = '#06B6D4';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#06B6D4';
+            ctx.fillRect(carX, carY, 60, 80);
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(carX + 10, carY + 15, 40, 30);
+            ctx.shadowBlur = 0;
+
+            // Spawn & Move Obstacles
+            obstacles.forEach(obs => {
+                obs.y += raceSpeed / 8;
+                const obsX = laneX[obs.lane];
+
+                if (obs.type === 'block') {
+                    ctx.fillStyle = '#EF4444';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#EF4444';
+                    ctx.fillRect(obsX + 5, obs.y, 50, 40);
+                    ctx.shadowBlur = 0;
+                } else {
+                    ctx.fillStyle = '#F59E0B';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = '#F59E0B';
+                    ctx.fillRect(obsX + 10, obs.y, 40, 40);
+                    ctx.shadowBlur = 0;
+                }
+
+                // Collision Detection
+                if (obs.y > 240 && obs.y < 340 && obs.lane === carLane) {
+                    if (obs.type === 'block') {
+                        raceLives--;
+                        raceSpeed = Math.max(40, raceSpeed - 40);
+                        obs.y = 500;
+                        if (raceLives <= 0) {
+                            clearInterval(raceLoopInterval);
+                            alert("XE VÂẠT CẢN! Xe đua va chạm quá 3 lần. Nhấn Bắt Đầu để đua lại!");
+                        }
+                    } else if (obs.type === 'gift') {
+                        obs.y = 500;
+                        raceSpeed = Math.min(220, raceSpeed + 40);
+                        alert("BẠN VỪA ĂN HỘP QUÀ MAY MẮN! +50 XP và Tăng tốc Turbo!");
+                    }
+                }
+
+                if (obs.y > 400) {
+                    obs.y = -100 - Math.random() * 200;
+                    obs.lane = Math.floor(Math.random() * 3);
+                    obs.type = Math.random() > 0.4 ? 'block' : 'gift';
+                }
+            });
         }
 
         function setIeltsSkill(sk) {
@@ -1269,11 +1438,6 @@
                 };
                 container.appendChild(btn);
             });
-        }
-
-        function startRaceGame() {
-            playClickSfx();
-            alert("ROBLOX GRAND PRIX: Khởi động xe đua trên đường đua 1000m! Né tránh chướng ngại vật và thu thập Hộp Quà May Mắn để tăng tốc!");
         }
 
         function drawWheelCanvas() {
