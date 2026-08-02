@@ -3,34 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIÊU CLUB HỌC TẬP - Đồ Họa Đỉnh Cao Glassmorphism 3D</title>
+    <title>SIÊU CLUB HỌC TẬP - Đồ Họa Đỉnh Cao Glassmorphism 3D Cyberpunk</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #030712 0%, #0B1528 40%, #0F1E36 100%);
-            --card-bg: rgba(11, 25, 44, 0.75);
-            --card-bg-hover: rgba(15, 30, 54, 0.85);
-            --card-border: rgba(0, 240, 255, 0.4);
-            --card-border-glow: #00F0FF;
-            --accent-cyan: #00F0FF;
-            --accent-green: #00FF88;
-            --accent-purple: #9D4EDD;
-            --accent-pink: #FF2E93;
-            --accent-gold: #FFD700;
-            --accent-red: #FF3366;
-            --text-main: #FFFFFF;
-            --text-sub: #CBD5E1;
-            --font-main: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --bg-body: #020617;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1E1B4B 0%, #0F172A 50%, #020617 100%);
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-bg-hover: rgba(30, 41, 59, 0.85);
+            --card-border: rgba(56, 189, 248, 0.35);
+            --card-border-glow: #38BDF8;
+            --accent-cyan: #38BDF8;
+            --accent-blue: #3B82F6;
+            --accent-green: #10B981;
+            --accent-purple: #A855F7;
+            --accent-pink: #EC4899;
+            --accent-gold: #F59E0B;
+            --accent-red: #EF4444;
+            --text-main: #F8FAFC;
+            --text-sub: #94A3B8;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: var(--font-main);
-            background: var(--bg-gradient);
+            font-family: var(--font-body);
+            background: var(--bg-body);
+            background-image: var(--bg-gradient);
             color: var(--text-main);
             min-height: 100vh;
             padding: 24px;
@@ -38,77 +42,90 @@
             background-attachment: fixed;
         }
 
-        /* Custom Animated Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #030712; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #00F0FF, #9D4EDD); border-radius: 4px; }
+        /* Animated Glowing Scrollbar */
+        ::-webkit-scrollbar { width: 9px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #38BDF8, #A855F7); border-radius: 6px; }
 
-        .container { max-width: 1240px; margin: 0 auto; }
+        .container { max-width: 1260px; margin: 0 auto; }
 
-        /* Ultra Premium Glassmorphism Header */
+        /* Breathtaking Glassmorphism Header */
         .header-bar {
-            background: rgba(11, 25, 44, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 2px solid var(--card-border);
-            border-radius: 24px;
-            padding: 22px 28px;
+            border-radius: 28px;
+            padding: 24px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
-            box-shadow: 0 12px 40px 0 rgba(0, 240, 255, 0.2);
+            margin-bottom: 28px;
+            box-shadow: 0 20px 60px -10px rgba(56, 189, 248, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
             position: relative;
             z-index: 100;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-bar:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 25px 70px -10px rgba(56, 189, 248, 0.4);
         }
 
         .header-title-box h1 {
-            font-size: 26px;
+            font-family: var(--font-heading);
+            font-size: 28px;
             font-weight: 900;
             letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #00F0FF 0%, #00FF88 50%, #9D4EDD 100%);
+            background: linear-gradient(90deg, #38BDF8 0%, #10B981 40%, #A855F7 80%, #EC4899 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 6px;
             text-transform: uppercase;
+            filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.4));
         }
 
         .header-title-box p {
-            font-size: 14px;
+            font-size: 14.5px;
             color: var(--text-sub);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .profile-badge {
-            background: linear-gradient(135deg, rgba(15, 30, 54, 0.9), rgba(11, 25, 44, 0.9));
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
             border: 2px solid var(--accent-cyan);
-            border-radius: 20px;
-            padding: 10px 20px;
+            border-radius: 22px;
+            padding: 12px 22px;
             display: flex;
             align-items: center;
-            gap: 16px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            gap: 18px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.35), inset 0 0 15px rgba(56, 189, 248, 0.2);
+            transition: transform 0.3s ease;
         }
 
+        .profile-badge:hover { transform: scale(1.04); }
+
         .avatar-img {
-            width: 52px;
-            height: 52px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            border: 2.5px solid var(--accent-cyan);
+            border: 3px solid var(--accent-cyan);
             object-fit: cover;
-            background-color: #030712;
+            background-color: #020617;
+            box-shadow: 0 0 16px var(--accent-cyan);
         }
 
         .user-name {
+            font-family: var(--font-heading);
             font-weight: 800;
-            font-size: 16px;
+            font-size: 17px;
             color: var(--accent-cyan);
         }
 
         .user-level {
-            font-size: 13px;
+            font-size: 13.5px;
             color: var(--accent-green);
-            font-weight: 700;
+            font-weight: 800;
         }
 
         /* Navigation Bar Tabs */
@@ -116,27 +133,28 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            background: rgba(11, 25, 44, 0.6);
-            backdrop-filter: blur(16px);
-            padding: 14px;
-            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 16px;
+            border-radius: 24px;
             border: 1.5px solid var(--card-border);
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             position: relative;
             z-index: 100;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         }
 
         .tab-btn {
-            background: rgba(15, 30, 54, 0.8);
+            background: rgba(30, 41, 59, 0.8);
             color: var(--text-sub);
-            border: 1.5px solid rgba(0, 240, 255, 0.3);
-            padding: 10px 16px;
+            border: 1.5px solid rgba(56, 189, 248, 0.3);
+            padding: 11px 18px;
+            font-family: var(--font-heading);
             font-weight: 700;
-            border-radius: 14px;
+            border-radius: 16px;
             cursor: pointer !important;
-            transition: all 0.25s ease;
-            font-size: 13.5px;
-            font-family: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
             position: relative;
             z-index: 101 !important;
             pointer-events: auto !important;
@@ -145,46 +163,54 @@
         .tab-btn:hover {
             color: #FFFFFF;
             border-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.2);
-            transform: translateY(-2px);
+            background: rgba(56, 189, 248, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #00F0FF 0%, #0077FF 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #3B82F6 100%);
             color: #FFFFFF;
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.7);
-            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
         }
 
         /* Glassmorphism Dynamic Cards */
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 2px solid var(--card-border);
-            border-radius: 24px;
-            padding: 28px;
-            margin-bottom: 28px;
-            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+            border-radius: 28px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 10;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            background: var(--card-bg-hover);
+            border-color: rgba(56, 189, 248, 0.7);
+            box-shadow: 0 25px 60px rgba(56, 189, 248, 0.25);
         }
 
         .form-group {
             display: flex;
-            gap: 18px;
+            gap: 20px;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
-        label { font-weight: 800; font-size: 14px; color: #FFFFFF; }
+        label { font-family: var(--font-heading); font-weight: 800; font-size: 15px; color: #FFFFFF; }
 
         select, input, button, textarea {
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-size: 14.5px;
+            padding: 13px 20px;
+            border-radius: 14px;
+            font-size: 15px;
             font-weight: 700;
             border: none;
             outline: none;
@@ -192,46 +218,56 @@
         }
 
         select, input, textarea {
-            background-color: #030712;
+            background-color: #020617;
             color: #FFFFFF;
             border: 2px solid var(--card-border);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
             pointer-events: auto !important;
+            transition: border-color 0.25s ease;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
         }
 
         button {
             cursor: pointer !important;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 200 !important;
             pointer-events: auto !important;
+            font-family: var(--font-heading);
         }
 
-        button:hover { transform: translateY(-2px); filter: brightness(1.15); }
-        button:active { transform: translateY(0); }
+        button:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.2); }
+        button:active { transform: translateY(0) scale(0.98); }
 
         .btn-primary {
-            background: linear-gradient(135deg, #00F0FF 0%, #0077FF 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #3B82F6 100%);
             color: #FFFFFF;
-            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.45);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #00FF88 0%, #00B359 100%);
-            color: #030712;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #020617;
             font-weight: 900;
-            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
         }
 
         .btn-secondary {
-            background: rgba(15, 30, 54, 0.9);
+            background: rgba(30, 41, 59, 0.9);
             color: #FFFFFF;
             border: 1.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .question-title {
-            font-size: 20px;
+            font-family: var(--font-heading);
+            font-size: 21px;
             font-weight: 800;
-            margin-bottom: 22px;
+            margin-bottom: 24px;
             line-height: 1.6;
             color: #FFFFFF;
         }
@@ -239,120 +275,163 @@
         .options-group {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 16px;
+            margin-bottom: 30px;
         }
 
         .option-btn {
-            background-color: rgba(3, 7, 18, 0.8);
+            background-color: rgba(2, 6, 23, 0.85);
             border: 2px solid var(--card-border);
             color: #FFFFFF;
-            padding: 16px 22px;
+            padding: 18px 24px;
             text-align: left;
-            border-radius: 16px;
-            font-size: 15.5px;
+            border-radius: 18px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer !important;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 200 !important;
             pointer-events: auto !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
         .option-btn:hover {
             border-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.15);
-            transform: translateX(4px);
+            background: rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+            transform: translateX(8px);
         }
 
         .option-btn.selected {
-            background: linear-gradient(135deg, #00F0FF 0%, #0077FF 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #3B82F6 100%);
             border-color: var(--accent-green);
             color: #FFFFFF;
             font-weight: 800;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
-            transform: translateX(6px);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.8);
+            transform: translateX(10px);
+        }
+
+        .option-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.2);
+            border: 1.5px solid var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+
+        .option-btn.selected .option-badge {
+            background: #FFFFFF;
+            color: #3B82F6;
+            border-color: #FFFFFF;
         }
 
         .nav-actions { display: flex; justify-content: space-between; align-items: center; }
         .section-pane { display: none; }
-        .section-pane.active { display: block; animation: fadeIn 0.3s ease-out; }
+        .section-pane.active { display: block; animation: fadeIn 0.4s ease-out; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
-        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 18px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
 
         .game-stadium-card {
-            background: linear-gradient(135deg, #0B1528 0%, #0F2547 100%);
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
             border: 2px solid var(--accent-cyan);
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 24px;
+            padding: 28px;
             text-align: center;
+            box-shadow: 0 12px 35px rgba(56, 189, 248, 0.25);
+            transition: all 0.35s ease;
         }
 
-        .game-stadium-card h4 { font-size: 18px; color: var(--accent-cyan); margin-bottom: 12px; font-weight: 800; }
+        .game-stadium-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 45px rgba(56, 189, 248, 0.45);
+        }
+
+        .game-stadium-card h4 { font-family: var(--font-heading); font-size: 19px; color: var(--accent-cyan); margin-bottom: 14px; font-weight: 800; }
 
         .team-badge-item {
-            background: #030712;
+            background: #020617;
             border: 2px solid var(--card-border);
-            padding: 14px;
-            border-radius: 14px;
+            padding: 16px;
+            border-radius: 16px;
             cursor: pointer !important;
             text-align: center;
             font-weight: 800;
             pointer-events: auto !important;
+            transition: all 0.3s ease;
         }
 
         .team-badge-item:hover, .team-badge-item.active {
             border-color: var(--accent-cyan);
-            background: linear-gradient(135deg, #0F2547, #0077FF);
+            background: linear-gradient(135deg, #1E293B, #3B82F6);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
         }
 
         .memory-card {
-            height: 110px;
-            background: linear-gradient(135deg, #030712, #0F2547);
+            height: 115px;
+            background: linear-gradient(135deg, #020617, #1E293B);
             border: 2.5px solid var(--card-border);
-            border-radius: 16px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
+            font-size: 15.5px;
             font-weight: 800;
             text-align: center;
             cursor: pointer !important;
-            padding: 12px;
+            padding: 14px;
             user-select: none;
             pointer-events: auto !important;
+            transition: all 0.35s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
 
         .memory-card.flipped {
-            background: linear-gradient(135deg, #00F0FF, #0077FF);
+            background: linear-gradient(135deg, #38BDF8, #3B82F6);
             border-color: var(--accent-green);
             color: #FFFFFF;
         }
 
         .memory-card.matched {
-            background: linear-gradient(135deg, #00FF88, #00B359);
+            background: linear-gradient(135deg, #10B981, #059669);
             border-color: var(--accent-gold);
-            color: #030712;
+            color: #020617;
         }
 
         .cert-card {
-            background: linear-gradient(135deg, #0F1E36 0%, #1A2B4C 100%);
+            background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
             border: 4px solid var(--accent-gold);
-            border-radius: 24px;
-            padding: 30px;
+            border-radius: 28px;
+            padding: 36px;
             text-align: center;
-            box-shadow: 0 0 35px rgba(255, 215, 0, 0.5);
-            margin-top: 24px;
+            box-shadow: 0 0 45px rgba(245, 158, 11, 0.6);
+            margin-top: 28px;
+            animation: pulseGold 2s infinite alternate;
         }
 
-        .cert-card h2 { color: var(--accent-gold); font-size: 26px; margin-bottom: 12px; font-weight: 900; }
+        @keyframes pulseGold {
+            from { box-shadow: 0 0 30px rgba(245, 158, 11, 0.5); }
+            to { box-shadow: 0 0 55px rgba(245, 158, 11, 0.9); }
+        }
+
+        .cert-card h2 { font-family: var(--font-heading); color: var(--accent-gold); font-size: 28px; margin-bottom: 14px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -371,12 +450,12 @@
                 <h1>SIÊU CLUB HỌC TẬP & TẬP THI IELTS</h1>
                 <p>Bản Gốc Đầy Đủ 16 Màn Hình: Học Tập, Gemini AI, World Cup, Cúp C1, Đua Xe & IELTS</p>
             </div>
-            <div style="display: flex; align-items: center; gap: 18px;">
-                <button id="btnToggleMusic" class="btn-primary" style="font-size: 13.5px; padding: 8px 16px; border-radius: 12px;" onclick="toggleBgMusic(event)">Tắt Nhạc Nền</button>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <button id="btnToggleMusic" class="btn-primary" style="font-size: 14px; padding: 10px 18px; border-radius: 14px;" onclick="toggleBgMusic(event)">Tắt Nhạc Nền</button>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <label style="font-size: 13.5px;">Âm lượng 30%:</label>
-                    <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 85px;" onchange="setVolume(this.value)">
-                    <span id="volVal" style="font-size: 13.5px; font-weight: 800; color: var(--accent-cyan);">30%</span>
+                    <label style="font-size: 14px;">Âm lượng 30%:</label>
+                    <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 90px;" onchange="setVolume(this.value)">
+                    <span id="volVal" style="font-size: 14px; font-weight: 800; color: var(--accent-cyan);">30%</span>
                 </div>
                 <div class="profile-badge">
                     <img src="/hinh_anh_3d/roblox_anh_dai_dien_3d.png" alt="Avatar" class="avatar-img" onerror="this.src='/hinh_anh_3d/linh_vat_3d.png'">
@@ -411,12 +490,12 @@
         <!-- 1. Menu Bắt Đầu -->
         <div id="pane-menu" class="section-pane active">
             <div class="card" style="text-align: center;">
-                <img src="/hinh_anh_3d/trang_chao_mung_3d.png" alt="Chào mừng" style="max-height: 240px; margin-bottom: 24px; filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.6));" onerror="this.style.display='none'">
-                <h2 style="color: var(--accent-cyan); font-size: 28px; margin-bottom: 14px; font-weight: 900;">CHÀO MỪNG EM ĐẾN VỚI SIÊU CLUB HỌC TẬP!</h2>
-                <p style="font-size: 16.5px; max-width: 850px; margin: 0 auto 28px auto; line-height: 1.7; color: var(--text-sub);">Ứng dụng phát nhạc nền Piano Sunrise 30% thư giãn, tích hợp 100% tất cả 16 phần tính năng từ bản Desktop: Học tập cốt lõi Lớp 1-12, Gemini AI sinh đề, Đấu trường Thể thao World Cup, Cúp C1, Đua xe Grand Prix và Tập Thi IELTS.</p>
-                <div style="display: flex; gap: 18px; justify-content: center;">
-                    <button class="btn-primary" style="font-size: 17px; padding: 16px 32px; border-radius: 16px;" onclick="switchSection('hoc')">Bắt Đầu Học Ngay</button>
-                    <button class="btn-secondary" style="font-size: 17px; padding: 16px 32px; border-radius: 16px;" onclick="switchSection('ielts')">Tập Thi IELTS</button>
+                <img src="/hinh_anh_3d/trang_chao_mung_3d.png" alt="Chào mừng" style="max-height: 260px; margin-bottom: 26px; filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.7));" onerror="this.style.display='none'">
+                <h2 style="color: var(--accent-cyan); font-size: 30px; margin-bottom: 16px; font-weight: 900;">CHÀO MỪNG EM ĐẾN VỚI SIÊU CLUB HỌC TẬP!</h2>
+                <p style="font-size: 17px; max-width: 900px; margin: 0 auto 30px auto; line-height: 1.8; color: var(--text-sub);">Ứng dụng phát nhạc nền Piano Sunrise 30% thư giãn, tích hợp 100% tất cả 16 phần tính năng từ bản Desktop: Học tập cốt lõi Lớp 1-12, Gemini AI sinh đề, Đấu trường Thể thao World Cup, Cúp C1, Đua xe Grand Prix và Tập Thi IELTS.</p>
+                <div style="display: flex; gap: 20px; justify-content: center;">
+                    <button class="btn-primary" style="font-size: 18px; padding: 18px 36px; border-radius: 18px;" onclick="switchSection('hoc')">Bắt Đầu Học Ngay</button>
+                    <button class="btn-secondary" style="font-size: 18px; padding: 18px 36px; border-radius: 18px;" onclick="switchSection('ielts')">Tập Thi IELTS</button>
                 </div>
             </div>
         </div>
@@ -424,7 +503,7 @@
         <!-- 2. Nội Dung Học Tập Lớp 1-12 -->
         <div id="pane-hoc" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">NỘI DUNG HỌC TẬP & BÀI HỌC CỐT LÕI LỚP 1-12</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">NỘI DUNG HỌC TẬP & BÀI HỌC CỐT LÕI LỚP 1-12</h3>
                 <div class="form-group">
                     <label>Chọn Lớp:</label>
                     <select id="selLopHoc" onchange="loadStudyContent()">
@@ -442,17 +521,17 @@
                         <option value="Tiếng Anh">Tiếng Anh</option>
                     </select>
                 </div>
-                <div id="studyContentDisplay" style="background-color: #030712; border: 2px solid #00F0FF; padding: 24px; border-radius: 18px; margin-top: 14px; line-height: 1.8; font-size: 15.5px;">
+                <div id="studyContentDisplay" style="background-color: #020617; border: 2px solid #38BDF8; padding: 26px; border-radius: 20px; margin-top: 16px; line-height: 1.8; font-size: 16px; box-shadow: inset 0 0 25px rgba(56, 189, 248, 0.2);">
                     Chọn lớp và môn học để tải chi tiết bài học.
                 </div>
-                <button class="btn-success" style="margin-top: 18px; font-size: 15px; padding: 14px 28px;" onclick="completeLesson()">Đã Hoàn Thành Bài Học (+30 XP & Tăng Streak)</button>
+                <button class="btn-success" style="margin-top: 20px; font-size: 16px; padding: 16px 32px;" onclick="completeLesson()">Đã Hoàn Thành Bài Học (+30 XP & Tăng Streak)</button>
             </div>
         </div>
 
         <!-- 3. Luyện Tập Tương Tác -->
         <div id="pane-luyen" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">LUYỆN TẬP TƯƠNG TÁC THEO LỚP & MÔN HỌC</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">LUYỆN TẬP TƯƠNG TÁC THEO LỚP & MÔN HỌC</h3>
                 <div class="form-group">
                     <label>Lớp học:</label>
                     <select id="selLuyenLop" onchange="loadPracticeQuiz()">
@@ -464,17 +543,17 @@
                     </select>
                 </div>
 
-                <div class="nav-actions" style="margin-bottom: 18px;">
-                    <span id="lblLuyenProgress" style="font-weight: 800; font-size: 16px; color: var(--accent-cyan);">Câu 1 / 5</span>
-                    <span style="background-color: #030712; border: 1.5px solid var(--accent-green); padding: 6px 16px; border-radius: 12px; font-weight: 800; color: var(--accent-green);">Thưởng: +10 XP / câu</span>
+                <div class="nav-actions" style="margin-bottom: 20px;">
+                    <span id="lblLuyenProgress" style="font-weight: 800; font-size: 17px; color: var(--accent-cyan);">Câu 1 / 5</span>
+                    <span style="background-color: #020617; border: 1.5px solid var(--accent-green); padding: 8px 18px; border-radius: 14px; font-weight: 800; color: var(--accent-green);">Thưởng: +10 XP / câu</span>
                 </div>
 
                 <div class="question-title" id="lblLuyenQuestion">Đang tải bài luyện tập...</div>
                 <div class="options-group" id="luyenOptionsContainer"></div>
 
-                <div id="luyenSolutionBox" style="display: none; background-color: #030712; padding: 20px; border-radius: 16px; border: 2px solid var(--accent-cyan); margin-top: 18px; line-height: 1.7;"></div>
+                <div id="luyenSolutionBox" style="display: none; background-color: #020617; padding: 22px; border-radius: 18px; border: 2px solid var(--accent-cyan); margin-top: 20px; line-height: 1.8;"></div>
 
-                <div class="nav-actions" style="margin-top: 18px;">
+                <div class="nav-actions" style="margin-top: 20px;">
                     <button class="btn-secondary" onclick="prevPracticeQuestion()">Câu trước</button>
                     <button class="btn-secondary" onclick="nextPracticeQuestion()">Câu sau</button>
                     <button class="btn-primary" onclick="showPracticeSolution()">Xem Lời Giải Chi Tiết</button>
@@ -485,7 +564,7 @@
         <!-- 4. Kiểm Tra 15'-45'-Học Kỳ -->
         <div id="pane-kiemtra" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">BÀI KIỂM TRA 15 PHÚT - 45 PHÚT - THI HỌC KỲ</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">BÀI KIỂM TRA 15 PHÚT - 45 PHÚT - THI HỌC KỲ</h3>
                 <div class="form-group">
                     <label>Loại đề kiểm tra:</label>
                     <select id="selLoaiKiemTra">
@@ -497,9 +576,9 @@
                 </div>
 
                 <div id="examTestBox" style="display: none;">
-                    <div class="nav-actions" style="margin-bottom: 18px;">
-                        <span id="lblExamProgress" style="font-weight: 800; font-size: 16px; color: var(--accent-cyan);">Câu 1 / 10</span>
-                        <span id="lblExamTimer" style="background-color: #030712; border: 2px solid #00F0FF; padding: 6px 18px; border-radius: 14px; font-weight: 800; color: #00FFCC;">Thời gian: 45:00</span>
+                    <div class="nav-actions" style="margin-bottom: 20px;">
+                        <span id="lblExamProgress" style="font-weight: 800; font-size: 17px; color: var(--accent-cyan);">Câu 1 / 10</span>
+                        <span id="lblExamTimer" style="background-color: #020617; border: 2px solid #38BDF8; padding: 8px 20px; border-radius: 16px; font-weight: 800; color: #10B981; font-size: 17px;">Thời gian: 45:00</span>
                     </div>
 
                     <div class="question-title" id="lblExamQuestion">Nội dung câu hỏi...</div>
@@ -527,7 +606,7 @@
                         <option value="Band 7.5 - 8.5+">Band 7.5 - 8.5+ (Xuất sắc)</option>
                     </select>
                 </div>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 14px; flex-wrap: wrap;">
                     <button class="btn-primary" onclick="setIeltsSkill('tu_vung')">KT Từ Vựng</button>
                     <button class="btn-secondary" onclick="setIeltsSkill('ngu_phap')">Ngữ Pháp & Các Thì</button>
                     <button class="btn-secondary" onclick="setIeltsSkill('doc')">Đọc Hiểu Reading</button>
@@ -537,12 +616,12 @@
             </div>
 
             <div class="card">
-                <div class="nav-actions" style="margin-bottom: 20px;">
-                    <span id="lblIeltsProgress" style="font-weight: 800; font-size: 17px; color: var(--accent-cyan);">Câu 1 / 10</span>
-                    <span id="lblIeltsTimer" style="background-color: #030712; border: 2px solid #00F0FF; padding: 6px 18px; border-radius: 14px; font-weight: 800; color: #00FFCC;">Thời gian: 15:00</span>
+                <div class="nav-actions" style="margin-bottom: 22px;">
+                    <span id="lblIeltsProgress" style="font-weight: 800; font-size: 18px; color: var(--accent-cyan);">Câu 1 / 10</span>
+                    <span id="lblIeltsTimer" style="background-color: #020617; border: 2px solid #38BDF8; padding: 8px 20px; border-radius: 16px; font-weight: 800; color: #10B981; font-size: 17px;">Thời gian: 15:00</span>
                 </div>
 
-                <div id="audioControls" style="display: none; margin-bottom: 20px;">
+                <div id="audioControls" style="display: none; margin-bottom: 22px;">
                     <button class="btn-primary" onclick="speakAudio()">Phát Âm Thanh Nghe (Listen to Audio)</button>
                     <button class="btn-secondary" onclick="stopAudio()">Dừng Âm Thanh</button>
                 </div>
@@ -561,10 +640,10 @@
         <!-- 6. Gemini AI Sinh Đề -->
         <div id="pane-aitao" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
                 <div class="form-group">
                     <label>Gemini API Key:</label>
-                    <input type="password" id="txtApiKey" placeholder="Dùng Key hệ thống mặc định" style="width: 260px;">
+                    <input type="password" id="txtApiKey" placeholder="Dùng Key hệ thống mặc định" style="width: 280px;">
                     <label>Lớp:</label>
                     <select id="selAiLop">
                         <option value="Lớp 6" selected>Lớp 6</option><option value="Lớp 7">Lớp 7</option><option value="Lớp 8">Lớp 8</option><option value="Lớp 9">Lớp 9</option>
@@ -575,34 +654,34 @@
                     </select>
                     <button class="btn-primary" onclick="generateAiExam()">Sinh Đề AI Ngay</button>
                 </div>
-                <div id="aiStatus" style="font-weight: 800; margin-top: 14px; color: var(--accent-cyan); font-size: 16px;"></div>
+                <div id="aiStatus" style="font-weight: 800; margin-top: 16px; color: var(--accent-cyan); font-size: 16.5px;"></div>
             </div>
         </div>
 
         <!-- 7. AI Chấm Bài Tự Luận -->
         <div id="pane-aicham" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">AI CHẤM BÀI TỰ LUẬN & PHÂN TÍCH LỖI SAI (OCR & PHÂN TÍCH)</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">AI CHẤM BÀI TỰ LUẬN & PHÂN TÍCH LỖI SAI (OCR & PHÂN TÍCH)</h3>
                 <div class="form-group">
-                    <textarea id="txtAiBaiLam" placeholder="Dán bài làm tự luận hoặc quét ảnh bài giải vào đây..." style="width: 100%; height: 120px; border-radius: 16px;"></textarea>
-                    <button class="btn-primary" style="margin-top: 10px;" onclick="gradeEssayAi()">AI Chấm Bài Ngay</button>
+                    <textarea id="txtAiBaiLam" placeholder="Dán bài làm tự luận hoặc quét ảnh bài giải vào đây..." style="width: 100%; height: 130px; border-radius: 18px;"></textarea>
+                    <button class="btn-primary" style="margin-top: 12px;" onclick="gradeEssayAi()">AI Chấm Bài Ngay</button>
                 </div>
-                <div id="aiGradingResult" style="margin-top: 14px; background-color: #030712; padding: 20px; border-radius: 16px; border: 2px solid var(--accent-green); line-height: 1.7;"></div>
+                <div id="aiGradingResult" style="margin-top: 16px; background-color: #020617; padding: 22px; border-radius: 18px; border: 2px solid var(--accent-green); line-height: 1.8;"></div>
             </div>
         </div>
 
         <!-- 8. Đấu Trường World Cup -->
         <div id="pane-worldcup" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP TRI THỨC ROBLOX</h3>
-                <p style="margin-bottom: 18px; color: var(--text-sub);">Chọn Đội tuyển Quốc gia yêu thích của bạn và tranh Cúp Vô Địch World Cup qua 4 Vòng đấu Penalty:</p>
-                <div class="grid-4" id="wcTeamGrid" style="margin-bottom: 24px;"></div>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP TRI THỨC ROBLOX</h3>
+                <p style="margin-bottom: 20px; color: var(--text-sub);">Chọn Đội tuyển Quốc gia yêu thích của bạn và tranh Cúp Vô Địch World Cup qua 4 Vòng đấu Penalty:</p>
+                <div class="grid-4" id="wcTeamGrid" style="margin-bottom: 26px;"></div>
                 <button class="btn-primary" onclick="startTournament('world_cup')">Thi Đấu Vòng Bảng World Cup</button>
 
-                <div id="wcPlayBoard" style="display: none; margin-top: 24px; background: #030712; padding: 24px; border-radius: 20px; border: 2px solid var(--accent-cyan);">
-                    <div class="nav-actions" style="margin-bottom: 18px;">
-                        <h4 id="lblWcName" style="color: var(--accent-cyan); font-size: 18px;">Vòng Bảng World Cup</h4>
-                        <span id="lblWcScore" style="background: #0F2547; padding: 8px 18px; border-radius: 12px; font-weight: 800; color: #00FF88;">Tỷ số: 0 - 0</span>
+                <div id="wcPlayBoard" style="display: none; margin-top: 26px; background: #020617; padding: 26px; border-radius: 24px; border: 2px solid var(--accent-cyan);">
+                    <div class="nav-actions" style="margin-bottom: 20px;">
+                        <h4 id="lblWcName" style="color: var(--accent-cyan); font-size: 19px;">Vòng Bảng World Cup</h4>
+                        <span id="lblWcScore" style="background: #1E293B; padding: 8px 20px; border-radius: 14px; font-weight: 800; color: #10B981; font-size: 17px;">Tỷ số: 0 - 0</span>
                     </div>
                     <div class="question-title" id="lblWcQuestion">Câu hỏi penalty...</div>
                     <div class="options-group" id="wcOptionsContainer"></div>
@@ -613,15 +692,15 @@
         <!-- 9. Cúp C1 Champions League -->
         <div id="pane-c1" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">CÚP C1 CHAMPIONS LEAGUE CHÂU ÂU</h3>
-                <p style="margin-bottom: 18px; color: var(--text-sub);">Chọn Câu Lạc Bộ Châu Âu yêu thích của bạn để nâng Cúp Vô Địch C1:</p>
-                <div class="grid-4" id="c1ClubGrid" style="margin-bottom: 24px;"></div>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">CÚP C1 CHAMPIONS LEAGUE CHÂU ÂU</h3>
+                <p style="margin-bottom: 20px; color: var(--text-sub);">Chọn Câu Lạc Bộ Châu Âu yêu thích của bạn để nâng Cúp Vô Địch C1:</p>
+                <div class="grid-4" id="c1ClubGrid" style="margin-bottom: 26px;"></div>
                 <button class="btn-primary" onclick="startTournament('champions_league')">Thi Đấu Cúp C1 Champions League</button>
 
-                <div id="c1PlayBoard" style="display: none; margin-top: 24px; background: #030712; padding: 24px; border-radius: 20px; border: 2px solid var(--accent-cyan);">
-                    <div class="nav-actions" style="margin-bottom: 18px;">
-                        <h4 id="lblC1Name" style="color: var(--accent-cyan); font-size: 18px;">Vòng Bảng Cúp C1</h4>
-                        <span id="lblC1Score" style="background: #0F2547; padding: 8px 18px; border-radius: 12px; font-weight: 800; color: #00FF88;">Tỷ số: 0 - 0</span>
+                <div id="c1PlayBoard" style="display: none; margin-top: 26px; background: #020617; padding: 26px; border-radius: 24px; border: 2px solid var(--accent-cyan);">
+                    <div class="nav-actions" style="margin-bottom: 20px;">
+                        <h4 id="lblC1Name" style="color: var(--accent-cyan); font-size: 19px;">Vòng Bảng Cúp C1</h4>
+                        <span id="lblC1Score" style="background: #1E293B; padding: 8px 20px; border-radius: 14px; font-weight: 800; color: #10B981; font-size: 17px;">Tỷ số: 0 - 0</span>
                     </div>
                     <div class="question-title" id="lblC1Question">Câu hỏi penalty...</div>
                     <div class="options-group" id="c1OptionsContainer"></div>
@@ -632,7 +711,7 @@
         <!-- 10. Giải Đua Xe Grand Prix -->
         <div id="pane-duaxe" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">GIẢI ĐUA XE SIÊU CẤP ROBLOX GRAND PRIX (1000m)</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">GIẢI ĐUA XE SIÊU CẤP ROBLOX GRAND PRIX (1000m)</h3>
                 <div class="form-group">
                     <label>Mức độ đường đua:</label>
                     <select id="selRacingMode">
@@ -642,7 +721,7 @@
                     </select>
                     <button class="btn-primary" onclick="startRaceGame()">Bắt Đầu Đua Xe 1000m</button>
                 </div>
-                <div id="raceTrackDisplay" style="margin-top: 18px; background: #030712; padding: 24px; border-radius: 18px; border: 2px solid var(--card-border); font-size: 16px; font-weight: 700; color: var(--accent-green);">
+                <div id="raceTrackDisplay" style="margin-top: 20px; background: #020617; padding: 26px; border-radius: 20px; border: 2px solid var(--card-border); font-size: 16.5px; font-weight: 700; color: var(--accent-green);">
                     Tốc độ xe đua: 0 km/h | Quãng đường: 0m / 1000m | Số mạng: 3 tim.
                 </div>
             </div>
@@ -651,43 +730,43 @@
         <!-- 11. Bộ 3 Minigames -->
         <div id="pane-minigames" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 24px; font-size: 22px; font-weight: 800;">BỘ 3 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 26px; font-size: 24px; font-weight: 800;">BỘ 3 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
                 <div class="grid-3">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
-                        <canvas id="canvasWheel" width="180" height="180" style="margin: 12px 0; border-radius: 50%;"></canvas><br>
+                        <canvas id="canvasWheel" width="180" height="180" style="margin: 14px 0; border-radius: 50%;"></canvas><br>
                         <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
-                        <div id="wheelResult" style="margin-top: 12px; font-weight: 800; color: var(--accent-green); font-size: 15px;"></div>
+                        <div id="wheelResult" style="margin-top: 14px; font-weight: 800; color: var(--accent-green); font-size: 16px;"></div>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Sút Phạt Penalty</h4>
-                        <div style="margin: 18px 0;">
-                            <div style="width: 100%; height: 65px; border: 3px solid #FFF; background: rgba(255,255,255,0.08); position: relative; display: flex; justify-content: center; align-items: center; border-radius: 12px;">
-                                <div id="gkPos" style="width: 40px; height: 44px; background: #FFD700; border-radius: 8px; color: #000; font-weight: 900; font-size: 11px; display: flex; align-items: center; justify-content: center;">GK</div>
+                        <div style="margin: 20px 0;">
+                            <div style="width: 100%; height: 70px; border: 3px solid #FFF; background: rgba(255,255,255,0.08); position: relative; display: flex; justify-content: center; align-items: center; border-radius: 14px;">
+                                <div id="gkPos" style="width: 44px; height: 48px; background: #F59E0B; border-radius: 10px; color: #000; font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center;">GK</div>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 8px; justify-content: center;">
+                        <div style="display: flex; gap: 10px; justify-content: center;">
                             <button class="btn-primary" onclick="shootPenalty('Trái')">Sút Trái</button>
                             <button class="btn-primary" onclick="shootPenalty('Giữa')">Sút Giữa</button>
                             <button class="btn-primary" onclick="shootPenalty('Phải')">Sút Phải</button>
                         </div>
-                        <div id="penaltyResult" style="margin-top: 12px; font-weight: 800; color: var(--accent-green); font-size: 15px;"></div>
+                        <div id="penaltyResult" style="margin-top: 14px; font-weight: 800; color: var(--accent-green); font-size: 16px;"></div>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Lật Thẻ Trí Nhớ 3D</h4>
-                        <p style="margin: 12px 0; font-size: 13.5px; color: var(--text-sub);">Ghép đúng cặp thẻ từ vựng & công thức để nhận +100 XP.</p>
+                        <p style="margin: 14px 0; font-size: 14px; color: var(--text-sub);">Ghép đúng cặp thẻ từ vựng & công thức để nhận +100 XP.</p>
                         <button class="btn-primary" onclick="initMemoryCards()">Bắt Đầu Lật Thẻ</button>
-                        <div id="memoryResult" style="margin-top: 12px; font-weight: 800; color: var(--accent-green); font-size: 15px;"></div>
+                        <div id="memoryResult" style="margin-top: 14px; font-weight: 800; color: var(--accent-green); font-size: 16px;"></div>
                     </div>
                 </div>
-                <div id="memoryGridContainer" class="grid-4" style="display: none; margin-top: 24px; background: #030712; padding: 24px; border-radius: 20px; border: 2px solid var(--accent-cyan);"></div>
+                <div id="memoryGridContainer" class="grid-4" style="display: none; margin-top: 26px; background: #020617; padding: 26px; border-radius: 24px; border: 2px solid var(--accent-cyan);"></div>
             </div>
         </div>
 
         <!-- 12. Sổ Tay Công Thức -->
         <div id="pane-formula" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">SỔ TAY CÔNG THỨC TOÁN - LÝ - HÓA - SINH - TIN HỌC</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">SỔ TAY CÔNG THỨC TOÁN - LÝ - HÓA - SINH - TIN HỌC</h3>
                 <div class="form-group">
                     <label>Chọn Lớp:</label>
                     <select id="selFormulaLop" onchange="loadFormulas()">
@@ -709,7 +788,7 @@
         <!-- 13. Sổ Lỗi Sai Bài Khó -->
         <div id="pane-notebook" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">SỔ LỖI SAI BÀI KHÓ</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">SỔ LỖI SAI BÀI KHÓ</h3>
                 <div id="notebookList">Đang tải danh sách câu hỏi làm sai...</div>
             </div>
         </div>
@@ -717,26 +796,26 @@
         <!-- 14. Lịch Học & Streak -->
         <div id="pane-plan" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">LỊCH HỌC TẬP HÀNG NGÀY & CHUỖI STREAK NGỌN LỬA</h3>
-                <div id="planSummary" style="line-height: 1.9; font-size: 16px;">Đang tải kế hoạch học...</div>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">LỊCH HỌC TẬP HÀNG NGÀY & CHUỖI STREAK NGỌN LỬA</h3>
+                <div id="planSummary" style="line-height: 2; font-size: 16.5px;">Đang tải kế hoạch học...</div>
             </div>
         </div>
 
         <!-- 15. Thống Kê & Bảng Vàng -->
         <div id="pane-stats" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">THỐNG KÊ TIẾN ĐỘ & BẢNG VÀNG GIẤY CHỨNG NHẬN</h3>
-                <div id="statsSummary" style="line-height: 1.9; font-size: 16.5px;">Đang tải thông số thống kê...</div>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">THỐNG KÊ TIẾN ĐỘ & BẢNG VÀNG GIẤY CHỨNG NHẬN</h3>
+                <div id="statsSummary" style="line-height: 2; font-size: 17px;">Đang tải thông số thống kê...</div>
             </div>
         </div>
 
         <!-- 16. Cài Đặt Mục Tiêu & Avatar -->
         <div id="pane-settings" class="section-pane">
             <div class="card">
-                <h3 style="color: var(--accent-cyan); margin-bottom: 18px; font-size: 22px; font-weight: 800;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
+                <h3 style="color: var(--accent-cyan); margin-bottom: 20px; font-size: 24px; font-weight: 800;">CÀI ĐẶT ĐIỂM SỐ & BAND IELTS MONG MUỐN</h3>
                 <div class="form-group">
                     <label>Tên học sinh:</label>
-                    <input type="text" id="setUserName" placeholder="Nhập tên của em" style="width: 240px;">
+                    <input type="text" id="setUserName" placeholder="Nhập tên của em" style="width: 260px;">
                 </div>
                 <div class="form-group">
                     <label>Target Grade:</label>
@@ -753,7 +832,7 @@
                     </select>
                 </div>
                 <button class="btn-primary" onclick="saveSettings()">Lưu Cấu Hình Mục Tiêu</button>
-                <div id="settingsMsg" style="margin-top: 14px; font-weight: 800; color: var(--accent-green); font-size: 15.5px;"></div>
+                <div id="settingsMsg" style="margin-top: 16px; font-weight: 800; color: var(--accent-green); font-size: 16px;"></div>
             </div>
         </div>
     </div>
@@ -763,12 +842,11 @@
         let userHasInteracted = false;
 
         let examTimerInterval = null;
-        let examSecondsLeft = 2700; // 45 phut
+        let examSecondsLeft = 2700;
 
         let ieltsTimerInterval = null;
-        let ieltsSecondsLeft = 900; // 15 phut
+        let ieltsSecondsLeft = 900;
 
-        // Audio activation without blocking click bubbling
         window.addEventListener('click', function(e) {
             if (!userHasInteracted) {
                 userHasInteracted = true;
@@ -894,7 +972,7 @@
 
         function startIeltsTimer() {
             if (ieltsTimerInterval) clearInterval(ieltsTimerInterval);
-            ieltsSecondsLeft = 900; // 15 phut
+            ieltsSecondsLeft = 900;
             updateIeltsTimerDisplay();
             ieltsTimerInterval = setInterval(function() {
                 if (ieltsSecondsLeft > 0) {
@@ -938,10 +1016,12 @@
             container.innerHTML = '';
             const saved = userAnswers[ieltsIndex] || '';
 
-            q.dap_an.forEach(opt => {
+            q.dap_an.forEach((opt, idx) => {
+                const badgeLetters = ['A', 'B', 'C', 'D', 'E'];
+                const letter = badgeLetters[idx] || (idx + 1);
                 const btn = document.createElement('button');
                 btn.className = `option-btn ${opt === saved ? 'selected' : ''}`;
-                btn.innerText = opt;
+                btn.innerHTML = `<span class="option-badge">${letter}</span> <span>${opt}</span>`;
                 btn.onclick = () => {
                     playClickSfx();
                     userAnswers[ieltsIndex] = opt;
@@ -997,18 +1077,20 @@
             const container = document.getElementById('luyenOptionsContainer');
             container.innerHTML = '';
 
-            q.dap_an.forEach(opt => {
+            q.dap_an.forEach((opt, idx) => {
+                const badgeLetters = ['A', 'B', 'C', 'D', 'E'];
+                const letter = badgeLetters[idx] || (idx + 1);
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
-                btn.innerText = opt;
+                btn.innerHTML = `<span class="option-badge">${letter}</span> <span>${opt}</span>`;
                 btn.onclick = () => {
                     playClickSfx();
                     if (opt === q.dap_an_dung) {
-                        btn.style.backgroundColor = '#00FF88';
-                        btn.style.color = '#030712';
+                        btn.style.backgroundColor = '#10B981';
+                        btn.style.color = '#020617';
                         alert("ĐÚNG RỒI! Bạn nhận được +10 Roblox XP!");
                     } else {
-                        btn.style.backgroundColor = '#FF3366';
+                        btn.style.backgroundColor = '#EF4444';
                         alert(`Chưa chính xác! Đáp án đúng là: ${q.dap_an_dung}`);
                     }
                 };
@@ -1077,10 +1159,12 @@
             container.innerHTML = '';
             const saved = examAnswers[examIndex] || '';
 
-            q.dap_an.forEach(opt => {
+            q.dap_an.forEach((opt, idx) => {
+                const badgeLetters = ['A', 'B', 'C', 'D', 'E'];
+                const letter = badgeLetters[idx] || (idx + 1);
                 const btn = document.createElement('button');
                 btn.className = `option-btn ${opt === saved ? 'selected' : ''}`;
-                btn.innerText = opt;
+                btn.innerHTML = `<span class="option-badge">${letter}</span> <span>${opt}</span>`;
                 btn.onclick = () => {
                     playClickSfx();
                     examAnswers[examIndex] = opt;
@@ -1107,8 +1191,8 @@
                 certHtml = `
                     <div class="cert-card">
                         <h2>GIẤY CHỨNG NHẬN THÀNH TÍCH XUẤT SẮC</h2>
-                        <p style="font-size: 19px; color: #FFFFFF; margin: 12px 0;">Chứng nhận học sinh đã đạt kết quả xuất sắc <b>${r.score}/10 điểm (${r.percentage}%)</b></p>
-                        <p style="font-size: 15.5px; color: var(--accent-cyan);">Ngày cấp: ${r.certificate.ngay_cap} | Mã chứng nhận: ${r.certificate.ma_so}</p>
+                        <p style="font-size: 20px; color: #FFFFFF; margin: 14px 0;">Chứng nhận học sinh đã đạt kết quả xuất sắc <b>${r.score}/10 điểm (${r.percentage}%)</b></p>
+                        <p style="font-size: 16px; color: var(--accent-cyan);">Ngày cấp: ${r.certificate.ngay_cap} | Mã chứng nhận: ${r.certificate.ma_so}</p>
                     </div>
                 `;
             }
@@ -1166,10 +1250,12 @@
             const container = document.getElementById(boardContainer);
             container.innerHTML = '';
 
-            q.dap_an.forEach(opt => {
+            q.dap_an.forEach((opt, idx) => {
+                const badgeLetters = ['A', 'B', 'C', 'D', 'E'];
+                const letter = badgeLetters[idx] || (idx + 1);
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
-                btn.innerText = opt;
+                btn.innerHTML = `<span class="option-badge">${letter}</span> <span>${opt}</span>`;
                 btn.onclick = () => {
                     playClickSfx();
                     if (opt === q.dap_an_dung) {
@@ -1195,7 +1281,7 @@
             const canvas = document.getElementById('canvasWheel');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const colors = ['#00F0FF', '#00FF88', '#FFD700', '#FF3366', '#9D4EDD', '#0077FF'];
+            const colors = ['#38BDF8', '#10B981', '#F59E0B', '#EF4444', '#A855F7', '#3B82F6'];
             const labels = ['+50 XP', '+100 XP', '+150 XP', '+200 XP', 'Pet 3D', 'Hộp Quà'];
             
             ctx.clearRect(0, 0, 180, 180);
@@ -1206,7 +1292,7 @@
                 ctx.arc(90, 90, 85, i * Math.PI / 3, (i + 1) * Math.PI / 3);
                 ctx.fill();
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = '#030712';
+                ctx.strokeStyle = '#020617';
                 ctx.stroke();
 
                 ctx.save();
@@ -1339,7 +1425,7 @@
             const mon = document.getElementById('selMonFormula').value;
             const res = await fetch(`/api/questions?skill=formula&lop=${encodeURIComponent(lop)}&mon=${encodeURIComponent(mon)}`);
             const d = await res.json();
-            document.getElementById('formulaDisplay').innerHTML = d.questions.map(f => `<div style="background-color: #030712; padding: 16px; margin-top: 12px; border-radius: 14px; border: 1.5px solid var(--accent-cyan);"><b>${f.ten} (${f.lop} - ${f.mon}):</b> <span style="color: var(--accent-green); font-weight: 800;">${f.cong_thuc}</span><br><small style="color: var(--text-sub);">${f.vi_du}</small></div>`).join('');
+            document.getElementById('formulaDisplay').innerHTML = d.questions.map(f => `<div style="background-color: #020617; padding: 18px; margin-top: 14px; border-radius: 16px; border: 1.5px solid var(--accent-cyan);"><b>${f.ten} (${f.lop} - ${f.mon}):</b> <span style="color: var(--accent-green); font-weight: 800;">${f.cong_thuc}</span><br><small style="color: var(--text-sub);">${f.vi_du}</small></div>`).join('');
         }
 
         async function loadPlan() {
@@ -1348,8 +1434,8 @@
             const plan = d.study_plan;
             document.getElementById('planSummary').innerHTML = `
                 <p><b>Chuỗi Ngày Học Streak:</b> <span style="color: var(--accent-gold); font-weight: 900;">${plan.streak_ngay || 1} ngày liên tiếp</span> (Ngọn lửa Fire active)</p>
-                <p style="margin-top: 10px;"><b>Danh sách Mục tiêu hàng ngày:</b></p>
-                <ul style="margin-left: 20px;">
+                <p style="margin-top: 12px;"><b>Danh sách Mục tiêu hàng ngày:</b></p>
+                <ul style="margin-left: 24px;">
                     ${(plan.danh_sach_muc_tieu || []).map(m => `<li>[${m.hoan_thanh ? 'ĐÃ HOÀN THÀNH' : 'CHƯA HOÀN THÀNH'}] ${m.noi_dung} (+${m.xp} XP)</li>`).join('')}
                 </ul>
             `;
@@ -1392,9 +1478,9 @@
             const d = await res.json();
             const box = document.getElementById('notebookList');
             if (d.mistakes.length === 0) {
-                box.innerHTML = '<p style="color: var(--accent-green); font-weight: 800; font-size: 16px;">Tuyệt vời! Bạn không có câu hỏi nào bị làm sai trong Sổ lỗi sai.</p>';
+                box.innerHTML = '<p style="color: var(--accent-green); font-weight: 800; font-size: 17px;">Tuyệt vời! Bạn không có câu hỏi nào bị làm sai trong Sổ lỗi sai.</p>';
             } else {
-                box.innerHTML = d.mistakes.map((m, i) => `<div style="background-color: #030712; padding: 16px; margin-bottom: 12px; border-radius: 14px; border: 2px solid var(--accent-red);"><b>Câu ${i+1}:</b> ${m.cau_hoi}<br><span style="color:var(--accent-green); font-weight: 800;">Đáp án đúng: ${m.dap_an_dung}</span></div>`).join('');
+                box.innerHTML = d.mistakes.map((m, i) => `<div style="background-color: #020617; padding: 18px; margin-bottom: 14px; border-radius: 16px; border: 2px solid var(--accent-red);"><b>Câu ${i+1}:</b> ${m.cau_hoi}<br><span style="color:var(--accent-green); font-weight: 800;">Đáp án đúng: ${m.dap_an_dung}</span></div>`).join('');
             }
         }
 
