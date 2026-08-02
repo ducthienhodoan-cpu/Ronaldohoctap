@@ -1520,7 +1520,7 @@
         }
 
         async function generateAiExam() {
-            playClickSfx();
+            try { playClickSfx(); } catch(e) {}
             const statusBox = document.getElementById('aiStatus');
             const displayBox = document.getElementById('aiQuestionsDisplayBox');
             statusBox.innerText = "Đang kết nối Gemini AI Key để sinh đề tự động...";
@@ -1535,38 +1535,47 @@
                 const data = await res.json();
                 statusBox.innerText = `SINH ĐỀ THÀNH CÔNG! Đã tạo ${data.total} câu hỏi trắc nghiệm mới từ Gemini AI:`;
                 
-                // RENDER GENERATED QUESTIONS IMMEDIATELY
-                let questionsHtml = '';
                 (data.questions || []).forEach((q, qIdx) => {
-                    const badgeLetters = ['A', 'B', 'C', 'D'];
-                    const optionsHtml = q.dap_an.map((opt, oIdx) => `
-                        <button class="option-btn" onclick="checkAiQuestionAnswer(this, '${opt.replace(/'/g, "\\'")}', '${q.dap_an_dung.replace(/'/g, "\\'")}')">
-                            <span class="option-badge">${badgeLetters[oIdx] || (oIdx+1)}</span>
-                            <span>${opt}</span>
-                        </button>
-                    `).join('');
+                    const cardDiv = document.createElement('div');
+                    cardDiv.style.cssText = "background: rgba(2, 6, 23, 0.95); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 26px; margin-bottom: 24px;";
 
-                    questionsHtml += `
-                        <div style="background: rgba(2, 6, 23, 0.95); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 26px; margin-bottom: 24px;">
-                            <div class="question-title" style="font-size: 19px; color: #06B6D4;">Câu ${qIdx + 1}: ${q.cau_hoi}</div>
-                            <div class="options-group">${optionsHtml}</div>
-                            <div class="ai-solution" style="display: none; background: #0F172A; padding: 18px; border-radius: 16px; border: 2px solid #10B981; color: #10B981; line-height: 1.7; font-weight: 800;">
-                                <b>Lời giải chi tiết từ Gemini AI:</b> ${q.giai_thich || 'Đáp án đúng là: ' + q.dap_an_dung}
-                            </div>
-                        </div>
-                    `;
+                    const titleDiv = document.createElement('div');
+                    titleDiv.className = "question-title";
+                    titleDiv.style.cssText = "font-size: 19px; color: #06B6D4;";
+                    titleDiv.innerText = `Câu ${qIdx + 1}: ${q.cau_hoi}`;
+                    cardDiv.appendChild(titleDiv);
+
+                    const optionsGroup = document.createElement('div');
+                    optionsGroup.className = "options-group";
+
+                    const badgeLetters = ['A', 'B', 'C', 'D'];
+                    (q.dap_an || []).forEach((opt, oIdx) => {
+                        const btn = document.createElement('button');
+                        btn.className = "option-btn";
+                        btn.innerHTML = `<span class="option-badge">${badgeLetters[oIdx] || (oIdx+1)}</span> <span>${opt}</span>`;
+                        btn.onclick = function() {
+                            checkAiQuestionAnswer(btn, opt, q.dap_an_dung, solutionDiv);
+                        };
+                        optionsGroup.appendChild(btn);
+                    });
+                    cardDiv.appendChild(optionsGroup);
+
+                    const solutionDiv = document.createElement('div');
+                    solutionDiv.className = "ai-solution";
+                    solutionDiv.style.cssText = "display: none; background: #0F172A; padding: 18px; border-radius: 16px; border: 2px solid #10B981; color: #10B981; line-height: 1.7; font-weight: 800;";
+                    solutionDiv.innerHTML = `<b>Lời giải chi tiết từ Gemini AI:</b> ${q.giai_thich || 'Đáp án đúng là: ' + q.dap_an_dung}`;
+                    cardDiv.appendChild(solutionDiv);
+
+                    displayBox.appendChild(cardDiv);
                 });
-                displayBox.innerHTML = questionsHtml;
 
             } catch (err) {
                 statusBox.innerText = "Có lỗi kết nối Gemini AI. Đã sử dụng đề từ kho dự phòng sinh đề tự động!";
             }
         }
 
-        function checkAiQuestionAnswer(btnEl, selectedOpt, correctOpt) {
-            playClickSfx();
-            const parentCard = btnEl.closest('div[style*="background"]');
-            const solutionBox = parentCard.querySelector('.ai-solution');
+        function checkAiQuestionAnswer(btnEl, selectedOpt, correctOpt, solutionBox) {
+            try { playClickSfx(); } catch(e) {}
             
             if (selectedOpt === correctOpt) {
                 btnEl.style.backgroundColor = '#10B981';
@@ -1580,7 +1589,7 @@
         }
 
         async function gradeEssayAi() {
-            playClickSfx();
+            try { playClickSfx(); } catch(e) {}
             const text = document.getElementById('txtAiBaiLam').value;
             const res = await fetch('/api/ai-generate', {
                 method: 'POST',
@@ -1593,7 +1602,7 @@
                 <p><b>Đánh giá tổng quan:</b> ${data.grading.danh_gia_chung}</p>
                 <p><b>Điểm số tự luận:</b> <span style="color: #F59E0B; font-weight: 900; font-size: 19px;">${data.grading.diem_so} / 10 điểm</span></p>
                 <p><b>Phân tích câu làm đúng/sai:</b> Đúng ${data.grading.so_cau_dung} câu, Chưa đúng ${data.grading.so_cau_sai} câu</p>
-                <p style="margin-top: 10px; color: #06B6D4;"><b>Lời khuyên cải thiện:</b> Hộp tập lại công thức và đọc lại đề bài trước khi trình bày lời giải chi tiết.</p>
+                <p style="margin-top: 10px; color: #06B6D4;"><b>Lời khuyên cải thiện:</b> Ôn tập lại công thức và đọc lại đề bài trước khi trình bày lời giải chi tiết.</p>
             `;
         }
 
