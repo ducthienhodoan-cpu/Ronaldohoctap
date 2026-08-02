@@ -1,8 +1,8 @@
 // File: dua_xe_3d.js
-// Mo ta: Dong co tro choi Dua Xe Siêu Cấp 3D bang Three.js
+// Mo ta: Dong co tro choi Dua Xe Siêu Cấp 3D bang Three.js ho tro kiem tra va cham xuyen lan giua
 
 let raceScene3D, raceCamera3D, raceRenderer3D;
-let carMesh3D, carSpotLightLeft, carSpotLightRight;
+let carMesh3D;
 let roadGridMesh, obstacles3DGroup = [];
 let isRace3DRunning = false;
 
@@ -16,7 +16,7 @@ function khoi_tao_dua_xe_3d() {
     const canvas = document.getElementById('canvasRacing3D');
     if (!canvas || typeof THREE === 'undefined') return;
 
-    // Khoi tao Scene & Camera perspective 3D góc nhìn phía sau xe
+    // Khoi tao Scene & Camera perspective 3D goc nhin phia sau xe
     raceScene3D = new THREE.Scene();
     raceScene3D.background = new THREE.Color(0x070a13);
     raceScene3D.fog = new THREE.FogExp2(0x070a13, 0.025);
@@ -67,7 +67,7 @@ function khoi_tao_dua_xe_3d() {
     carMesh3D.position.set(laneXPositions3D[carLane3D], 0.6, 3);
     raceScene3D.add(carMesh3D);
 
-    // Khoi tao cac vat cản & hop qua 3D
+    // Khoi tao cac vat can & hop qua 3D
     resetVatCan3D();
 
     isRace3DRunning = true;
@@ -84,14 +84,14 @@ function tao_mo_hinh_xe_3d() {
     body.position.y = 0.35;
     carGroup.add(body);
 
-    // Ca bin / Kính xe
+    // Ca bin / Kinh xe
     const cabinGeo = new THREE.BoxGeometry(1.4, 0.5, 1.6);
     const cabinMat = new THREE.MeshStandardMaterial({ color: 0x020617, roughness: 0.1 });
     const cabin = new THREE.Mesh(cabinGeo, cabinMat);
     cabin.position.set(0, 0.85, -0.2);
     carGroup.add(cabin);
 
-    // Bánh xe 4 cái
+    // Banh xe 4 cai
     const wheelGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.3, 16);
     const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
     wheelGeo.rotateZ(Math.PI / 2);
@@ -109,7 +109,7 @@ function tao_mo_hinh_xe_3d() {
         carGroup.add(wheel);
     });
 
-    // Đèn pha 3D
+    // Den pha 3D
     const lightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const headLeft = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 0.1), lightMat);
     headLeft.position.set(-0.6, 0.4, -1.6);
@@ -165,12 +165,12 @@ function animateDuaXe3D() {
     requestAnimationFrame(animateDuaXe3D);
     if (!raceScene3D || !raceRenderer3D) return;
 
-    // Di chuyen xe mượt mà toi lane chọn
+    // Di chuyen xe muot ma toi lan chon
     const targetX = laneXPositions3D[carLane3D];
     carMesh3D.position.x += (targetX - carMesh3D.position.x) * 0.2;
     carMesh3D.rotation.z = (carMesh3D.position.x - targetX) * 0.08;
 
-    // Cuộn mặt đường
+    // Cuon mat duong
     const deltaZ = raceSpeed3D / 25;
     roadGridMesh.children.forEach(stripe => {
         stripe.position.z += deltaZ;
@@ -194,19 +194,23 @@ function animateDuaXe3D() {
         return;
     }
 
-    // Di chuyển vật cản & kiem tra va cham
+    // Di chuyen vat can & kiem tra va cham (Kiem tra toa do X thuc te bao gom ca khi chuyen lan xuyen qua lan giua)
     obstacles3DGroup.forEach(obs => {
         obs.mesh.position.z += deltaZ;
         if (obs.type === 'gift') {
             obs.mesh.rotation.y += 0.04;
         }
 
-        // Va cham voi xe ở khoảng z gần
-        if (Math.abs(obs.mesh.position.z - carMesh3D.position.z) < 1.4 && obs.lane === carLane3D) {
+        // Tinh khoang cach va cham thuc te theo 2 truc X va Z
+        const distZ = Math.abs(obs.mesh.position.z - carMesh3D.position.z);
+        const distX = Math.abs(obs.mesh.position.x - obs.mesh.position.x);
+
+        if (distZ < 1.6 && Math.abs(obs.mesh.position.x - carMesh3D.position.x) < 1.3) {
             if (obs.type === 'block') {
                 raceLives3D--;
                 raceSpeed3D = Math.max(40, raceSpeed3D - 40);
-                obs.mesh.position.z = 100; // Đẩy ra xa
+                obs.mesh.position.z = 100; // Day ra xa khi da va cham
+                alert("VA CHẠM VẬT CẢN! Xe chuyển làn đâm phải vật cản ở đường và bị trừ 1 mạng!");
                 if (raceLives3D <= 0) {
                     isRace3DRunning = false;
                     alert("XE VA CHẠM! Hết 3 mạng. Nhấn nút Bắt Đầu để đua lại!");
