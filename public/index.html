@@ -1485,7 +1485,16 @@
                 body: JSON.stringify({ type: 'penalty', direction: dir })
             });
             const d = await res.json();
-            document.getElementById('penaltyResult').innerText = `${d.result.thong_bao} (Thủ môn bay người sang ${gkDir})`;
+            const resBox = document.getElementById('penaltyResult');
+            if (resBox) {
+                if (d.result && d.result.vao) {
+                    resBox.style.color = '#10B981';
+                    resBox.innerHTML = `<span style="color: #10B981; font-weight: 900;">VÀOOO! ${d.result.thong_bao} (Thủ môn bay người sang ${gkDir})</span>`;
+                } else {
+                    resBox.style.color = '#EF4444';
+                    resBox.innerHTML = `<span style="color: #EF4444; font-weight: 900;">THỦ MÔN CẢN PHÁ THÀNH CÔNG! Thủ môn đã xuất sắc bắt gọn bóng ở ${gkDir}. Hãy thử sút góc khác ở lượt tiếp theo!</span>`;
+                }
+            }
         }
 
         let memoryCardsData = [
