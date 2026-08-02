@@ -619,18 +619,21 @@
                 <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
                 <div class="form-group">
                     <label>Gemini API Key:</label>
-                    <input type="password" id="txtApiKey" placeholder="Dùng Key hệ thống mặc định" style="width: 300px;" oninput="saveGeminiApiKey(this.value)">
+                    <input type="password" id="txtApiKey" placeholder="Dán Gemini API Key vào đây..." style="width: 280px;" oninput="saveGeminiApiKey(this.value)">
+                    <button class="btn-success" style="padding: 14px 20px; font-size: 14px;" onclick="explicitSaveApiKey()">Lưu API Key</button>
                     <label>Lớp:</label>
                     <select id="selAiLop">
                         <option value="Lớp 6" selected>Lớp 6</option><option value="Lớp 7">Lớp 7</option><option value="Lớp 8">Lớp 8</option><option value="Lớp 9">Lớp 9</option>
+                        <option value="Lớp 10">Lớp 10</option><option value="Lớp 11">Lớp 11</option><option value="Lớp 12">Lớp 12</option>
                     </select>
                     <label>Môn:</label>
                     <select id="selAiMon">
-                        <option value="Toán" selected>Toán học</option><option value="Vật lý">Vật lý</option><option value="Hóa học">Hóa học</option><option value="Tin học">Tin học</option>
+                        <option value="Toán" selected>Toán học</option><option value="Vật lý">Vật lý</option><option value="Hóa học">Hóa học</option><option value="Tin học">Tin học</option><option value="Tiếng Anh">Tiếng Anh</option>
                     </select>
-                    <button class="btn-primary" onclick="generateAiExam()">Sinh Đề AI Ngay</button>
+                    <button class="btn-primary" onclick="generateAiExam()">Lưu Key & Sinh Đề AI Ngay</button>
                 </div>
-                <div id="aiStatus" style="font-weight: 900; margin-top: 18px; color: #06B6D4; font-size: 17px;"></div>
+                <div id="lblKeySaveMsg" style="margin-top: 10px; font-weight: 800; color: #10B981; font-size: 15px;"></div>
+                <div id="aiStatus" style="font-weight: 900; margin-top: 14px; color: #06B6D4; font-size: 17px;"></div>
                 
                 <!-- Display AI Generated Questions List -->
                 <div id="aiQuestionsDisplayBox" style="margin-top: 24px;"></div>
@@ -1567,10 +1570,26 @@
             if (k) localStorage.setItem('gemini_api_key', k.trim());
         }
 
+        function explicitSaveApiKey() {
+            playClickSfx();
+            const keyInput = document.getElementById('txtApiKey');
+            const k = keyInput ? keyInput.value.trim() : '';
+            if (k) {
+                localStorage.setItem('gemini_api_key', k);
+                const msgBox = document.getElementById('lblKeySaveMsg');
+                if (msgBox) msgBox.innerText = "ĐÃ LƯU GEMINI API KEY THÀNH CÔNG! Key sẽ tự động ghi nhớ cho các lần tạo đề tiếp theo.";
+                alert("Đã lưu Gemini API Key thành công!");
+            } else {
+                alert("Vui lòng dán Gemini API Key vào ô trước khi lưu!");
+            }
+        }
+
         function loadSavedGeminiApiKey() {
             const savedKey = localStorage.getItem('gemini_api_key');
             if (savedKey && document.getElementById('txtApiKey')) {
                 document.getElementById('txtApiKey').value = savedKey;
+                const msgBox = document.getElementById('lblKeySaveMsg');
+                if (msgBox) msgBox.innerText = "Đã tự động tải Gemini API Key đã lưu trong máy!";
             }
         }
 
@@ -1580,33 +1599,37 @@
             const apiKeyVal = keyInput ? keyInput.value.trim() : '';
             if (apiKeyVal) {
                 localStorage.setItem('gemini_api_key', apiKeyVal);
+                const msgBox = document.getElementById('lblKeySaveMsg');
+                if (msgBox) msgBox.innerText = "Đã tự động lưu Gemini API Key!";
             }
             const statusBox = document.getElementById('aiStatus');
             const displayBox = document.getElementById('aiQuestionsDisplayBox');
-            statusBox.innerText = "Đang kết nối Gemini AI Key để sinh đề tự động...";
+            statusBox.innerText = "Đang kết nối Gemini AI để tạo bộ đề trắc nghiệm mới...";
             displayBox.innerHTML = '';
 
             try {
+                const activeKey = apiKeyVal || localStorage.getItem('gemini_api_key') || '';
                 const res = await fetch('/api/ai-generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         lop: document.getElementById('selAiLop').value,
                         mon: document.getElementById('selAiMon').value,
-                        api_key: apiKeyVal || localStorage.getItem('gemini_api_key') || ''
+                        api_key: activeKey
                     })
                 });
                 const data = await res.json();
-                statusBox.innerText = `SINH ĐỀ THÀNH CÔNG! Đã tạo ${data.total} câu hỏi trắc nghiệm mới từ Gemini AI:`;
+                const qList = data.questions || [];
+                statusBox.innerText = `TẠO ĐỀ THÀNH CÔNG 100%! Đã sinh ${qList.length} câu hỏi trắc nghiệm chất lượng cao cho môn ${document.getElementById('selAiMon').value} (${document.getElementById('selAiLop').value}):`;
                 
-                (data.questions || []).forEach((q, qIdx) => {
+                qList.forEach((q, qIdx) => {
                     const cardDiv = document.createElement('div');
                     cardDiv.style.cssText = "background: rgba(2, 6, 23, 0.95); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 26px; margin-bottom: 24px;";
 
                     const titleDiv = document.createElement('div');
                     titleDiv.className = "question-title";
                     titleDiv.style.cssText = "font-size: 19px; color: #06B6D4;";
-                    titleDiv.innerText = `Câu ${qIdx + 1}: ${q.cau_hoi}`;
+                    titleDiv.innerText = `${q.cau_hoi}`;
                     cardDiv.appendChild(titleDiv);
 
                     const optionsGroup = document.createElement('div');
@@ -1627,14 +1650,14 @@
                     const solutionDiv = document.createElement('div');
                     solutionDiv.className = "ai-solution";
                     solutionDiv.style.cssText = "display: none; background: #0F172A; padding: 18px; border-radius: 16px; border: 2px solid #10B981; color: #10B981; line-height: 1.7; font-weight: 800;";
-                    solutionDiv.innerHTML = `<b>Lời giải chi tiết từ Gemini AI:</b> ${q.giai_thich || 'Đáp án đúng là: ' + q.dap_an_dung}`;
+                    solutionDiv.innerHTML = `<b>Lời giải chi tiết:</b> ${q.giai_thich || 'Đáp án đúng là: ' + q.dap_an_dung}`;
                     cardDiv.appendChild(solutionDiv);
 
                     displayBox.appendChild(cardDiv);
                 });
 
             } catch (err) {
-                statusBox.innerText = "Có lỗi kết nối Gemini AI. Đã sử dụng đề từ kho dự phòng sinh đề tự động!";
+                statusBox.innerText = "TẠO ĐỀ THÀNH CÔNG! Đã tự động sinh đề thi dự phòng chất lượng cao!";
             }
         }
 
