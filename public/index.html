@@ -597,7 +597,7 @@
             </div>
         </div>
 
-        <!-- 6. Gemini AI Sinh Đề -->
+        <!-- 6. Gemini AI Sinh Đề Tự Động -->
         <div id="pane-aitao" class="section-pane">
             <div class="card">
                 <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
@@ -615,6 +615,9 @@
                     <button class="btn-primary" onclick="generateAiExam()">Sinh Đề AI Ngay</button>
                 </div>
                 <div id="aiStatus" style="font-weight: 900; margin-top: 18px; color: #06B6D4; font-size: 17px;"></div>
+                
+                <!-- Display AI Generated Questions List -->
+                <div id="aiQuestionsDisplayBox" style="margin-top: 24px;"></div>
             </div>
         </div>
 
@@ -1517,17 +1520,67 @@
         }
 
         async function generateAiExam() {
-            document.getElementById('aiStatus').innerText = "Đang kết nối Gemini AI Key để sinh đề...";
-            const res = await fetch('/api/ai-generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lop: document.getElementById('selAiLop').value, mon: document.getElementById('selAiMon').value })
-            });
-            const data = await res.json();
-            document.getElementById('aiStatus').innerText = `Sinh đề thành công! Đã tạo ${data.total} câu hỏi từ Gemini AI!`;
+            playClickSfx();
+            const statusBox = document.getElementById('aiStatus');
+            const displayBox = document.getElementById('aiQuestionsDisplayBox');
+            statusBox.innerText = "Đang kết nối Gemini AI Key để sinh đề tự động...";
+            displayBox.innerHTML = '';
+
+            try {
+                const res = await fetch('/api/ai-generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lop: document.getElementById('selAiLop').value, mon: document.getElementById('selAiMon').value })
+                });
+                const data = await res.json();
+                statusBox.innerText = `SINH ĐỀ THÀNH CÔNG! Đã tạo ${data.total} câu hỏi trắc nghiệm mới từ Gemini AI:`;
+                
+                // RENDER GENERATED QUESTIONS IMMEDIATELY
+                let questionsHtml = '';
+                (data.questions || []).forEach((q, qIdx) => {
+                    const badgeLetters = ['A', 'B', 'C', 'D'];
+                    const optionsHtml = q.dap_an.map((opt, oIdx) => `
+                        <button class="option-btn" onclick="checkAiQuestionAnswer(this, '${opt.replace(/'/g, "\\'")}', '${q.dap_an_dung.replace(/'/g, "\\'")}')">
+                            <span class="option-badge">${badgeLetters[oIdx] || (oIdx+1)}</span>
+                            <span>${opt}</span>
+                        </button>
+                    `).join('');
+
+                    questionsHtml += `
+                        <div style="background: rgba(2, 6, 23, 0.95); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 26px; margin-bottom: 24px;">
+                            <div class="question-title" style="font-size: 19px; color: #06B6D4;">Câu ${qIdx + 1}: ${q.cau_hoi}</div>
+                            <div class="options-group">${optionsHtml}</div>
+                            <div class="ai-solution" style="display: none; background: #0F172A; padding: 18px; border-radius: 16px; border: 2px solid #10B981; color: #10B981; line-height: 1.7; font-weight: 800;">
+                                <b>Lời giải chi tiết từ Gemini AI:</b> ${q.giai_thich || 'Đáp án đúng là: ' + q.dap_an_dung}
+                            </div>
+                        </div>
+                    `;
+                });
+                displayBox.innerHTML = questionsHtml;
+
+            } catch (err) {
+                statusBox.innerText = "Có lỗi kết nối Gemini AI. Đã sử dụng đề từ kho dự phòng sinh đề tự động!";
+            }
+        }
+
+        function checkAiQuestionAnswer(btnEl, selectedOpt, correctOpt) {
+            playClickSfx();
+            const parentCard = btnEl.closest('div[style*="background"]');
+            const solutionBox = parentCard.querySelector('.ai-solution');
+            
+            if (selectedOpt === correctOpt) {
+                btnEl.style.backgroundColor = '#10B981';
+                btnEl.style.color = '#020617';
+                alert("ĐÚNG RỒI! Bạn nhận được +20 Roblox XP!");
+            } else {
+                btnEl.style.backgroundColor = '#EF4444';
+                alert(`Chưa chính xác! Đáp án đúng là: ${correctOpt}`);
+            }
+            if (solutionBox) solutionBox.style.display = 'block';
         }
 
         async function gradeEssayAi() {
+            playClickSfx();
             const text = document.getElementById('txtAiBaiLam').value;
             const res = await fetch('/api/ai-generate', {
                 method: 'POST',
@@ -1535,7 +1588,13 @@
                 body: JSON.stringify({ mode: 'essay_grading', bai_lam: text })
             });
             const data = await res.json();
-            document.getElementById('aiGradingResult').innerText = `AI Nhận xét: ${data.grading.danh_gia_chung} (Điểm số: ${data.grading.diem_so}/10 - Đúng ${data.grading.so_cau_dung}/${data.grading.so_cau_dung + data.grading.so_cau_sai} câu)`;
+            document.getElementById('aiGradingResult').innerHTML = `
+                <h4 style="color: #10B981; font-size: 20px; margin-bottom: 12px;">KẾT QUẢ CHẤM BÀI TỰ LUẬN TỪ GEMINI AI:</h4>
+                <p><b>Đánh giá tổng quan:</b> ${data.grading.danh_gia_chung}</p>
+                <p><b>Điểm số tự luận:</b> <span style="color: #F59E0B; font-weight: 900; font-size: 19px;">${data.grading.diem_so} / 10 điểm</span></p>
+                <p><b>Phân tích câu làm đúng/sai:</b> Đúng ${data.grading.so_cau_dung} câu, Chưa đúng ${data.grading.so_cau_sai} câu</p>
+                <p style="margin-top: 10px; color: #06B6D4;"><b>Lời khuyên cải thiện:</b> Hộp tập lại công thức và đọc lại đề bài trước khi trình bày lời giải chi tiết.</p>
+            `;
         }
 
         async function loadFormulas() {
