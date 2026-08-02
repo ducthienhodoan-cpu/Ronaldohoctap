@@ -619,7 +619,7 @@
                 <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
                 <div class="form-group">
                     <label>Gemini API Key:</label>
-                    <input type="password" id="txtApiKey" placeholder="Dùng Key hệ thống mặc định" style="width: 300px;">
+                    <input type="password" id="txtApiKey" placeholder="Dùng Key hệ thống mặc định" style="width: 300px;" oninput="saveGeminiApiKey(this.value)">
                     <label>Lớp:</label>
                     <select id="selAiLop">
                         <option value="Lớp 6" selected>Lớp 6</option><option value="Lớp 7">Lớp 7</option><option value="Lớp 8">Lớp 8</option><option value="Lớp 9">Lớp 9</option>
@@ -1472,27 +1472,27 @@
                 'Góc Thấp Phải': 'translateX(70px) translateY(20px)'
             };
 
-            const allCorners = ['Góc Cao Trái', 'Góc Thấp Trái', 'Chính Giữa', 'Góc Cao Phải', 'Góc Thấp Phải'];
-            const gkDir = allCorners[Math.floor(Math.random() * 5)];
-
-            if (gk && cornerPositions[gkDir]) {
-                gk.style.transform = cornerPositions[gkDir];
-            }
-
             const res = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type: 'penalty', direction: dir })
             });
             const d = await res.json();
+            const resultData = d.result || {};
+            const gkDir = resultData.huong_thu_mon || 'Chính Giữa';
+
+            if (gk && cornerPositions[gkDir]) {
+                gk.style.transform = cornerPositions[gkDir];
+            }
+
             const resBox = document.getElementById('penaltyResult');
             if (resBox) {
-                if (d.result && d.result.vao) {
+                if (resultData.vao) {
                     resBox.style.color = '#10B981';
-                    resBox.innerHTML = `<span style="color: #10B981; font-weight: 900;">VÀOOO! ${d.result.thong_bao} (Thủ môn bay người sang ${gkDir})</span>`;
+                    resBox.innerHTML = `<span style="color: #10B981; font-weight: 900;">${resultData.thong_bao}</span>`;
                 } else {
                     resBox.style.color = '#EF4444';
-                    resBox.innerHTML = `<span style="color: #EF4444; font-weight: 900;">THỦ MÔN CẢN PHÁ THÀNH CÔNG! Thủ môn đã xuất sắc bắt gọn bóng ở ${gkDir}. Hãy thử sút góc khác ở lượt tiếp theo!</span>`;
+                    resBox.innerHTML = `<span style="color: #EF4444; font-weight: 900;">THỦ MÔN CẢN PHÁ THÀNH CÔNG! ${resultData.thong_bao}</span>`;
                 }
             }
         }
@@ -1563,8 +1563,24 @@
             alert("CHÚC MỪNG! Em đã hoàn thành bài học và nhận được +30 Roblox XP & Tăng 1 ngày Streak!");
         }
 
+        function saveGeminiApiKey(k) {
+            if (k) localStorage.setItem('gemini_api_key', k.trim());
+        }
+
+        function loadSavedGeminiApiKey() {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey && document.getElementById('txtApiKey')) {
+                document.getElementById('txtApiKey').value = savedKey;
+            }
+        }
+
         async function generateAiExam() {
             try { playClickSfx(); } catch(e) {}
+            const keyInput = document.getElementById('txtApiKey');
+            const apiKeyVal = keyInput ? keyInput.value.trim() : '';
+            if (apiKeyVal) {
+                localStorage.setItem('gemini_api_key', apiKeyVal);
+            }
             const statusBox = document.getElementById('aiStatus');
             const displayBox = document.getElementById('aiQuestionsDisplayBox');
             statusBox.innerText = "Đang kết nối Gemini AI Key để sinh đề tự động...";
@@ -1574,7 +1590,11 @@
                 const res = await fetch('/api/ai-generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ lop: document.getElementById('selAiLop').value, mon: document.getElementById('selAiMon').value })
+                    body: JSON.stringify({
+                        lop: document.getElementById('selAiLop').value,
+                        mon: document.getElementById('selAiMon').value,
+                        api_key: apiKeyVal || localStorage.getItem('gemini_api_key') || ''
+                    })
                 });
                 const data = await res.json();
                 statusBox.innerText = `SINH ĐỀ THÀNH CÔNG! Đã tạo ${data.total} câu hỏi trắc nghiệm mới từ Gemini AI:`;
@@ -1699,6 +1719,7 @@
 
         window.onload = () => {
             loadStats();
+            loadSavedGeminiApiKey();
         };
     </script>
 </body>

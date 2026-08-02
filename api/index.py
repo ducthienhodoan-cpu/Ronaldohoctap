@@ -145,7 +145,8 @@ def ai_engine():
         muc_do = req.get('muc_do', 'Trung bình')
         chu_de = req.get('chu_de', 'Kiến thức tổng hợp')
         so_cau = req.get('so_cau', 5)
-        questions = tao_de_thi_gemini_api(ten_lop, ten_mon, muc_do, chu_de, so_cau)
+        api_key = req.get('api_key', '')
+        questions = tao_de_thi_gemini_api(ten_lop, ten_mon, muc_do, chu_de, so_cau, api_key=api_key)
         return jsonify({"status": "success", "total": len(questions), "questions": questions})
 
 # Function 5: All Sports & Racing Tournaments & Minigames

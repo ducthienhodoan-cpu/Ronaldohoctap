@@ -1,6 +1,6 @@
 # Thu muc: xu_ly_tro_choi
 # File: minigame_giua_gio.py
-# Mo ta: Bo thuat toan quan ly 3 minigame thu gian giua gio (Lat the ghi nho, Vong quay may man, Sut phat penalty) sang Tieng Viet co dau
+# Mo ta: Bo thuat toan quan ly 3 minigame thu gian giua gio (Lat the ghi nho, Vong quay may man, Sut phat penalty 5 goc) sang Tieng Viet co dau
 
 import random
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
@@ -25,7 +25,7 @@ def tao_danh_sach_the_lat_tri_nho():
     return the_list
 
 def quay_vong_quay_may_man():
-    """Quay thưởng vòn quay may mắn nhận ngẫu nhiên XP phần thưởng."""
+    """Quay thưởng vòng quay may mắn nhận ngẫu nhiên XP phần thưởng."""
     cac_phan_thuong = [
         {"ten": "Cộng 50 XP Kinh Nghiệm", "xp": 50},
         {"ten": "Cộng 100 XP Kinh Nghiệm", "xp": 100},
@@ -39,19 +39,29 @@ def quay_vong_quay_may_man():
     return thuong
 
 def xu_ly_sut_phat_penalty(huong_sut):
-    """Xử lý minigame sút phạt penalty giải trí."""
-    cac_huong_goc = ["Trái Trên", "Trái Dưới", "Giữa", "Phải Trên", "Phải Dưới"]
+    """Xử lý minigame sút phạt penalty 5 góc giải trí chuẩn đồng bộ tên hướng."""
+    cac_huong_goc = ["Góc Cao Trái", "Góc Thấp Trái", "Chính Giữa", "Góc Cao Phải", "Góc Thấp Phải"]
+    
+    # Chuan hoa ten huong neu tu ban cu truyen sang
+    mapping_ten = {
+        "Trái": "Góc Thấp Trái", "Giữa": "Chính Giữa", "Phải": "Góc Thấp Phải",
+        "Trái Trên": "Góc Cao Trái", "Trái Dưới": "Góc Thấp Trái",
+        "Phải Trên": "Góc Cao Phải", "Phải Dưới": "Góc Thấp Phải"
+    }
+    huong_sut_chuan = mapping_ten.get(huong_sut, huong_sut)
     huong_thu_mon_bay = random.choice(cac_huong_goc)
     
-    if huong_sut != huong_thu_mon_bay:
+    if huong_sut_chuan != huong_thu_mon_bay:
         xp_thuong = 60
         cong_phan_thuong(xp_thuong)
         return {
             "vao": True,
-            "thong_bao": f"VÀO OOO! Bạn sút góc '{huong_sut}', thủ môn bay góc '{huong_thu_mon_bay}'. Nhận ngay +{xp_thuong} XP!"
+            "huong_thu_mon": huong_thu_mon_bay,
+            "thong_bao": f"VÀO OOO! Bạn sút góc '{huong_sut_chuan}', thủ môn bay góc '{huong_thu_mon_bay}'. Nhận ngay +{xp_thuong} XP!"
         }
     else:
         return {
             "vao": False,
-            "thong_bao": f"Thủ môn đã cản phá thành công góc '{huong_sut}'! Thử lại ở lượt tiếp theo nhé."
+            "huong_thu_mon": huong_thu_mon_bay,
+            "thong_bao": f"Thủ môn đã đoán đúng góc '{huong_sut_chuan}' và cản phá xuất sắc!"
         }
