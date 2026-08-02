@@ -8,6 +8,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js 3D Engine & Modular 3D Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/xu_ly_3d/khong_gian_nen_3d.js"></script>
+    <script src="/xu_ly_3d/dua_xe_3d.js"></script>
+    <script src="/xu_ly_3d/cup_vo_dich_3d.js"></script>
+    <script src="/xu_ly_3d/vong_quay_3d.js"></script>
+    <script src="/xu_ly_3d/linh_vat_3d.js"></script>
     <style>
         :root {
             --bg-body: #020617;
@@ -391,10 +398,19 @@
             margin-top: 30px;
         }
 
-        .cert-card h2 { font-family: var(--font-heading); color: #F59E0B; font-size: 30px; margin-bottom: 16px; font-weight: 900; }
+        #bg3dCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <canvas id="bg3dCanvas"></canvas>
     <audio id="bgMusic" loop preload="auto">
         <source src="/am_thanh_cache/Piano%20Sunrise%20(1).mp3" type="audio/mpeg">
         <source src="/am_thanh_cache/nhac_nen.wav" type="audio/wav">
@@ -408,7 +424,7 @@
         <div class="header-bar">
             <div class="header-title-box">
                 <h1>SIÊU CLUB HỌC TẬP & TẬP THI IELTS</h1>
-                <p>Bản Gốc Đầy Đủ 16 Màn Hình: Học Tập, Gemini AI, World Cup, Cúp C1, Đua Xe & IELTS</p>
+                <p>Ứng Dụng Đồ Họa 3D Gaming All-In-One: Học Tập, Gemini AI, World Cup, Cúp C1, Đua Xe & IELTS</p>
             </div>
             <div style="display: flex; align-items: center; gap: 20px;">
                 <button id="btnToggleMusic" class="btn-primary" style="font-size: 14px; padding: 10px 18px; border-radius: 14px;" onclick="toggleBgMusic(event)">Tắt Nhạc Nền</button>
@@ -418,6 +434,7 @@
                     <span id="volVal" style="font-size: 14px; font-weight: 800; color: #06B6D4;">30%</span>
                 </div>
                 <div class="profile-badge">
+                    <canvas id="canvasMascot3D" width="60" height="60" style="width: 60px; height: 60px;"></canvas>
                     <img src="/hinh_anh_3d/roblox_anh_dai_dien_3d.png" alt="Avatar" class="avatar-img" onerror="this.src='/hinh_anh_3d/linh_vat_3d.png'">
                     <div style="display: flex; flex-direction: column;">
                         <span class="user-name" id="hdrUserName">Học Sinh Roblox</span>
@@ -637,6 +654,7 @@
         <div id="pane-worldcup" class="section-pane">
             <div class="card">
                 <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">ĐẤU TRƯỜNG THỂ THAO WORLD CUP TRI THỨC ROBLOX</h3>
+                <canvas id="canvasTrophyWc3D" width="300" height="220" style="display: block; margin: 0 auto 20px auto; width: 300px; height: 220px;"></canvas>
                 <p style="margin-bottom: 22px; color: #F1F5F9;">Chọn Đội tuyển Quốc gia yêu thích của bạn và tranh Cúp Vô Địch World Cup qua 4 Vòng đấu Penalty:</p>
                 <div class="grid-4" id="wcTeamGrid" style="margin-bottom: 28px;"></div>
                 <button class="btn-primary" onclick="startTournament('world_cup')">Thi Đấu Vòng Bảng World Cup</button>
@@ -656,6 +674,7 @@
         <div id="pane-c1" class="section-pane">
             <div class="card">
                 <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">CÚP C1 CHAMPIONS LEAGUE CHÂU ÂU</h3>
+                <canvas id="canvasTrophyC13D" width="300" height="220" style="display: block; margin: 0 auto 20px auto; width: 300px; height: 220px;"></canvas>
                 <p style="margin-bottom: 22px; color: #F1F5F9;">Chọn Câu Lạc Bộ Châu Âu yêu thích của bạn để nâng Cúp Vô Địch C1:</p>
                 <div class="grid-4" id="c1ClubGrid" style="margin-bottom: 28px;"></div>
                 <button class="btn-primary" onclick="startTournament('champions_league')">Thi Đấu Cúp C1 Champions League</button>
@@ -949,8 +968,8 @@
                 if (secId === 'hoc') loadStudyContent();
                 if (secId === 'formula') loadFormulas();
                 if (secId === 'minigames') drawWheelCanvas();
-                if (secId === 'worldcup') renderWcTeams();
-                if (secId === 'c1') renderC1Clubs();
+                if (secId === 'worldcup') { renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); }
+                if (secId === 'c1') { renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); }
                 if (secId === 'plan') loadPlan();
                 if (secId === 'stats') loadStats();
                 if (secId === 'notebook') loadNotebook();
@@ -1428,6 +1447,7 @@
 
         async function spinWheelCanvas() {
             playClickSfx();
+            if (typeof quay_vong_quay_3d === 'function') quay_vong_quay_3d();
             const res = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
