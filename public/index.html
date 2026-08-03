@@ -411,7 +411,7 @@
 </head>
 <body>
     <canvas id="bg3dCanvas"></canvas>
-    <audio id="bgMusic" loop preload="auto">
+    <audio id="bgMusic" autoplay loop preload="auto">
         <source src="/am_thanh_cache/gut_genug.mp3" type="audio/mpeg">
         <source src="/am_thanh_cache/Piano%20Sunrise%20(1).mp3" type="audio/mpeg">
         <source src="/am_thanh_cache/gut_genug.wav" type="audio/wav">
@@ -887,30 +887,30 @@
                 const btn = document.getElementById('btnToggleMusic');
                 if (bg) {
                     bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
-                    bg.play().then(() => {
-                        isMusicPlaying = true;
-                        if (btn) btn.innerText = 'Tắt Nhạc Nền';
-                    }).catch(e => {
-                        if (btn) btn.innerText = 'Bật Nhạc Nền (Click)';
-                    });
+                    const p = bg.play();
+                    if (p && p.then) {
+                        p.then(() => {
+                            isMusicPlaying = true;
+                            if (btn) btn.innerText = 'Tắt Nhạc Nền';
+                        }).catch(e => {
+                            if (btn) btn.innerText = 'Bật Nhạc Nền (Click)';
+                        });
+                    }
                 }
             } catch(err) {}
         }
 
-        // Tự động phát nhạc nền ngay khi người dùng chạm hoặc click bất kỳ vị trí nào trên trang web
-        document.addEventListener('click', function unlockAudioOnFirstClick() {
-            if (!userHasInteracted) {
-                userHasInteracted = true;
-                startBgMusic();
-            }
-        }, { once: true });
+        // Tự động phát nhạc ngay khi load trang
+        try { startBgMusic(); } catch(e) {}
 
-        document.addEventListener('keydown', function unlockAudioOnFirstKey() {
-            if (!userHasInteracted) {
-                userHasInteracted = true;
-                startBgMusic();
-            }
-        }, { once: true });
+        // Bắt tất cả sự kiện chuột, chạm, cuộn trang để phát nhạc lập tức
+        ['click', 'touchstart', 'pointerdown', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
+            document.addEventListener(evt, function autoPlayMusicInstant() {
+                if (!isMusicPlaying) {
+                    startBgMusic();
+                }
+            }, { passive: true });
+        });
 
         function toggleBgMusic(e) {
             if (e) e.stopPropagation();
@@ -1773,6 +1773,7 @@
         window.onload = () => {
             loadStats();
             loadSavedGeminiApiKey();
+            startBgMusic();
         };
     </script>
 </body>
