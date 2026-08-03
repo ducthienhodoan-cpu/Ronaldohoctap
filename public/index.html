@@ -535,6 +535,7 @@
                     <button class="btn-secondary" onclick="prevPracticeQuestion()">Câu trước</button>
                     <button class="btn-secondary" onclick="nextPracticeQuestion()">Câu sau</button>
                     <button class="btn-primary" onclick="showPracticeSolution()">Xem Lời Giải Chi Tiết</button>
+                    <button class="btn-success" onclick="openMinigameModal(practiceIndex + 1)">Minigame Thư Giãn Giữa Các Câu</button>
                 </div>
             </div>
         </div>
@@ -610,7 +611,8 @@
                 <div class="nav-actions">
                     <button class="btn-secondary" onclick="prevQuestion()">Câu trước</button>
                     <button class="btn-secondary" onclick="nextQuestion()">Câu sau</button>
-                    <button class="btn-success" onclick="submitExam()">Nộp bài & Chấm điểm</button>
+                    <button class="btn-success" onclick="openMinigameModal(ieltsIndex + 1)">Minigame Giữa Các Câu</button>
+                    <button class="btn-primary" onclick="submitExam()">Nộp bài & Chấm điểm</button>
                 </div>
             </div>
         </div>
@@ -1802,11 +1804,190 @@
             }
         }
 
+        // HAM XU LY MINIGAME THU GIAN GIUA CAC CAU HOI
+        function openMinigameModal(cauSo) {
+            const modal = document.getElementById('modalMinigameGiuaGio');
+            if (!modal) return;
+            document.getElementById('lblMinigameModalHeader').innerText = `MINIGAME THƯ GIÃN GIỮA GIỜ (CÂU ${cauSo || 1}) - THƯỞNG +XP`;
+            modal.style.display = 'flex';
+            showMinigameModalTab('vongquay');
+            try { playClickSfx(); } catch(e) {}
+        }
+
+        function closeMinigameModal() {
+            const modal = document.getElementById('modalMinigameGiuaGio');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function showMinigameModalTab(tabName) {
+            document.getElementById('tabModalVongQuay').style.display = tabName === 'vongquay' ? 'block' : 'none';
+            document.getElementById('tabModalPenalty').style.display = tabName === 'penalty' ? 'block' : 'none';
+            document.getElementById('tabModalLatThe').style.display = tabName === 'latthe' ? 'block' : 'none';
+            
+            if (tabName === 'vongquay') drawModalWheelCanvas();
+            if (tabName === 'latthe') initModalMemoryCards();
+        }
+
+        function drawModalWheelCanvas() {
+            const canvas = document.getElementById('canvasModalWheel');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const rewards = ['+20 XP', '+50 XP', '+10 XP', '+100 XP', '+30 XP', '+80 XP'];
+            const colors = ['#06B6D4', '#10B981', '#F59E0B', '#EC4899', '#A855F7', '#FF6B00'];
+            const angle = (2 * Math.PI) / rewards.length;
+            ctx.clearRect(0, 0, 200, 200);
+
+            for (let i = 0; i < rewards.length; i++) {
+                ctx.beginPath();
+                ctx.fillStyle = colors[i];
+                ctx.moveTo(100, 100);
+                ctx.arc(100, 100, 95, i * angle, (i + 1) * angle);
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(100, 100);
+                ctx.rotate(i * angle + angle / 2);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.fillText(rewards[i], 38, 5);
+                ctx.restore();
+            }
+        }
+
+        async function spinModalWheel() {
+            try { playClickSfx(); } catch(e) {}
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'wheel' })
+            });
+            const d = await res.json();
+            const r = d.reward || {};
+            document.getElementById('modalWheelResult').innerText = `CHÚC MỪNG: Bạn quay trúng phần thưởng +${r.xp || 50} Roblox XP!`;
+        }
+
+        async function shootModalPenalty(direction) {
+            try { playClickSfx(); } catch(e) {}
+            const gk = document.getElementById('gkPosModal');
+            const positions = ['5%', '35%', '70%'];
+            if (gk) gk.style.left = positions[Math.floor(Math.random() * positions.length)];
+            
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'penalty', direction: direction })
+            });
+            const d = await res.json();
+            const r = d.result || {};
+            document.getElementById('modalPenaltyResult').innerText = r.vao ? `VÀO OOO! Bàn thắng tuyệt đẹp hướng ${direction}! Nhận +50 XP!` : `ĐỐI THỦ THỦ MÔN CẢN PHÁ! Thử lại góc khác!`;
+        }
+
+        let modalMemoryCards = [];
+        let modalFlipped = [];
+        let modalMatched = 0;
+
+        async function initModalMemoryCards() {
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'memory_cards' })
+            });
+            const d = await res.json();
+            modalMemoryCards = d.cards || [];
+            modalFlipped = [];
+            modalMatched = 0;
+            renderModalMemoryGrid();
+        }
+
+        function renderModalMemoryGrid() {
+            const grid = document.getElementById('modalMemoryGrid');
+            if (!grid) return;
+            grid.innerHTML = modalMemoryCards.map((c, i) => `
+                <div class="memory-card ${c.da_lat ? 'flipped' : ''} ${c.da_ghep ? 'matched' : ''}" onclick="flipModalMemoryCard(${i})">
+                    ${c.da_lat || c.da_ghep ? c.noi_dung : '?'}
+                </div>
+            `).join('');
+        }
+
+        function flipModalMemoryCard(idx) {
+            const card = modalMemoryCards[idx];
+            if (!card || card.da_lat || card.da_ghep || modalFlipped.length >= 2) return;
+            try { playClickSfx(); } catch(e) {}
+            card.da_lat = true;
+            modalFlipped.push({ card, idx });
+            renderModalMemoryGrid();
+
+            if (modalFlipped.length === 2) {
+                setTimeout(() => {
+                    const [first, second] = modalFlipped;
+                    if (first.card.cap_id === second.card.cap_id) {
+                        first.card.da_ghep = true;
+                        second.card.da_ghep = true;
+                        modalMatched++;
+                        if (modalMatched >= modalMemoryCards.length / 2) {
+                            document.getElementById('modalMemoryResult').innerText = "XUẤT SẮC! Đã ghép đúng tất cả các thẻ! Thưởng +100 Roblox XP!";
+                        }
+                    } else {
+                        first.card.da_lat = false;
+                        second.card.da_lat = false;
+                    }
+                    modalFlipped = [];
+                    renderModalMemoryGrid();
+                }, 800);
+            }
+        }
+
         window.onload = () => {
             loadStats();
             loadSavedGeminiApiKey();
             startBgMusic();
         };
     </script>
+
+    <!-- Modal Dialog Minigame Thư Giãn Giữa Các Câu Hỏi -->
+    <div id="modalMinigameGiuaGio" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: linear-gradient(135deg, #0F172A, #1E1B4B); border: 3px solid #06B6D4; border-radius: 28px; width: 90%; max-width: 680px; padding: 28px; box-shadow: 0 0 50px rgba(6, 182, 212, 0.6); position: relative; max-height: 90vh; overflow-y: auto;">
+            <button onclick="closeMinigameModal()" style="position: absolute; top: 18px; right: 22px; background: #EF4444; color: #FFF; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 18px; font-weight: 900; cursor: pointer;">X</button>
+            <h3 id="lblMinigameModalHeader" style="color: #F59E0B; font-size: 22px; margin-bottom: 14px; text-align: center;">MINIGAME THƯ GIÃN GIỮA GIỜ - THƯỞNG +XP</h3>
+            <p style="text-align: center; color: #F1F5F9; font-size: 15px; margin-bottom: 20px;">Chúc mừng bạn đã trả lời câu hỏi! Chọn 1 trong 3 Minigame dưới đây để thư giãn và tích lũy XP:</p>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="showMinigameModalTab('vongquay')">1. Vòng Quay May Mắn</button>
+                <button class="btn-secondary" onclick="showMinigameModalTab('penalty')">2. Sút Phạt Penalty</button>
+                <button class="btn-success" onclick="showMinigameModalTab('latthe')">3. Lật Thẻ Trí Nhớ</button>
+            </div>
+
+            <div id="tabModalVongQuay" style="text-align: center;">
+                <canvas id="canvasModalWheel" width="200" height="200" style="margin: 10px auto; border-radius: 50%; display: block;"></canvas>
+                <button class="btn-primary" style="font-size: 16px; padding: 12px 28px; margin-top: 10px;" onclick="spinModalWheel()">Quay Vòng Quay Thưởng</button>
+                <div id="modalWheelResult" style="margin-top: 14px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
+            </div>
+
+            <div id="tabModalPenalty" style="display: none; text-align: center;">
+                <div style="width: 100%; height: 140px; border: 4px solid #FFFFFF; background: linear-gradient(180deg, rgba(6, 182, 212, 0.15), rgba(15, 23, 42, 0.8)); position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 14px;">
+                    <div id="gkPosModal" style="position: absolute; top: 40px; left: calc(50% - 24px); width: 48px; height: 50px; background: #F59E0B; border: 2px solid #FFFFFF; border-radius: 12px; color: #000; font-weight: 900; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all 0.4s ease; z-index: 5;">GK</div>
+                    <button style="position: absolute; top: 8px; left: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootModalPenalty('Góc Cao Trái')">Cao Trái</button>
+                    <button style="position: absolute; bottom: 8px; left: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootModalPenalty('Góc Thấp Trái')">Thấp Trái</button>
+                    <button style="position: absolute; bottom: 8px; left: calc(50% - 35px); font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootModalPenalty('Chính Giữa')">Chính Giữa</button>
+                    <button style="position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootModalPenalty('Góc Cao Phải')">Cao Phải</button>
+                    <button style="position: absolute; bottom: 8px; right: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootModalPenalty('Góc Thấp Phải')">Thấp Phải</button>
+                </div>
+                <div id="modalPenaltyResult" style="font-weight: 900; color: #10B981; font-size: 16px;"></div>
+            </div>
+
+            <div id="tabModalLatThe" style="display: none;">
+                <p style="text-align: center; font-size: 14px; margin-bottom: 12px; color: #06B6D4;">Nhấp lật 2 thẻ trùng khớp để nhận +100 XP thưởng!</p>
+                <div id="modalMemoryGrid" class="grid-4" style="gap: 12px;"></div>
+                <div id="modalMemoryResult" style="text-align: center; margin-top: 14px; font-weight: 900; color: #10B981; font-size: 16px;"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 24px;">
+                <button class="btn-success" style="font-size: 16px; padding: 14px 32px; border-radius: 16px;" onclick="closeMinigameModal()">Đóng & Tiếp Tục Học Bài</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
