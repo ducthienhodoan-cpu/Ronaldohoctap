@@ -8,7 +8,7 @@ def lay_qss_giao_dien():
     /* Tong the ung dung phong cach Roblox Dark Theme voi chu sang ro net */
     QWidget {
         background-color: #191B1D;
-        font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+        font-family: 'Be Vietnam Pro', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
         font-size: 15px;
         color: #FFFFFF;
         font-weight: 500;
