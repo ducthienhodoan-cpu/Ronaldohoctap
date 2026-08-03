@@ -1388,16 +1388,41 @@
             alert(`KẾT QUẢ BÀI KIỂM TRA:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nXếp loại: ${r.rating}\nNhận thưởng: +${r.xp_reward} XP!`);
         }
 
+        let selectedWcTeam = 'Việt Nam';
+        let selectedC1Club = 'Real Madrid';
+
         function renderWcTeams() {
             const teams = ["Việt Nam", "Brazil", "Argentina", "Pháp", "Anh", "Đức", "Nhật Bản", "Tây Ban Nha"];
             const grid = document.getElementById('wcTeamGrid');
-            grid.innerHTML = teams.map((t, i) => `<div class="team-badge-item ${i===0?'active':''}">${t}</div>`).join('');
+            if (!grid) return;
+            grid.innerHTML = teams.map((t) => 
+                `<div class="team-badge-item ${t === selectedWcTeam ? 'active' : ''}" onclick="selectWcTeam('${t}', this)">${t}</div>`
+            ).join('');
+        }
+
+        function selectWcTeam(teamName, el) {
+            selectedWcTeam = teamName;
+            const items = document.querySelectorAll('#wcTeamGrid .team-badge-item');
+            items.forEach(item => item.classList.remove('active'));
+            if (el) el.classList.add('active');
+            try { playClickSfx(); } catch(e) {}
         }
 
         function renderC1Clubs() {
             const clubs = ["Real Madrid", "Man City", "FC Barcelona", "Bayern Munich", "PSG", "Liverpool", "Inter Milan", "Arsenal"];
             const grid = document.getElementById('c1ClubGrid');
-            grid.innerHTML = clubs.map((c, i) => `<div class="team-badge-item ${i===0?'active':''}">${c}</div>`).join('');
+            if (!grid) return;
+            grid.innerHTML = clubs.map((c) => 
+                `<div class="team-badge-item ${c === selectedC1Club ? 'active' : ''}" onclick="selectC1Club('${c}', this)">${c}</div>`
+            ).join('');
+        }
+
+        function selectC1Club(clubName, el) {
+            selectedC1Club = clubName;
+            const items = document.querySelectorAll('#c1ClubGrid .team-badge-item');
+            items.forEach(item => item.classList.remove('active'));
+            if (el) el.classList.add('active');
+            try { playClickSfx(); } catch(e) {}
         }
 
         async function startTournament(type) {
@@ -1405,16 +1430,22 @@
             const res = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: type, lop: 'Lớp 6', mon: 'Toán' })
+                body: JSON.stringify({ 
+                    type: type, 
+                    doi_user: selectedWcTeam,
+                    clb_user: selectedC1Club,
+                    lop: 'Lớp 6', 
+                    mon: 'Toán' 
+                })
             });
             const d = await res.json();
-            tourQuestions = d.match.cau_hoi || [];
+            tourQuestions = (d.match && d.match.cau_hoi) ? d.match.cau_hoi : [];
             tourIndex = 0;
             tourScoreUser = 0;
             tourScoreOpponent = 0;
             
             const board = type === 'world_cup' ? document.getElementById('wcPlayBoard') : document.getElementById('c1PlayBoard');
-            board.style.display = 'block';
+            if (board) board.style.display = 'block';
             renderTourQuestion();
         }
 
@@ -1431,8 +1462,9 @@
                 return;
             }
             const q = tourQuestions[tourIndex];
-            document.getElementById(boardName).innerText = `${isWc ? 'Vòng Bảng World Cup' : 'Vòng Bảng Cúp C1'} - Trận ${tourIndex + 1}`;
-            document.getElementById(boardScore).innerText = `Tỷ số: Học sinh ${tourScoreUser} - ${tourScoreOpponent} Đối thủ`;
+            const chosenTeam = isWc ? selectedWcTeam : selectedC1Club;
+            document.getElementById(boardName).innerText = `${isWc ? 'Vòng Bảng World Cup' : 'Vòng Bảng Cúp C1'} (${chosenTeam}) - Trận ${tourIndex + 1}`;
+            document.getElementById(boardScore).innerText = `Tỷ số: ${chosenTeam} ${tourScoreUser} - ${tourScoreOpponent} Đối thủ`;
             document.getElementById(boardQ).innerText = q.cau_hoi;
 
             const container = document.getElementById(boardContainer);
