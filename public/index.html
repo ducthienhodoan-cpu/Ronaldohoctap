@@ -1244,7 +1244,7 @@
         async function loadPracticeQuiz() {
             const lop = document.getElementById('selLuyenLop').value;
             const mon = document.getElementById('selLuyenMon').value;
-            const res = await fetch(`/api/questions?skill=luyen_tap&lop=${encodeURIComponent(lop)}&mon=${encodeURIComponent(mon)}`);
+            const res = await fetch(`/api/questions?skill=luyen_tap&lop=${encodeURIComponent(lop)}&mon=${encodeURIComponent(mon)}&so_cau=50`);
             const d = await res.json();
             practiceQuestions = d.questions || [];
             practiceIndex = 0;

@@ -57,6 +57,10 @@ def get_questions():
     ten_lop = request.args.get('lop', 'Lớp 6')
     ten_mon = request.args.get('mon', 'Toán')
     ten_bai = request.args.get('bai', 'Chủ đề 1')
+    try:
+        so_cau = min(int(request.args.get('so_cau', 20)), 10000)
+    except Exception:
+        so_cau = 20
 
     if skill == 'tu_vung':
         data = lay_danh_sach_tu_vung_ielts(band)
@@ -79,7 +83,7 @@ def get_questions():
         data = lay_chu_de_theo_lop_va_mon(ten_lop, ten_mon)
         return jsonify({"status": "success", "topics": data})
     else:
-        data = lay_cau_hoi_luyen_tap(ten_mon, ten_lop, ten_bai)
+        data = lay_cau_hoi_luyen_tap(ten_mon, ten_lop, ten_bai, so_cau=so_cau)
 
     return jsonify({
         "status": "success",
@@ -87,6 +91,7 @@ def get_questions():
         "band": band,
         "lop": ten_lop,
         "mon": ten_mon,
+        "so_cau": so_cau,
         "total": len(data),
         "questions": data
     })
