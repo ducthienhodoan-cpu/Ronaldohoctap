@@ -60,7 +60,7 @@ def lay_qss_giao_dien():
     }
 
     QLabel.text-header-title {
-        font-family: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
+        font-family: 'Be Vietnam Pro', 'Segoe UI', 'Roboto', sans-serif;
         font-size: 21px;
         font-weight: bold;
         color: #00A2FF;
@@ -91,7 +91,7 @@ def lay_qss_giao_dien():
 
     /* Tieu de Card Roblox chu sang */
     QLabel.card-title {
-        font-family: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
+        font-family: 'Be Vietnam Pro', 'Segoe UI', 'Roboto', sans-serif;
         font-size: 18px;
         font-weight: bold;
         color: #00E676;
