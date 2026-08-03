@@ -884,15 +884,33 @@
         function startBgMusic() {
             try {
                 const bg = document.getElementById('bgMusic');
+                const btn = document.getElementById('btnToggleMusic');
                 if (bg) {
                     bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
                     bg.play().then(() => {
                         isMusicPlaying = true;
-                        document.getElementById('btnToggleMusic').innerText = 'Tắt Nhạc Nền';
-                    }).catch(e => {});
+                        if (btn) btn.innerText = 'Tắt Nhạc Nền';
+                    }).catch(e => {
+                        if (btn) btn.innerText = 'Bật Nhạc Nền (Click)';
+                    });
                 }
             } catch(err) {}
         }
+
+        // Tự động phát nhạc nền ngay khi người dùng chạm hoặc click bất kỳ vị trí nào trên trang web
+        document.addEventListener('click', function unlockAudioOnFirstClick() {
+            if (!userHasInteracted) {
+                userHasInteracted = true;
+                startBgMusic();
+            }
+        }, { once: true });
+
+        document.addEventListener('keydown', function unlockAudioOnFirstKey() {
+            if (!userHasInteracted) {
+                userHasInteracted = true;
+                startBgMusic();
+            }
+        }, { once: true });
 
         function toggleBgMusic(e) {
             if (e) e.stopPropagation();
@@ -904,18 +922,22 @@
             if (isMusicPlaying) {
                 bg.pause();
                 isMusicPlaying = false;
-                btn.innerText = 'Phát Nhạc Nền';
+                if (btn) btn.innerText = 'Bật Nhạc Nền';
             } else {
+                userHasInteracted = true;
                 bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
                 bg.play().then(() => {
                     isMusicPlaying = true;
-                    btn.innerText = 'Tắt Nhạc Nền';
-                }).catch(e => {});
+                    if (btn) btn.innerText = 'Tắt Nhạc Nền';
+                }).catch(e => {
+                    alert("Hãy nhấp vào bất kỳ đâu trên trang web để trình duyệt cho phép phát nhạc!");
+                });
             }
         }
 
         function setVolume(v) {
-            document.getElementById('volVal').innerText = v + '%';
+            const volEl = document.getElementById('volVal');
+            if (volEl) volEl.innerText = v + '%';
             const bg = document.getElementById('bgMusic');
             if (bg) {
                 bg.volume = parseFloat(v) / 100;
