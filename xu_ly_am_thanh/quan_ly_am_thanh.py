@@ -125,13 +125,17 @@ class QuanLyAmThanh:
         self.file_ai_done = os.path.abspath(os.path.join(DIR_AM_THANH, "ai_hoan_thanh.wav"))
         self.file_ai_thinking = os.path.abspath(os.path.join(DIR_AM_THANH, "ai_suy_nghi.wav"))
         
+        file_gut_genug = os.path.abspath(os.path.join(DIR_AM_THANH, "gut_genug.mp3"))
         file_piano = os.path.abspath(os.path.join(DIR_AM_THANH, "Piano Sunrise (1).mp3"))
-        if os.path.exists(file_piano):
+        if os.path.exists(file_gut_genug):
+            self.file_nhac_nen = file_gut_genug
+            self.ten_bai_nhac = "GUT GENUG - KITSCHKRIEG feat. BLUMENGARTEN & SHIRIN DAVID"
+        elif os.path.exists(file_piano):
             self.file_nhac_nen = file_piano
             self.ten_bai_nhac = "Piano Sunrise"
         else:
             self.file_nhac_nen = os.path.abspath(os.path.join(DIR_AM_THANH, "nhac_nen.wav"))
-            self.ten_bai_nhac = "Nhac Thu Gian Chuan"
+            self.ten_bai_nhac = "GUT GENUG"
             tao_file_wav_nhac_nen(self.file_nhac_nen)
 
         tao_file_wav_dap_an(self.file_dap_an)

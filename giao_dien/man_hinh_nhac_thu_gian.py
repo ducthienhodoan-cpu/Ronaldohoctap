@@ -35,7 +35,7 @@ class ManHinhNhacThuGian(QWidget):
         card_bg_music.setStyleSheet("background-color: #EBF5FB; border: 1px solid #AED6F1; border-radius: 10px; padding: 10px 15px;")
         layout_bg = QHBoxLayout(card_bg_music)
         
-        lbl_bg_title = QLabel("Nhạc nền hệ thống: Piano Sunrise (Nhạc Piano nhẹ nhàng tập trung)")
+        lbl_bg_title = QLabel("Nhạc nền hệ thống: GUT GENUG - KITSCHKRIEG ft. BLUMENGARTEN & SHIRIN DAVID")
         lbl_bg_title.setStyleSheet("font-size: 14px; font-weight: bold; color: #1B4F72;")
         
         self.lbl_status = QLabel("Trạng thái: Đã Tắt")
@@ -72,7 +72,7 @@ class ManHinhNhacThuGian(QWidget):
         card_layout.setContentsMargins(15, 15, 15, 15)
         card_layout.setSpacing(10)
 
-        sub_title = QLabel("Âm Nhạc Tích Cực Buổi Sáng - Thư Giãn, Năng Lượng, May Mắn & Hạnh Phúc")
+        sub_title = QLabel("KITSCHKRIEG feat. BLUMENGARTEN & SHIRIN DAVID - GUT GENUG")
         sub_title.setStyleSheet("font-size: 16px; font-weight: bold; color: #4A90E2;")
         card_layout.addWidget(sub_title)
 
@@ -84,9 +84,12 @@ class ManHinhNhacThuGian(QWidget):
         thiet_lap_ngan_copy_web_view(self.web_view)
 
         iframe_code = """<iframe 
-            src="https://www.youtube.com/embed/GZKSEAlOZRc?autoplay=1&list=RDGZKSEAlOZRc" 
-            title="Âm Nhạc Tích Cực Buổi Sáng | Thư Giãn, Năng Lượng, May Mắn & Hạnh Phúc" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            width="100%" height="400"
+            src="https://www.youtube.com/embed/0GnA8VYOfko?autoplay=1&list=RD0GnA8VYOfko" 
+            title="KITSCHKRIEG feat. BLUMENGARTEN & SHIRIN DAVID - GUT GENUG" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
             allowfullscreen>
         </iframe>"""
         
@@ -97,7 +100,7 @@ class ManHinhNhacThuGian(QWidget):
 
         # Thanh nút bổ trợ
         btn_layout = QHBoxLayout()
-        lbl_info = QLabel("Gợi ý: Lắng nghe âm nhạc tích cực buổi sáng giúp tinh thần sảng khoái và tràn đầy năng lượng.")
+        lbl_info = QLabel("Gợi ý: Lắng nghe âm nhạc GUT GENUG giúp tinh thần sảng khoái và tràn đầy năng lượng khi học tập.")
         lbl_info.setStyleSheet("color: #7F8C8D; font-size: 13px;")
 
         btn_open_browser = QPushButton("Mở bài nhạc trên Trình duyệt web")
@@ -128,16 +131,17 @@ class ManHinhNhacThuGian(QWidget):
     def cap_nhat_trang_thai_nhac(self):
         """Cap nhat nhan trang thai dang phat hay dang tat."""
         dang_phat = QuanLyAmThanh.get_instance().danh_dang_phat_nhac_nen
+        ten_bai = QuanLyAmThanh.get_instance().lay_ten_bai_hat_nen()
         if dang_phat:
-            self.lbl_status.setText("Trạng thái: Đang Phát (Piano Sunrise)")
+            self.lbl_status.setText(f"Trạng thái: Đang Phát ({ten_bai})")
             self.lbl_status.setStyleSheet("color: #27AE60; font-weight: bold;")
         else:
             self.lbl_status.setText("Trạng thái: Đã Tắt")
             self.lbl_status.setStyleSheet("color: #E74C3C; font-weight: bold;")
 
     def mo_tren_trinh_duyet(self):
-        """Mở link bài nhạc tích cực trực tiếp trên trình duyệt ngoài."""
-        url = QUrl("https://www.youtube.com/watch?v=GZKSEAlOZRc")
+        """Mở link bài nhạc trực tiếp trên trình duyệt ngoài."""
+        url = QUrl("https://www.youtube.com/watch?v=0GnA8VYOfko")
         QDesktopServices.openUrl(url)
 
     def tai_lai_nhac(self):
