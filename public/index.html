@@ -448,12 +448,6 @@
                 <p>Ứng Dụng Đồ Họa 3D Gaming All-In-One: Học Tập, Gemini AI, World Cup, Cúp C1, Đua Xe & IELTS</p>
             </div>
             <div style="display: flex; align-items: center; gap: 20px;">
-                <button id="btnToggleMusic" class="btn-primary" style="font-size: 14px; padding: 10px 18px; border-radius: 14px;" onclick="toggleBgMusic(event)">Tắt Nhạc Nền</button>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <label style="font-size: 14px;">Âm lượng 30%:</label>
-                    <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 90px;" onchange="setVolume(this.value)">
-                    <span id="volVal" style="font-size: 14px; font-weight: 800; color: #06B6D4;">30%</span>
-                </div>
                 <div class="profile-badge">
                     <canvas id="canvasMascot3D" width="60" height="60" style="width: 60px; height: 60px;"></canvas>
                     <img src="/hinh_anh_3d/roblox_anh_dai_dien_3d.png" alt="Avatar" class="avatar-img" onerror="this.src='/hinh_anh_3d/linh_vat_3d.png'">
@@ -461,6 +455,24 @@
                         <span class="user-name" id="hdrUserName">Học Sinh Roblox</span>
                         <span class="user-level" id="hdrUserLevel">Level 5 | 1250 XP | 1 Streak</span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Playlist Vòng Lặp 4 Bài Hát YouTube -->
+        <div id="playlistHeaderBar" style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border: 2.5px solid #06B6D4; border-radius: 20px; padding: 14px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="background: linear-gradient(135deg, #FF6B00, #F59E0B); padding: 6px 14px; border-radius: 12px; font-weight: 900; font-size: 13px; color: #020617;">PLAYLIST VÒNG LẶP</span>
+                <span id="lblCurrentTrack" style="font-weight: 800; font-size: 15px; color: #06B6D4;">Bài 1/4: Oliver Tree - Life Goes On</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-secondary" style="font-size: 13px; padding: 8px 16px; border-radius: 12px;" onclick="prevMusicTrack()">Bài Trước</button>
+                <button id="btnToggleMusic" class="btn-primary" style="font-size: 13px; padding: 8px 18px; border-radius: 12px;" onclick="toggleBgMusic(event)">Mở Khung Nhạc</button>
+                <button class="btn-secondary" style="font-size: 13px; padding: 8px 16px; border-radius: 12px;" onclick="nextMusicTrack()">Bài Sau</button>
+                <div style="display: flex; align-items: center; gap: 8px; margin-left: 10px;">
+                    <label style="font-size: 13px;">Âm lượng 30%:</label>
+                    <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 80px;" onchange="setVolume(this.value)">
+                    <span id="volVal" style="font-size: 13px; font-weight: 800; color: #06B6D4;">30%</span>
                 </div>
             </div>
         </div>
@@ -933,26 +945,55 @@
             }, { passive: true });
         });
 
+        const musicPlaylist = [
+            { id: '8F2s8ivKXNY', title: 'Oliver Tree - Life Goes On' },
+            { id: '0GnA8VYOfko', title: 'KITSCHKRIEG ft. BLUMENGARTEN & SHIRIN DAVID - GUT GENUG' },
+            { id: 'pRpeEdMmmQ0', title: 'Shakira - Waka Waka (FIFA World Cup 2010)' },
+            { id: '7-7knsP2n5w', title: 'Shakira - La La La (Brazil 2014)' }
+        ];
+
+        let currentTrackIdx = 0;
+
+        function updateTrackDisplay() {
+            const track = musicPlaylist[currentTrackIdx];
+            const lbl = document.getElementById('lblCurrentTrack');
+            if (lbl) {
+                lbl.innerText = `Bài ${currentTrackIdx + 1}/4: ${track.title}`;
+            }
+            const iframe = document.getElementById('ytIframePlayer');
+            if (iframe) {
+                const playlistIds = musicPlaylist.map(t => t.id).join(',');
+                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1`;
+            }
+        }
+
+        function nextMusicTrack() {
+            try { playClickSfx(); } catch(e) {}
+            currentTrackIdx = (currentTrackIdx + 1) % musicPlaylist.length;
+            updateTrackDisplay();
+        }
+
+        function prevMusicTrack() {
+            try { playClickSfx(); } catch(e) {}
+            currentTrackIdx = (currentTrackIdx - 1 + musicPlaylist.length) % musicPlaylist.length;
+            updateTrackDisplay();
+        }
+
         function toggleBgMusic(e) {
             if (e) e.stopPropagation();
-            playClickSfx();
-            const bg = document.getElementById('bgMusic');
+            try { playClickSfx(); } catch(e) {}
+            const playerBox = document.getElementById('ytPlaylistContainer');
             const btn = document.getElementById('btnToggleMusic');
-            if (!bg) return;
+            if (!playerBox) return;
 
             if (isMusicPlaying) {
-                bg.pause();
+                playerBox.style.display = 'none';
                 isMusicPlaying = false;
-                if (btn) btn.innerText = 'Bật Nhạc Nền';
+                if (btn) btn.innerText = 'Mở Khung Nhạc';
             } else {
-                userHasInteracted = true;
-                bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
-                bg.play().then(() => {
-                    isMusicPlaying = true;
-                    if (btn) btn.innerText = 'Tắt Nhạc Nền';
-                }).catch(e => {
-                    alert("Hãy nhấp vào bất kỳ đâu trên trang web để trình duyệt cho phép phát nhạc!");
-                });
+                playerBox.style.display = 'block';
+                isMusicPlaying = true;
+                if (btn) btn.innerText = 'Ẩn Khung Nhạc';
             }
         }
 
@@ -961,6 +1002,9 @@
             if (volEl) volEl.innerText = v + '%';
             const bg = document.getElementById('bgMusic');
             if (bg) {
+                bg.volume = parseFloat(v) / 100;
+            }
+        }
                 bg.volume = parseFloat(v) / 100;
             }
         }
@@ -2007,6 +2051,15 @@
                 <button class="btn-success" style="font-size: 16px; padding: 14px 32px; border-radius: 16px;" onclick="closeMinigameModal()">Đóng & Tiếp Tục Học Bài</button>
             </div>
         </div>
+    </div>
+
+    <!-- Embedded YouTube Continuous Playlist Player Widget -->
+    <div id="ytPlaylistContainer" style="display: none; position: fixed; bottom: 130px; right: 20px; z-index: 99999; width: 340px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 14px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: 900; font-size: 13px; color: #F59E0B;">PLAYLIST VÒNG LẶP YOUTUBE</span>
+            <button onclick="toggleBgMusic()" style="background: #EF4444; border: none; color: #FFF; border-radius: 50%; width: 26px; height: 26px; font-weight: 900; cursor: pointer;">X</button>
+        </div>
+        <iframe id="ytIframePlayer" width="100%" height="195" src="https://www.youtube.com/embed/8F2s8ivKXNY?playlist=8F2s8ivKXNY,0GnA8VYOfko,pRpeEdMmmQ0,7-7knsP2n5w&loop=1&autoplay=1&enablejsapi=1" title="YouTube Music Playlist Vong Lap" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 14px; border: 1.5px solid #06B6D4;"></iframe>
     </div>
 
     <!-- Ronaldo Corner Mascot Widget -->
