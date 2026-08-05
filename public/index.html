@@ -430,12 +430,6 @@
 </head>
 <body>
     <canvas id="bg3dCanvas"></canvas>
-    <audio id="bgMusic" autoplay loop preload="auto">
-        <source src="/am_thanh_cache/gut_genug.mp3" type="audio/mpeg">
-        <source src="/am_thanh_cache/Piano%20Sunrise%20(1).mp3" type="audio/mpeg">
-        <source src="/am_thanh_cache/gut_genug.wav" type="audio/wav">
-        <source src="/am_thanh_cache/nhac_nen.wav" type="audio/wav">
-    </audio>
     <audio id="clickSfx" preload="auto">
         <source src="/am_thanh_cache/dap_an.wav" type="audio/wav">
     </audio>
@@ -915,35 +909,12 @@
         }
 
         function startBgMusic() {
+            // Ngan khong cho am thanh audio cu phat trung voi YouTube Playlist
             try {
                 const bg = document.getElementById('bgMusic');
-                const btn = document.getElementById('btnToggleMusic');
-                if (bg) {
-                    bg.volume = parseFloat(document.getElementById('volSlider').value) / 100;
-                    const p = bg.play();
-                    if (p && p.then) {
-                        p.then(() => {
-                            isMusicPlaying = true;
-                            if (btn) btn.innerText = 'Tắt Nhạc Nền';
-                        }).catch(e => {
-                            if (btn) btn.innerText = 'Bật Nhạc Nền (Click)';
-                        });
-                    }
-                }
-            } catch(err) {}
+                if (bg) { bg.pause(); bg.currentTime = 0; }
+            } catch(e) {}
         }
-
-        // Tự động phát nhạc ngay khi load trang
-        try { startBgMusic(); } catch(e) {}
-
-        // Bắt tất cả sự kiện chuột, chạm, cuộn trang để phát nhạc lập tức
-        ['click', 'touchstart', 'pointerdown', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
-            document.addEventListener(evt, function autoPlayMusicInstant() {
-                if (!isMusicPlaying) {
-                    startBgMusic();
-                }
-            }, { passive: true });
-        });
 
         const musicPlaylist = [
             { id: '8F2s8ivKXNY', title: 'Oliver Tree - Life Goes On' },
@@ -1000,13 +971,6 @@
         function setVolume(v) {
             const volEl = document.getElementById('volVal');
             if (volEl) volEl.innerText = v + '%';
-            const bg = document.getElementById('bgMusic');
-            if (bg) {
-                bg.volume = parseFloat(v) / 100;
-            }
-        }
-                bg.volume = parseFloat(v) / 100;
-            }
         }
 
         let currentIeltsSkill = 'tu_vung';
