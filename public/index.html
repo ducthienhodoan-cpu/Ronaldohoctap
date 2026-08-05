@@ -464,8 +464,8 @@
                 <button id="btnToggleMusic" class="btn-primary" style="font-size: 13px; padding: 8px 18px; border-radius: 12px;" onclick="toggleBgMusic(event)">Mở Khung Nhạc</button>
                 <button class="btn-secondary" style="font-size: 13px; padding: 8px 16px; border-radius: 12px;" onclick="nextMusicTrack()">Bài Sau</button>
                 <div style="display: flex; align-items: center; gap: 8px; margin-left: 10px;">
-                    <label style="font-size: 13px;">Âm lượng 30%:</label>
-                    <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 80px;" onchange="setVolume(this.value)">
+                    <label style="font-size: 13px;">Âm lượng:</label>
+                    <input type="range" id="volSlider" min="0" max="100" value="30" style="width: 90px; cursor: pointer;" oninput="setVolume(this.value)" onchange="setVolume(this.value)">
                     <span id="volVal" style="font-size: 13px; font-weight: 800; color: #06B6D4;">30%</span>
                 </div>
             </div>
@@ -972,8 +972,45 @@
         }
 
         function setVolume(v) {
+            const val = parseInt(v);
             const volEl = document.getElementById('volVal');
-            if (volEl) volEl.innerText = v + '%';
+            const slider = document.getElementById('volSlider');
+            const iframe = document.getElementById('ytIframePlayer');
+
+            if (volEl) {
+                if (val === 0) {
+                    volEl.innerText = '0% (Tắt nhạc)';
+                    volEl.style.color = '#FFFFFF';
+                    volEl.style.textShadow = 'none';
+                } else if (val === 100) {
+                    volEl.innerText = '100% (To nhất)';
+                    volEl.style.color = '#06B6D4';
+                    volEl.style.textShadow = '0 0 12px rgba(6, 182, 212, 0.9)';
+                } else {
+                    volEl.innerText = val + '%';
+                    volEl.style.color = '#06B6D4';
+                    volEl.style.textShadow = '0 0 8px rgba(6, 182, 212, 0.6)';
+                }
+            }
+
+            if (slider) {
+                if (val === 0) {
+                    slider.style.background = '#FFFFFF';
+                    slider.style.accentColor = '#FFFFFF';
+                } else {
+                    slider.style.background = `linear-gradient(90deg, #06B6D4 ${val}%, #334155 ${val}%)`;
+                    slider.style.accentColor = '#06B6D4';
+                }
+            }
+
+            if (iframe && iframe.contentWindow) {
+                if (val === 0) {
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+                } else {
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [val] }), '*');
+                }
+            }
         }
 
         let currentIeltsSkill = 'tu_vung';
