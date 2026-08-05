@@ -2057,11 +2057,11 @@
         </div>
     </div>
 
-    <!-- Embedded YouTube Continuous Playlist Player Widget -->
-    <div id="ytPlaylistContainer" style="display: none; position: fixed; bottom: 130px; right: 20px; z-index: 99999; width: 340px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 14px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span style="font-weight: 900; font-size: 13px; color: #F59E0B;">PLAYLIST VÒNG LẶP YOUTUBE</span>
-            <button onclick="toggleBgMusic()" style="background: #EF4444; border: none; color: #FFF; border-radius: 50%; width: 26px; height: 26px; font-weight: 900; cursor: pointer;">X</button>
+    <!-- Embedded YouTube Continuous Playlist Player Widget (Draggable) -->
+    <div id="ytPlaylistContainer" style="display: none; position: fixed; bottom: 130px; right: 20px; z-index: 99999; width: 340px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 2.5px solid #06B6D4; border-radius: 22px; padding: 14px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8); user-select: none;">
+        <div id="ytPlaylistHeader" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: move; padding: 6px 10px; background: rgba(6, 182, 212, 0.18); border-radius: 12px; border: 1px dashed #06B6D4;">
+            <span style="font-weight: 900; font-size: 12.5px; color: #F59E0B; pointer-events: none;">KÉO DI CHUYỂN | PLAYLIST YOUTUBE</span>
+            <button onclick="toggleBgMusic()" style="background: #EF4444; border: none; color: #FFF; border-radius: 50%; width: 24px; height: 24px; font-weight: 900; cursor: pointer;">X</button>
         </div>
         <iframe id="ytIframePlayer" width="100%" height="195" src="https://www.youtube.com/embed/8F2s8ivKXNY?playlist=8F2s8ivKXNY,0GnA8VYOfko,pRpeEdMmmQ0,7-7knsP2n5w,IwzkfMmNMpM,fcnDmrtj6Sk,611WYDonzTU&loop=1&autoplay=1&enablejsapi=1" title="YouTube Music Playlist Vong Lap" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 14px; border: 1.5px solid #06B6D4;"></iframe>
     </div>
@@ -2103,6 +2103,48 @@
                 bubble.innerText = quotes[Math.floor(Math.random() * quotes.length)];
             }
         }
+
+        function makeElementDraggable(elmnt, headerElmnt) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const dragTarget = headerElmnt || elmnt;
+            dragTarget.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                elmnt.style.bottom = 'auto';
+                elmnt.style.right = 'auto';
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const playerBox = document.getElementById('ytPlaylistContainer');
+            const playerHeader = document.getElementById('ytPlaylistHeader');
+            if (playerBox && playerHeader) {
+                makeElementDraggable(playerBox, playerHeader);
+            }
+        });
     </script>
 </body>
 </html>
