@@ -20,7 +20,6 @@ class ManHinhGapThu(QWidget):
         self.tong_luot_choi = 0
         self.tong_xp_gap_duoc = 0
         self.dang_gap = False
-        self.loai_thu_dang_gap = "thuong"
         
         # Timer mo phong hoat anh tay gap
         self.timer_gap = QTimer(self)
@@ -59,9 +58,32 @@ class ManHinhGapThu(QWidget):
         layout_stats.addWidget(self.lbl_tong_xp)
         layout_chinh.addWidget(frame_stats)
 
+        # Khung danh sach thu bong va ti le
+        frame_danh_sach = QFrame()
+        frame_danh_sach.setStyleSheet(
+            "background-color: #1E293B; border: 1px solid #334155; border-radius: 12px; padding: 12px;"
+        )
+        layout_ds = QVBoxLayout(frame_danh_sach)
+        lbl_ds_tieu_de = QLabel("CƠ CẤU PHẦN THƯỞNG MÁY GẮP THÚ:")
+        lbl_ds_tieu_de.setStyleSheet("font-size: 15px; font-weight: bold; color: #F59E0B;")
+        layout_ds.addWidget(lbl_ds_tieu_de)
+
+        lbl_mo_ta = QLabel("• Tỉ lệ gắp thành công 70% (khoảng 30% rớt). Trúng ngẫu nhiên 1 trong 3 loại thú:")
+        lbl_mo_ta.setStyleSheet("font-size: 14px; font-weight: bold; color: #CBD5E1;")
+        layout_ds.addWidget(lbl_mo_ta)
+
+        layout_ds_chi_tiet = QHBoxLayout()
+        ds_thu = lay_danh_sach_thu()
+        for thu in ds_thu:
+            lbl_item = QLabel(f"• {thu['ten']}: +{thu['xp']} XP")
+            lbl_item.setStyleSheet("font-size: 14px; font-weight: bold; color: #38BDF8;")
+            layout_ds_chi_tiet.addWidget(lbl_item)
+        layout_ds.addLayout(layout_ds_chi_tiet)
+        layout_chinh.addWidget(frame_danh_sach)
+
         # Khung mo phong may gap 3D / animation
         self.frame_may_gap = QFrame()
-        self.frame_may_gap.setMinimumHeight(200)
+        self.frame_may_gap.setMinimumHeight(180)
         self.frame_may_gap.setStyleSheet(
             "background: linear-gradient(180deg, #1E1B4B 0%, #0F172A 100%); "
             "border: 3px solid #EC4899; border-radius: 16px; padding: 16px;"
@@ -69,7 +91,7 @@ class ManHinhGapThu(QWidget):
         layout_may_gap = QVBoxLayout(self.frame_may_gap)
         layout_may_gap.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.lbl_trang_thai_gap = QLabel("Vui lòng chọn loại thú bông để bắt đầu gắp!")
+        self.lbl_trang_thai_gap = QLabel("Nhấn nút GẮP THÚ để thử vận may!")
         self.lbl_trang_thai_gap.setStyleSheet("font-size: 18px; font-weight: bold; color: #F59E0B;")
         self.lbl_trang_thai_gap.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout_may_gap.addWidget(self.lbl_trang_thai_gap)
@@ -86,71 +108,35 @@ class ManHinhGapThu(QWidget):
         layout_may_gap.addWidget(self.progress_bar_gap)
 
         self.lbl_ket_qua = QLabel("")
-        self.lbl_ket_qua.setStyleSheet("font-size: 17px; font-weight: bold; color: #FFFFFF;")
+        self.lbl_ket_qua.setStyleSheet("font-size: 16px; font-weight: bold; color: #FFFFFF;")
         self.lbl_ket_qua.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout_may_gap.addWidget(self.lbl_ket_qua)
 
         layout_chinh.addWidget(self.frame_may_gap)
 
-        # Khung 3 nut bam lua chon 3 cap do gap thu
-        lbl_huong_dan = QLabel("CHỌN CẤP ĐỘ GẮP THÚ:")
-        lbl_huong_dan.setStyleSheet("font-size: 16px; font-weight: bold; color: #FFFFFF;")
-        layout_chinh.addWidget(lbl_huong_dan)
-
-        layout_nut = QHBoxLayout()
-        layout_nut.setSpacing(12)
-
-        # Nut Gắp Thường (75% - 50XP)
-        self.btn_thuong = QPushButton("Gắp Gấu Bông Thường\nTỉ lệ: 75% | Thưởng: 50 XP")
-        self.btn_thuong.setStyleSheet(
-            "QPushButton { background: linear-gradient(135deg, #06B6D4, #0891B2); color: #FFFFFF; font-size: 14px; font-weight: bold; padding: 14px; border-radius: 12px; border: none; }"
-            "QPushButton:hover { background: linear-gradient(135deg, #22D3EE, #06B6D4); }"
+        # Nut bam GẮP THÚ duy nhat
+        self.btn_gap_thu = QPushButton("GẮP THÚ")
+        self.btn_gap_thu.setStyleSheet(
+            "QPushButton { background: linear-gradient(135deg, #EC4899, #A855F7); color: #FFFFFF; font-size: 18px; font-weight: bold; padding: 16px; border-radius: 14px; border: none; }"
+            "QPushButton:hover { background: linear-gradient(135deg, #F472B6, #C084FC); }"
             "QPushButton:disabled { background: #475569; color: #94A3B8; }"
         )
-        self.btn_thuong.clicked.connect(lambda: self.bat_dau_gap("thuong"))
+        self.btn_gap_thu.clicked.connect(self.bat_dau_gap)
+        layout_chinh.addWidget(self.btn_gap_thu)
 
-        # Nut Gắp Hiếm (50% - 200XP)
-        self.btn_hiem = QPushButton("Gắp Thỏ Bông Hiếm\nTỉ lệ: 50% | Thưởng: 200 XP")
-        self.btn_hiem.setStyleSheet(
-            "QPushButton { background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFFFFF; font-size: 14px; font-weight: bold; padding: 14px; border-radius: 12px; border: none; }"
-            "QPushButton:hover { background: linear-gradient(135deg, #FBBF24, #F59E0B); }"
-            "QPushButton:disabled { background: #475569; color: #94A3B8; }"
-        )
-        self.btn_hiem.clicked.connect(lambda: self.bat_dau_gap("hiem"))
-
-        # Nut Gắp Huyền Thoại (25% - 500XP)
-        self.btn_huyen_thoai = QPushButton("Gắp Rồng Bông Huyền Thoại\nTỉ lệ: 25% | Thưởng: 500 XP")
-        self.btn_huyen_thoai.setStyleSheet(
-            "QPushButton { background: linear-gradient(135deg, #EC4899, #BE185D); color: #FFFFFF; font-size: 14px; font-weight: bold; padding: 14px; border-radius: 12px; border: none; }"
-            "QPushButton:hover { background: linear-gradient(135deg, #F472B6, #EC4899); }"
-            "QPushButton:disabled { background: #475569; color: #94A3B8; }"
-        )
-        self.btn_huyen_thoai.clicked.connect(lambda: self.bat_dau_gap("huyen_thoai"))
-
-        layout_nut.addWidget(self.btn_thuong)
-        layout_nut.addWidget(self.btn_hiem)
-        layout_nut.addWidget(self.btn_huyen_thoai)
-
-        layout_chinh.addLayout(layout_nut)
-
-    def bat_dau_gap(self, loai_id):
-        """Bat dau qua trinh gap thu bong hoat anh."""
+    def bat_dau_gap(self):
+        """Bat dau qua trinh tay gap ha xuong."""
         if self.dang_gap:
             return
 
         self.dang_gap = True
-        self.loai_thu_dang_gap = loai_id
-        self.set_nut_enabled(False)
+        self.btn_gap_thu.setEnabled(False)
         self.tien_trinh_gap = 0
         self.progress_bar_gap.setValue(0)
         self.lbl_ket_qua.setText("")
 
-        if loai_id == "thuong":
-            self.lbl_trang_thai_gap.setText("Tay gắp đang hạ xuống gắp Gấu Bông Thường (75%)...")
-        elif loai_id == "hiem":
-            self.lbl_trang_thai_gap.setText("Tay gắp đang hạ xuống gắp Thỏ Bông Hiếm (50%)...")
-        else:
-            self.lbl_trang_thai_gap.setText("Tay gắp đang hạ xuống gắp Rồng Bông Huyền Thoại (25%)...")
+        self.lbl_trang_thai_gap.setText("Tay gắp đang hạ xuống gắp thú bông...")
+        self.lbl_trang_thai_gap.setStyleSheet("font-size: 18px; font-weight: bold; color: #F59E0B;")
 
         # Chay timer hoat anh 40ms 1 lan (tong cong ~2 giay)
         self.timer_gap.start(40)
@@ -167,7 +153,7 @@ class ManHinhGapThu(QWidget):
     def hoan_thanh_gap(self):
         """Tinh ket qua gap va cong XP khi hoan thanh hoat anh."""
         self.tong_luot_choi += 1
-        thanh_cong, xp, thong_bao = thuc_hien_gap_thu(self.loai_thu_dang_gap)
+        thanh_cong, xp, thong_bao, thu_info = thuc_hien_gap_thu()
 
         if thanh_cong:
             self.tong_xp_gap_duoc += xp
@@ -182,7 +168,7 @@ class ManHinhGapThu(QWidget):
             except Exception:
                 pass
         else:
-            self.lbl_trang_thai_gap.setText("GẮP TRƯỢT MẤT RỒI!")
+            self.lbl_trang_thai_gap.setText("TAY GẮP BỊ RỚT!")
             self.lbl_trang_thai_gap.setStyleSheet("font-size: 18px; font-weight: bold; color: #EF4444;")
             self.lbl_ket_qua.setText(thong_bao)
             self.lbl_ket_qua.setStyleSheet("font-size: 17px; font-weight: bold; color: #EF4444;")
@@ -192,10 +178,6 @@ class ManHinhGapThu(QWidget):
         self.lbl_tong_xp.setText(f"Tổng XP gắp được: {self.tong_xp_gap_duoc} XP")
 
         self.dang_gap = False
-        self.set_nut_enabled(True)
+        self.btn_gap_thu.setEnabled(True)
 
-    def set_nut_enabled(self, state):
-        """Bat hoac tat cac nut bam trong khi dang gap."""
-        self.btn_thuong.setEnabled(state)
-        self.btn_hiem.setEnabled(state)
-        self.btn_huyen_thoai.setEnabled(state)
+

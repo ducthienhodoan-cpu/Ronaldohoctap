@@ -85,21 +85,15 @@ function khoi_tao_gap_thu_3d() {
     animateGapThu3D();
 }
 
-function bat_dau_gap_thu_web(loaiTier) {
+function bat_dau_gap_thu_web() {
     if (clawIsOperating) return;
     clawIsOperating = true;
-    clawTargetTier = loaiTier || 'thuong';
     clawState = 'lowering';
-
-    const info = TI_LE_GAP_THU[clawTargetTier];
-    if (clawPlush3D) {
-        clawPlush3D.material.color.setHex(info.color);
-    }
 
     const resDiv = document.getElementById('clawResult');
     if (resDiv) {
         resDiv.style.color = '#F59E0B';
-        resDiv.innerText = `Tay gắp đang hạ xuống gắp ${info.ten} (Tỉ lệ ${info.ti_le}%)...`;
+        resDiv.innerText = 'Tay gắp đang hạ xuống gắp thú...';
     }
 }
 
@@ -111,17 +105,24 @@ function animateGapThu3D() {
         if (clawArm3D.position.y > -0.7) {
             clawArm3D.position.y -= 0.04;
         } else {
-            clawState = 'lifting';
-            // Roll probability
-            const info = TI_LE_GAP_THU[clawTargetTier];
+            // Roll 30% rot vs 70% thanh cong
             const roll = Math.floor(Math.random() * 100) + 1;
-            const success = roll <= info.ti_le;
-
-            if (success) {
-                clawPlush3D.position.y = clawArm3D.position.y - 0.5;
-                clawState = 'lifting_success';
-            } else {
+            if (roll <= 30) {
+                // 30% Rot
                 clawState = 'lifting_fail';
+            } else {
+                // 70% Thanh cong: ngau nhien 1 trong 3 thu bong
+                const subRoll = Math.random() * 100;
+                if (subRoll < 60) clawTargetTier = 'thuong';
+                else if (subRoll < 90) clawTargetTier = 'hiem';
+                else clawTargetTier = 'huyen_thoai';
+
+                const info = TI_LE_GAP_THU[clawTargetTier];
+                if (clawPlush3D) {
+                    clawPlush3D.material.color.setHex(info.color);
+                    clawPlush3D.position.y = clawArm3D.position.y - 0.5;
+                }
+                clawState = 'lifting_success';
             }
         }
     } else if (clawState === 'lifting_success') {
@@ -151,11 +152,10 @@ function animateGapThu3D() {
             clawIsOperating = false;
             clawPlush3D.position.set(0, -1.3, 0);
 
-            const info = TI_LE_GAP_THU[clawTargetTier];
             const resDiv = document.getElementById('clawResult');
             if (resDiv) {
                 resDiv.style.color = '#EF4444';
-                resDiv.innerText = `Tiếc quá! Gắp trượt ${info.ten} (Tỉ lệ ${info.ti_le}%). Thử lại nhé!`;
+                resDiv.innerText = 'Tiếc quá! Tay gắp bị trượt rớt mất thú bông rồi. Thử lại nhé!';
             }
         }
     } else {

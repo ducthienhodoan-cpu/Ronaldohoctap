@@ -131,7 +131,7 @@ class ManHinhTroChoi(QWidget):
         btn_g3.setStyleSheet("color: #FFFFFF; font-weight: bold;")
         btn_g3.clicked.connect(lambda: self.stack_game.setCurrentIndex(2))
 
-        btn_g4 = QPushButton("Gắp Thú May Mắn (75%/50%/25%)")
+        btn_g4 = QPushButton("Gắp Thú May Mắn (Ngẫu nhiên)")
         btn_g4.setProperty("class", "btn-primary")
         btn_g4.setStyleSheet("background: linear-gradient(135deg, #EC4899, #A855F7); color: #FFFFFF; font-weight: bold;")
         btn_g4.clicked.connect(lambda: self.stack_game.setCurrentIndex(3))
