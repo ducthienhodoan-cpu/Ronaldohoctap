@@ -483,7 +483,7 @@
             <button class="tab-btn" data-sec="worldcup" onclick="switchSection('worldcup', this)">Đấu Trường World Cup</button>
             <button class="tab-btn" data-sec="c1" onclick="switchSection('c1', this)">Cúp C1 Champions League</button>
             <button class="tab-btn" data-sec="duaxe" onclick="switchSection('duaxe', this)">Giải Đua Xe Grand Prix</button>
-            <button class="tab-btn" data-sec="minigames" onclick="switchSection('minigames', this)">Bộ 3 Minigames</button>
+            <button class="tab-btn" data-sec="minigames" onclick="switchSection('minigames', this)">Bộ 4 Minigames</button>
             <button class="tab-btn" data-sec="formula" onclick="switchSection('formula', this)">Sổ Tay Công Thức</button>
             <button class="tab-btn" data-sec="notebook" onclick="switchSection('notebook', this)">Sổ Lỗi Sai Bài Khó</button>
             <button class="tab-btn" data-sec="plan" onclick="switchSection('plan', this)">Lịch Học & Streak</button>
@@ -755,7 +755,7 @@
         <!-- 11. Bộ Minigames -->
         <div id="pane-minigames" class="section-pane">
             <div class="card">
-                <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
+                <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ 4 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
@@ -1893,7 +1893,9 @@
             if (!modal) return;
             document.getElementById('lblMinigameModalHeader').innerText = `MINIGAME THƯ GIÃN GIỮA GIỜ (CÂU ${cauSo || 1}) - THƯỞNG +XP`;
             modal.style.display = 'flex';
-            showMinigameModalTab('vongquay');
+            const tabs = ['vongquay', 'penalty', 'latthe', 'gapthu'];
+            const randTab = tabs[Math.floor(Math.random() * tabs.length)];
+            showMinigameModalTab(randTab);
             try { playClickSfx(); } catch(e) {}
         }
 
@@ -1906,9 +1908,11 @@
             document.getElementById('tabModalVongQuay').style.display = tabName === 'vongquay' ? 'block' : 'none';
             document.getElementById('tabModalPenalty').style.display = tabName === 'penalty' ? 'block' : 'none';
             document.getElementById('tabModalLatThe').style.display = tabName === 'latthe' ? 'block' : 'none';
+            document.getElementById('tabModalGapThu').style.display = tabName === 'gapthu' ? 'block' : 'none';
             
             if (tabName === 'vongquay') drawModalWheelCanvas();
             if (tabName === 'latthe') initModalMemoryCards();
+            if (tabName === 'gapthu' && typeof khoi_tao_modal_gap_thu_3d === 'function') setTimeout(khoi_tao_modal_gap_thu_3d, 100);
         }
 
         function drawModalWheelCanvas() {
@@ -2035,12 +2039,13 @@
         <div style="background: linear-gradient(135deg, #0F172A, #1E1B4B); border: 3px solid #06B6D4; border-radius: 28px; width: 90%; max-width: 680px; padding: 28px; box-shadow: 0 0 50px rgba(6, 182, 212, 0.6); position: relative; max-height: 90vh; overflow-y: auto;">
             <button onclick="closeMinigameModal()" style="position: absolute; top: 18px; right: 22px; background: #EF4444; color: #FFFFFF; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 18px; font-weight: 900; display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0; margin: 0; cursor: pointer; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6);">X</button>
             <h3 id="lblMinigameModalHeader" style="color: #F59E0B; font-size: 22px; margin-bottom: 14px; text-align: center;">MINIGAME THƯ GIÃN GIỮA GIỜ - THƯỞNG +XP</h3>
-            <p style="text-align: center; color: #F1F5F9; font-size: 15px; margin-bottom: 20px;">Chúc mừng bạn đã trả lời câu hỏi! Chọn 1 trong 3 Minigame dưới đây để thư giãn và tích lũy XP:</p>
+            <p style="text-align: center; color: #F1F5F9; font-size: 15px; margin-bottom: 20px;">Chúc mừng bạn đã trả lời câu hỏi! Chọn 1 trong 4 Minigame dưới đây để thư giãn và tích lũy XP:</p>
             
-            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
-                <button class="btn-primary" onclick="showMinigameModalTab('vongquay')">1. Vòng Quay May Mắn</button>
-                <button class="btn-secondary" onclick="showMinigameModalTab('penalty')">2. Sút Phạt Penalty</button>
-                <button class="btn-success" onclick="showMinigameModalTab('latthe')">3. Lật Thẻ Trí Nhớ</button>
+            <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="showMinigameModalTab('vongquay')">1. Vòng Quay</button>
+                <button class="btn-secondary" onclick="showMinigameModalTab('penalty')">2. Sút Penalty</button>
+                <button class="btn-success" onclick="showMinigameModalTab('latthe')">3. Lật Thẻ</button>
+                <button class="btn-primary" style="background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="showMinigameModalTab('gapthu')">4. Gắp Thú 3D</button>
             </div>
 
             <div id="tabModalVongQuay" style="text-align: center;">
@@ -2065,6 +2070,14 @@
                 <p style="text-align: center; font-size: 14px; margin-bottom: 12px; color: #06B6D4;">Nhấp lật 2 thẻ trùng khớp để nhận +100 XP thưởng!</p>
                 <div id="modalMemoryGrid" class="grid-4" style="gap: 12px;"></div>
                 <div id="modalMemoryResult" style="text-align: center; margin-top: 14px; font-weight: 900; color: #10B981; font-size: 16px;"></div>
+            </div>
+
+            <div id="tabModalGapThu" style="display: none; text-align: center;">
+                <div style="font-size: 12px; color: #CBD5E1; margin-bottom: 10px; line-height: 1.4;">
+                    Tỉ lệ thành công 70% (30% rớt). Trúng 1 trong 3: Gấu Thường (+50 XP), Thỏ Hiếm (+200 XP), Rồng Huyền Thoại (+500 XP)
+                </div>
+                <button class="btn-primary" style="font-size: 16px; font-weight: 900; padding: 14px 24px; width: 100%; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web()">GẮP THÚ</button>
+                <div id="modalClawResult" style="margin-top: 12px; font-weight: 900; color: #10B981; font-size: 15px;"></div>
             </div>
 
             <div style="text-align: center; margin-top: 24px;">

@@ -12,14 +12,15 @@ from xu_ly_tro_choi.minigame_giua_gio import (
     tao_danh_sach_the_lat_tri_nho, quay_vong_quay_may_man, xu_ly_sut_phat_penalty
 )
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
+from giao_dien.man_hinh_gap_thu import ManHinhGapThu
 
 class HopThoaiMinigameGiuaGioDialog(QDialog):
-    """Hộp thoại Minigame thư giãn giữa giờ học giúp học sinh giải trí và tích lũy XP."""
+    """Hộp thoại Minigame thư giãn giữa giờ học giúp học sinh giải trí và tích lũy XP (Bộ 4 Minigames)."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("MINIGAME THƯ GIÃN GIỮA GIỜ HỌC & LUYỆN TẬP")
-        self.resize(680, 560)
+        self.setWindowTitle("MINIGAME THƯ GIÃN GIỮA GIỜ HỌC & LUYỆN TẬP - BỘ 4 MINIGAMES")
+        self.resize(720, 600)
 
         self.the_list = []
         self.open_cards = []
@@ -38,16 +39,15 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
         main_layout.setSpacing(12)
 
         # Header tiêu đề chữ trắng
-        self.lbl_header = QLabel("MINIGAME THƯ GIÃN GIỮA GIỜ - GIẢI TRÍ & TÍCH LŨY XP")
+        self.lbl_header = QLabel("MINIGAME THƯ GIÃN GIỮA GIỜ - BỘ 4 MINIGAMES GIẢI TRÍ & TÍCH LŨY XP")
         self.lbl_header.setStyleSheet("font-size: 18px; font-weight: bold; color: #FFFFFF;")
         main_layout.addWidget(self.lbl_header)
 
-
-        # Tab điều hướng 3 Minigame
+        # Tab điều hướng Bộ 4 Minigames
         self.tabs = QTabWidget()
         self.tabs.setStyleSheet("""
             QTabWidget::pane { border: 2px solid #00A2FF; border-radius: 8px; background-color: #001F3F; }
-            QTabBar::tab { background-color: #002B4D; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 16px; margin-right: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; }
+            QTabBar::tab { background-color: #002B4D; color: #FFFFFF; font-weight: bold; font-size: 13px; padding: 8px 12px; margin-right: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; }
             QTabBar::tab:selected { background-color: #00A2FF; color: #FFFFFF; }
         """)
 
@@ -66,6 +66,10 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
         self.init_tab_penalty()
         self.tabs.addTab(self.tab_penalty, "3. Sút Phạt Penalty")
 
+        # Tab 4: Gắp thú may mắn
+        self.tab_gap_thu = ManHinhGapThu(self)
+        self.tabs.addTab(self.tab_gap_thu, "4. Gắp Thú May Mắn")
+
         main_layout.addWidget(self.tabs)
 
         # Nút đóng
@@ -80,9 +84,9 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
         main_layout.addLayout(btn_layout)
 
     def mo_tab_ngau_nhien(self, cau_so=1):
-        """Mở ngẫu nhiên 1 trong 3 tab Minigame sau khi học sinh làm xong câu hỏi."""
+        """Mở ngẫu nhiên 1 trong 4 tab Minigame sau khi học sinh làm xong câu hỏi."""
         import random
-        idx_tab = random.randint(0, 2)
+        idx_tab = random.randint(0, 3)
         self.tabs.setCurrentIndex(idx_tab)
         self.lbl_header.setText(f"CHÚC MỪNG BẠN ĐÃ TRẢ LỜI CÂU {cau_so}! CHƠI MINIGAME NHẬN THƯỞNG!")
 
