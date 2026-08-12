@@ -21,6 +21,7 @@ from xu_ly_tro_choi.quan_ly_tro_choi import (
     luu_ghi_chu_hoc_tap, lay_ghi_chu_hoc_tap
 )
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
+from giao_dien.man_hinh_gap_thu import ManHinhGapThu
 
 class ManHinhTroChoi(QWidget):
     """Màn hình Trung tâm Trò chơi Minigame và Ứng dụng Học tập với BỐ CỤC CUỘN TỰ ĐỘNG KHÔNG BỊ CHE CHỮ KHÔNG BỊ CHE NÚT."""
@@ -130,9 +131,15 @@ class ManHinhTroChoi(QWidget):
         btn_g3.setStyleSheet("color: #FFFFFF; font-weight: bold;")
         btn_g3.clicked.connect(lambda: self.stack_game.setCurrentIndex(2))
 
+        btn_g4 = QPushButton("Gắp Thú May Mắn (75%/50%/25%)")
+        btn_g4.setProperty("class", "btn-primary")
+        btn_g4.setStyleSheet("background: linear-gradient(135deg, #EC4899, #A855F7); color: #FFFFFF; font-weight: bold;")
+        btn_g4.clicked.connect(lambda: self.stack_game.setCurrentIndex(3))
+
         nav_game_layout.addWidget(btn_g1)
         nav_game_layout.addWidget(btn_g2)
         nav_game_layout.addWidget(btn_g3)
+        nav_game_layout.addWidget(btn_g4)
         layout_games.addLayout(nav_game_layout)
 
         # StackedWidget các trò chơi bọc trong QScrollArea để không bị che nút che chữ
@@ -140,6 +147,7 @@ class ManHinhTroChoi(QWidget):
         self.stack_game.addWidget(self.wrap_in_scroll(self.create_math_racer_widget()))
         self.stack_game.addWidget(self.wrap_in_scroll(self.create_memory_match_widget()))
         self.stack_game.addWidget(self.wrap_in_scroll(self.create_super_typing_widget()))
+        self.stack_game.addWidget(self.wrap_in_scroll(ManHinhGapThu()))
         self.stack_game.currentChanged.connect(self.on_stack_game_changed)
 
         layout_games.addWidget(self.stack_game)

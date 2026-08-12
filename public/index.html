@@ -15,6 +15,7 @@
     <script src="/xu_ly_3d/cup_vo_dich_3d.js"></script>
     <script src="/xu_ly_3d/vong_quay_3d.js"></script>
     <script src="/xu_ly_3d/linh_vat_3d.js"></script>
+    <script src="/xu_ly_3d/gap_thu_3d.js"></script>
     <style>
         :root {
             --bg-body: #020617;
@@ -751,16 +752,26 @@
             </div>
         </div>
 
-        <!-- 11. Bộ 3 Minigames -->
+        <!-- 11. Bộ Minigames -->
         <div id="pane-minigames" class="section-pane">
             <div class="card">
-                <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ 3 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
-                <div class="grid-3">
+                <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
                         <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%;"></canvas><br>
                         <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
                         <div id="wheelResult" style="margin-top: 16px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
+                    </div>
+                    <div class="game-stadium-card">
+                        <h4>Máy Gắp Thú May Mắn 3D</h4>
+                        <canvas id="canvasClaw" width="220" height="160" style="margin: 12px 0; border-radius: 16px; border: 2px solid #EC4899;"></canvas><br>
+                        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
+                            <button class="btn-primary" style="font-size: 11px; padding: 6px 10px;" onclick="bat_dau_gap_thu_web('thuong')">Gấu Thường (75% - 50 XP)</button>
+                            <button class="btn-primary" style="font-size: 11px; padding: 6px 10px; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web('hiem')">Thỏ Hiếm (50% - 200 XP)</button>
+                            <button class="btn-primary" style="font-size: 11px; padding: 6px 10px; background: linear-gradient(135deg, #EC4899, #BE185D);" onclick="bat_dau_gap_thu_web('huyen_thoai')">Rồng Huyền Thoại (25% - 500 XP)</button>
+                        </div>
+                        <div id="clawResult" style="margin-top: 14px; font-weight: 900; color: #10B981; font-size: 15px;"></div>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Sút Phạt Penalty 5 Góc</h4>
