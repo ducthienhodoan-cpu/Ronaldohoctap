@@ -36,6 +36,7 @@ class ManHinhChampionsLeague(QWidget):
         self.cau_hoi_cl = []
         self.dap_an_user = {}
         self.last_played_date = ""
+        self.so_luot_hom_nay = 0
 
         self.thoi_gian_con_lai = 300
         self.timer = QTimer(self)
@@ -80,7 +81,7 @@ class ManHinhChampionsLeague(QWidget):
 
         # Bộ lọc Chọn CLB, Lớp, Môn và 5 Chủ đề
         info_vbox = QVBoxLayout()
-        lbl_select_title = QLabel("Cấu hình Cúp C1 (Chọn CLB Châu Âu, Môn học & 1 Chủ đề - 1 lượt chơi/ngày):")
+        lbl_select_title = QLabel("Cấu hình Cúp C1 (Chọn CLB Châu Âu, Môn học & 1 Chủ đề - 3 lượt chơi/ngày):")
         lbl_select_title.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF;")
         info_vbox.addWidget(lbl_select_title)
 
@@ -259,18 +260,22 @@ class ManHinhChampionsLeague(QWidget):
         self.cbo_chu_de.addItems(danh_sach_5_chu_de)
         self.cbo_chu_de.blockSignals(False)
 
-        self.bat_dau_giai_dau()
-
     def bat_dau_giai_dau(self):
-        """Khởi động trận đấu Champions League mới cho 1 Chủ đề được chọn (Kiểm tra giới hạn 1 lượt/ngày)."""
+        """Khởi động trận đấu Champions League mới cho 1 Chủ đề được chọn (Kiểm tra giới hạn 3 lượt/ngày)."""
         hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
-        if self.last_played_date == hom_nay and self.vong_idx == 0:
-            QMessageBox.warning(
-                self, 
-                "Giới hạn lượt chơi Cúp C1", 
-                "Mỗi ngày chỉ có 1 lượt tham gia Giải đấu Cúp C1 Champions League! Em đã sử dụng lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
-            )
-            return
+        if self.last_played_date != hom_nay:
+            self.last_played_date = hom_nay
+            self.so_luot_hom_nay = 0
+
+        if self.vong_idx == 0:
+            if self.so_luot_hom_nay >= 3:
+                QMessageBox.warning(
+                    self, 
+                    "Giới hạn lượt chơi Cúp C1", 
+                    f"Mỗi ngày chỉ có tối đa 3 lượt tham gia Giải đấu Cúp C1 Champions League! Em đã sử dụng hết {self.so_luot_hom_nay}/3 lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
+                )
+                return
+            self.so_luot_hom_nay += 1
 
         ten_lop = self.cbo_lop.currentText()
         ten_mon = self.cbo_mon.currentText()

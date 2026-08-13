@@ -33,7 +33,7 @@ class ManHinhWorldCup(QWidget):
         self.cau_hoi_world_cup = []
         self.dap_an_user = {}
         self.last_played_date = ""
-        self.da_dung_luot_hom_nay = False
+        self.so_luot_hom_nay = 0
 
         self.thoi_gian_con_lai = 300
         self.timer = QTimer(self)
@@ -78,7 +78,7 @@ class ManHinhWorldCup(QWidget):
 
         # Bộ lọc Chọn Đội tuyển, Lớp và Môn học chữ trắng
         info_vbox = QVBoxLayout()
-        lbl_select_title = QLabel("Ngoại hình Trang phục & Đội tuyển Quốc gia đại diện (1 lượt chơi/ngày):")
+        lbl_select_title = QLabel("Ngoại hình Trang phục & Đội tuyển Quốc gia đại diện (3 lượt chơi/ngày):")
         lbl_select_title.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF;")
         info_vbox.addWidget(lbl_select_title)
 
@@ -224,15 +224,21 @@ class ManHinhWorldCup(QWidget):
                 self.lbl_match_title.setText(f"{self.vong_info['ten'].upper()}: {doi_ten.upper()} VS {doi_thu.upper()}")
 
     def bat_dau_giai_dau(self):
-        """Khởi động trận đấu World Cup mới (Kiểm tra giới hạn 1 lượt chơi/ngày)."""
+        """Khởi động trận đấu World Cup mới (Kiểm tra giới hạn 3 lượt chơi/ngày)."""
         hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
-        if self.last_played_date == hom_nay and self.vong_idx == 0:
-            QMessageBox.warning(
-                self, 
-                "Giới hạn lượt chơi World Cup", 
-                "Mỗi ngày chỉ có 1 lượt tham gia Đấu trường World Cup! Em đã sử dụng lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
-            )
-            return
+        if self.last_played_date != hom_nay:
+            self.last_played_date = hom_nay
+            self.so_luot_hom_nay = 0
+
+        if self.vong_idx == 0:
+            if self.so_luot_hom_nay >= 3:
+                QMessageBox.warning(
+                    self, 
+                    "Giới hạn lượt chơi World Cup", 
+                    f"Mỗi ngày chỉ có tối đa 3 lượt tham gia Đấu trường World Cup! Em đã sử dụng hết {self.so_luot_hom_nay}/3 lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
+                )
+                return
+            self.so_luot_hom_nay += 1
 
         ten_lop = self.cbo_lop.currentText()
         ten_mon = self.cbo_mon.currentText()

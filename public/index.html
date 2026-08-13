@@ -1509,10 +1509,25 @@
         async function startTournament(type) {
             tourTypeCurrent = type;
             const todayStr = new Date().toISOString().split('T')[0];
-            const lastKey = type === 'world_cup' ? 'wc_last_played_date' : 'c1_last_played_date';
-            if (tourVongIdx === 0 && localStorage.getItem(lastKey) === todayStr) {
-                alert("Mỗi ngày chỉ có 1 lượt tham gia Đấu trường! Bạn đã sử dụng lượt chơi hôm nay, hãy quay lại vào ngày mai để thử sức tiếp nhé!");
-                return;
+            const countKey = type === 'world_cup' ? 'wc_count_today' : 'c1_count_today';
+            const dateKey = type === 'world_cup' ? 'wc_date_today' : 'c1_date_today';
+
+            let playedDate = localStorage.getItem(dateKey);
+            let playedCount = parseInt(localStorage.getItem(countKey) || '0', 10);
+
+            if (playedDate !== todayStr) {
+                playedDate = todayStr;
+                playedCount = 0;
+                localStorage.setItem(dateKey, todayStr);
+                localStorage.setItem(countKey, '0');
+            }
+
+            if (tourVongIdx === 0) {
+                if (playedCount >= 3) {
+                    alert(`Mỗi ngày chỉ có tối đa 3 lượt tham gia Đấu trường! Bạn đã sử dụng hết ${playedCount}/3 lượt chơi hôm nay, hãy quay lại vào ngày mai để thử sức tiếp nhé!`);
+                    return;
+                }
+                localStorage.setItem(countKey, (playedCount + 1).toString());
             }
 
             const res = await fetch('/api/games', {
@@ -1545,8 +1560,6 @@
             const boardQ = isWc ? 'lblWcQuestion' : 'lblC1Question';
             const boardContainer = isWc ? 'wcOptionsContainer' : 'c1OptionsContainer';
             const chosenTeam = isWc ? selectedWcTeam : selectedC1Club;
-            const todayStr = new Date().toISOString().split('T')[0];
-            const lastKey = isWc ? 'wc_last_played_date' : 'c1_last_played_date';
 
             if (!tourQuestions || tourIndex >= tourQuestions.length) {
                 // Truong hop Hoa -> Penalty loai truc tiep!
@@ -1564,8 +1577,6 @@
                         alert(`HÒA TRẬN ĐẤU! Hai đội bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thua ${penUser} - ${penOpp}!`);
                     }
                 }
-
-                localStorage.setItem(lastKey, todayStr);
 
                 if (tourScoreUser > tourScoreOpponent) {
                     if (tourVongIdx < 3) {
