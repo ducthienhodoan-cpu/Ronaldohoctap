@@ -1504,13 +1504,23 @@
             try { playClickSfx(); } catch(e) {}
         }
 
+        let tourVongIdx = 0;
+
         async function startTournament(type) {
             tourTypeCurrent = type;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const lastKey = type === 'world_cup' ? 'wc_last_played_date' : 'c1_last_played_date';
+            if (tourVongIdx === 0 && localStorage.getItem(lastKey) === todayStr) {
+                alert("Mỗi ngày chỉ có 1 lượt tham gia Đấu trường! Bạn đã sử dụng lượt chơi hôm nay, hãy quay lại vào ngày mai để thử sức tiếp nhé!");
+                return;
+            }
+
             const res = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     type: type, 
+                    vong_idx: tourVongIdx,
                     doi_user: selectedWcTeam,
                     clb_user: selectedC1Club,
                     lop: 'Lớp 6', 
@@ -1534,16 +1544,52 @@
             const boardScore = isWc ? 'lblWcScore' : 'lblC1Score';
             const boardQ = isWc ? 'lblWcQuestion' : 'lblC1Question';
             const boardContainer = isWc ? 'wcOptionsContainer' : 'c1OptionsContainer';
+            const chosenTeam = isWc ? selectedWcTeam : selectedC1Club;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const lastKey = isWc ? 'wc_last_played_date' : 'c1_last_played_date';
 
             if (!tourQuestions || tourIndex >= tourQuestions.length) {
-                alert(`TRẬN ĐẤU KẾT THÚC!\nTỷ số chung cuộc: Học Sinh ${tourScoreUser} - ${tourScoreOpponent} Đối Thủ.\nThưởng: +${tourScoreUser * 30} Roblox XP!`);
-                document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
+                // Truong hop Hoa -> Penalty loai truc tiep!
+                if (tourScoreUser === tourScoreOpponent) {
+                    let penUser = Math.floor(Math.random() * 5) + 1;
+                    let penOpp = Math.floor(Math.random() * 5) + 1;
+                    while (penUser === penOpp) {
+                        penOpp = Math.floor(Math.random() * 5) + 1;
+                    }
+                    if (penUser > penOpp) {
+                        tourScoreUser++;
+                        alert(`HÒA TRẬN ĐẤU! Hai đội bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thắng ${penUser} - ${penOpp}!`);
+                    } else {
+                        tourScoreOpponent++;
+                        alert(`HÒA TRẬN ĐẤU! Hai đội bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thua ${penUser} - ${penOpp}!`);
+                    }
+                }
+
+                localStorage.setItem(lastKey, todayStr);
+
+                if (tourScoreUser > tourScoreOpponent) {
+                    if (tourVongIdx < 3) {
+                        alert(`VICTORY!\n\nXuất sắc! ${chosenTeam} đã chiến thắng đối thủ!\nEm đã giành vé tiến vào VÒNG TIẾP THEO!\nThưởng +${tourScoreUser * 40} XP!`);
+                        tourVongIdx++;
+                        startTournament(tourTypeCurrent);
+                    } else {
+                        alert(`CHAMMMMMMMMMMMMPION!\n\nCHÚC MỪNG VÔ ĐỊCH!\n${chosenTeam} đã xuất sắc nâng cao CÚP VÔ ĐỊCH!\nTổng Bàn Thắng: ${tourScoreUser}!\nThưởng +500 XP!`);
+                        tourVongIdx = 0;
+                        document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
+                    }
+                } else {
+                    alert(`DEFEAT!\n\nRất tiếc! ${chosenTeam} đã thất bại.\nLượt chơi hôm nay đã kết thúc, hãy quay lại vào ngày mai để thử sức tiếp nhé!`);
+                    tourVongIdx = 0;
+                    document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
+                }
                 return;
             }
+
             const q = tourQuestions[tourIndex];
-            const chosenTeam = isWc ? selectedWcTeam : selectedC1Club;
-            document.getElementById(boardName).innerText = `${isWc ? 'Vòng Bảng World Cup' : 'Vòng Bảng Cúp C1'} (${chosenTeam}) - Trận ${tourIndex + 1}`;
-            document.getElementById(boardScore).innerText = `Tỷ số: ${chosenTeam} ${tourScoreUser} - ${tourScoreOpponent} Đối thủ`;
+            const vongNames = ['Vòng Bảng', 'Vòng Tứ Kết', 'Vòng Bán Kết', 'TRẬN CHUNG KẾT'];
+            const currentVongName = vongNames[tourVongIdx] || 'Vòng Thi Đấu';
+            document.getElementById(boardName).innerText = `${isWc ? 'World Cup' : 'Cúp C1'} (${currentVongName} - ${chosenTeam}) - Cú sút Penalty ${tourIndex + 1}/${tourQuestions.length}`;
+            document.getElementById(boardScore).innerText = `Tỷ số Penalty: ${chosenTeam} ${tourScoreUser} - ${tourScoreOpponent} Đối thủ`;
             document.getElementById(boardQ).innerText = q.cau_hoi;
 
             const container = document.getElementById(boardContainer);

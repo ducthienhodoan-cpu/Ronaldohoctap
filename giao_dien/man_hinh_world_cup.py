@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
     QPushButton, QFrame, QMessageBox, QScrollArea, QGridLayout,
     QComboBox, QProgressBar
 )
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, QDate
 from PyQt6.QtGui import QPixmap
 
 from du_lieu.kho_noi_dung_hoc import lay_danh_sach_lop, lay_danh_sach_mon_hoc
@@ -32,6 +32,8 @@ class ManHinhWorldCup(QWidget):
         self.so_ban_thang = 0
         self.cau_hoi_world_cup = []
         self.dap_an_user = {}
+        self.last_played_date = ""
+        self.da_dung_luot_hom_nay = False
 
         self.thoi_gian_con_lai = 300
         self.timer = QTimer(self)
@@ -76,7 +78,7 @@ class ManHinhWorldCup(QWidget):
 
         # Bộ lọc Chọn Đội tuyển, Lớp và Môn học chữ trắng
         info_vbox = QVBoxLayout()
-        lbl_select_title = QLabel("Ngoại hình Trang phục & Đội tuyển Quốc gia đại diện:")
+        lbl_select_title = QLabel("Ngoại hình Trang phục & Đội tuyển Quốc gia đại diện (1 lượt chơi/ngày):")
         lbl_select_title.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF;")
         info_vbox.addWidget(lbl_select_title)
 
@@ -213,9 +215,6 @@ class ManHinhWorldCup(QWidget):
 
         main_layout.addLayout(nav_layout)
 
-        # Khởi chạy trận đấu mặc định
-        self.bat_dau_giai_dau()
-
     def thay_doi_doi_tuyen(self, index):
         if 0 <= index < len(self.danh_sach_doi):
             self.doi_user = self.danh_sach_doi[index]
@@ -225,7 +224,16 @@ class ManHinhWorldCup(QWidget):
                 self.lbl_match_title.setText(f"{self.vong_info['ten'].upper()}: {doi_ten.upper()} VS {doi_thu.upper()}")
 
     def bat_dau_giai_dau(self):
-        """Khởi động trận đấu World Cup mới."""
+        """Khởi động trận đấu World Cup mới (Kiểm tra giới hạn 1 lượt chơi/ngày)."""
+        hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+        if self.last_played_date == hom_nay and self.vong_idx == 0:
+            QMessageBox.warning(
+                self, 
+                "Giới hạn lượt chơi World Cup", 
+                "Mỗi ngày chỉ có 1 lượt tham gia Đấu trường World Cup! Em đã sử dụng lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
+            )
+            return
+
         ten_lop = self.cbo_lop.currentText()
         ten_mon = self.cbo_mon.currentText()
         
@@ -304,19 +312,34 @@ class ManHinhWorldCup(QWidget):
         if not self.cau_hoi_world_cup:
             return
 
+        # Luu ngay choi hôm nay
+        hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+        self.last_played_date = hom_nay
+
         ban_thang_tran = 0
         for idx, cau in enumerate(self.cau_hoi_world_cup):
             ans = self.dap_an_user.get(idx, "")
             if str(ans).strip() == str(cau["dap_an_dung"]).strip():
                 ban_thang_tran += 1
 
-        self.so_ban_thang += ban_thang_tran
         doi_ten = self.doi_user["ten"]
         doi_thu = self.vong_info["doi_thu"]
-        
-        # Bàn thắng đối thủ ngẫu nhiên
         ban_thang_doi_thu = random.randint(0, max(0, len(self.cau_hoi_world_cup) - 2))
 
+        # Truong hop Hoa -> Penalty loai truc tiep!
+        if ban_thang_tran == ban_thang_doi_thu:
+            sut_user = random.randint(1, 5)
+            sut_opp = random.randint(1, 5)
+            while sut_user == sut_opp:
+                sut_opp = random.randint(1, 5)
+            if sut_user > sut_opp:
+                ban_thang_tran += 1
+                QMessageBox.information(self, "Penalty Loạt Sút Sinh Tử", f"HÒA TRẬN ĐẤU! Bước vào sút phạt Penalty loại trực tiếp: Đội tuyển {doi_ten} sút thắng {sut_user} - {sut_opp} {doi_thu}!")
+            else:
+                ban_thang_doi_thu += 1
+                QMessageBox.warning(self, "Penalty Loạt Sút Sinh Tử", f"HÒA TRẬN ĐẤU! Bước vào sút phạt Penalty loại trực tiếp: Đội tuyển {doi_ten} sút thua {sut_user} - {sut_opp} {doi_thu}!")
+
+        self.so_ban_thang += ban_thang_tran
         self.lbl_score_board.setText(f"Tỷ số Penalty: {doi_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu} | Tổng Bàn Thắng World Cup: {self.so_ban_thang}")
 
         if ban_thang_tran > ban_thang_doi_thu:
@@ -324,18 +347,20 @@ class ManHinhWorldCup(QWidget):
             if self.vong_idx < len(lay_vong_dau_world_cup()) - 1:
                 QMessageBox.information(
                     self, 
-                    "Chiến thắng Trận đấu World Cup", 
-                    f"XUẤT SẮC! Đội tuyển {doi_ten} đã chiến thắng {doi_thu} với tỷ số Penalty {ban_thang_tran} - {ban_thang_doi_thu}!\n"
+                    "VICTORY", 
+                    f"VICTORY!\n"
+                    f"Xuất sắc! Đội tuyển {doi_ten} đã chiến thắng {doi_thu} với tỷ số Penalty {ban_thang_tran} - {ban_thang_doi_thu}!\n"
                     f"Em đã giành vé vào VÒNG ĐẤU TIẾP THEO của World Cup!\nThưởng +{ban_thang_tran * 20} XP!"
                 )
                 self.vong_idx += 1
                 self.bat_dau_giai_dau()
             else:
-                # VÔ ĐỊCH WORLD CUP!
+                # VO DICH CHUNG KET WORLD CUP!
                 QMessageBox.information(
                     self, 
-                    "VÔ ĐỊCH WORLD CUP ROBLOX", 
-                    f"CHÚC MỪNG VÔ ĐỊCH WORLD CUP!\n"
+                    "CHAMMMMMMMMMMMMPION", 
+                    f"CHAMMMMMMMMMMMMPION!\n"
+                    f"CHÚC MỪNG NHÀ VÔ ĐỊCH WORLD CUP!\n"
                     f"Đội tuyển {doi_ten} đã xuất sắc nâng cao CÚP VÀNG WORLD CUP!\n"
                     f"Tổng số bàn thắng: {self.so_ban_thang} Bàn Thắng!\nThưởng +500 XP và Cúp Vàng World Cup 3D!"
                 )
@@ -348,11 +373,12 @@ class ManHinhWorldCup(QWidget):
                 )
                 dlg_cert.exec()
                 self.vong_idx = 0
-                self.bat_dau_giai_dau()
         else:
             QMessageBox.warning(
                 self, 
-                "Kết quả Trận đấu World Cup", 
+                "DEFEAT", 
+                f"DEFEAT!\n"
                 f"Trận đấu kết thúc với tỷ số: {doi_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu}.\n"
-                f"Hãy tiếp tục luyện tập và thử sức lại để nâng Cúp Vàng World Cup nhé!"
+                f"Lượt chơi hôm nay đã kết thúc! Hãy quay lại vào ngày mai để thử sức lại nhé!"
             )
+            self.vong_idx = 0
