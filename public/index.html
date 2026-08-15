@@ -1584,20 +1584,35 @@
                 localStorage.setItem(countKey, (playedCount + 1).toString());
             }
 
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    type: type, 
-                    vong_idx: tourVongIdx,
-                    doi_user: selectedWcTeam,
-                    clb_user: selectedC1Club,
-                    lop: 'Lớp 6', 
-                    mon: 'Toán' 
-                })
-            });
-            const d = await res.json();
-            tourQuestions = (d.match && d.match.cau_hoi) ? d.match.cau_hoi : [];
+            try {
+                const res = await fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        type: type, 
+                        vong_idx: tourVongIdx,
+                        doi_user: selectedWcTeam,
+                        clb_user: selectedC1Club,
+                        lop: 'Lớp 6', 
+                        mon: 'Toán' 
+                    })
+                });
+                const d = await res.json();
+                tourQuestions = (d.match && d.match.cau_hoi) ? d.match.cau_hoi : [];
+            } catch(err) {
+                console.warn("Tournament fetch fallback:", err);
+            }
+
+            if (!tourQuestions || tourQuestions.length === 0) {
+                tourQuestions = [
+                    { cau_hoi: "Kết quả của phép tính 15 + 25 x 2 là bao nhiêu?", dap_an: ["65", "80", "50"], dap_an_dung: "65" },
+                    { cau_hoi: "Số nào sau đây là số nguyên tố nhỏ nhất?", dap_an: ["2", "1", "3"], dap_an_dung: "2" },
+                    { cau_hoi: "Chu vi của một hình vuông có cạnh 5cm là bao nhiêu?", dap_an: ["20 cm", "25 cm", "10 cm"], dap_an_dung: "20 cm" },
+                    { cau_hoi: "Diện tích hình chữ nhật có chiều dài 8m, chiều rộng 4m là bao nhiêu?", dap_an: ["32 m2", "24 m2", "12 m2"], dap_an_dung: "32 m2" },
+                    { cau_hoi: "Phân số 3/4 đổi ra số thập phân bằng bao nhiêu?", dap_an: ["0.75", "0.5", "0.8"], dap_an_dung: "0.75" }
+                ];
+            }
+
             tourIndex = 0;
             tourScoreUser = 0;
             tourScoreOpponent = 0;
@@ -2057,13 +2072,18 @@
 
         async function spinModalWheel() {
             try { playClickSfx(); } catch(e) {}
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'wheel' })
-            });
-            const d = await res.json();
-            const r = d.reward || {};
+            let r = { xp: 50 };
+            try {
+                const res = await fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'wheel' })
+                });
+                const d = await res.json();
+                if (d.reward) r = d.reward;
+            } catch(err) {
+                console.warn("Spin fallback:", err);
+            }
             document.getElementById('modalWheelResult').innerText = `CHÚC MỪNG: Bạn quay trúng phần thưởng +${r.xp || 50} Roblox XP!`;
         }
 
@@ -2073,14 +2093,19 @@
             const positions = ['5%', '35%', '70%'];
             if (gk) gk.style.left = positions[Math.floor(Math.random() * positions.length)];
             
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'penalty', direction: direction })
-            });
-            const d = await res.json();
-            const r = d.result || {};
-            document.getElementById('modalPenaltyResult').innerText = r.vao ? `VÀO OOO! Bàn thắng tuyệt đẹp hướng ${direction}! Nhận +50 XP!` : `ĐỐI THỦ THỦ MÔN CẢN PHÁ! Thử lại góc khác!`;
+            let isVao = Math.random() > 0.3;
+            try {
+                const res = await fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'penalty', direction: direction })
+                });
+                const d = await res.json();
+                if (d.result && typeof d.result.vao !== 'undefined') isVao = d.result.vao;
+            } catch(err) {
+                console.warn("Penalty fallback:", err);
+            }
+            document.getElementById('modalPenaltyResult').innerText = isVao ? `VÀO OOO! Bàn thắng tuyệt đẹp hướng ${direction}! Nhận +50 XP!` : `ĐỐI THỦ THỦ MÔN CẢN PHÁ! Thử lại góc khác!`;
         }
 
         let modalMemoryCards = [];
@@ -2088,13 +2113,31 @@
         let modalMatched = 0;
 
         async function initModalMemoryCards() {
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'memory_cards' })
-            });
-            const d = await res.json();
-            modalMemoryCards = d.cards || [];
+            try {
+                const res = await fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'memory_cards' })
+                });
+                const d = await res.json();
+                modalMemoryCards = d.cards || [];
+            } catch(err) {
+                console.warn("Memory cards fallback:", err);
+            }
+
+            if (!modalMemoryCards || modalMemoryCards.length === 0) {
+                modalMemoryCards = [
+                    { noi_dung: "SỐ HỌC", cap_id: 1, da_lat: false, da_ghep: false },
+                    { noi_dung: "SỐ HỌC", cap_id: 1, da_lat: false, da_ghep: false },
+                    { noi_dung: "HÌNH HỌC", cap_id: 2, da_lat: false, da_ghep: false },
+                    { noi_dung: "HÌNH HỌC", cap_id: 2, da_lat: false, da_ghep: false },
+                    { noi_dung: "ĐẠI SỐ", cap_id: 3, da_lat: false, da_ghep: false },
+                    { noi_dung: "ĐẠI SỐ", cap_id: 3, da_lat: false, da_ghep: false },
+                    { noi_dung: "TIẾNG ANH", cap_id: 4, da_lat: false, da_ghep: false },
+                    { noi_dung: "TIẾNG ANH", cap_id: 4, da_lat: false, da_ghep: false }
+                ];
+            }
+
             modalFlipped = [];
             modalMatched = 0;
             renderModalMemoryGrid();
