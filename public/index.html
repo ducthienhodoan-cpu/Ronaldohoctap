@@ -2203,22 +2203,26 @@
             });
         }
 
-        async function startObbyLevelGame() {
+        function startObbyLevelGame() {
             const wIdx = Math.floor((currentObbyLevel - 1) / 10);
-            const wInfo = obbyWorldsData[wIdx];
-            document.getElementById('lblObbyCurrentLevelTitle').innerText = `MÀN ${currentObbyLevel} - ${wInfo.name.toUpperCase()}`;
-            document.getElementById('lblObbyMechanicDesc').innerText = `Cơ chế: ${wInfo.desc}. Thưởng: +${currentObbyLevel % 10 === 0 ? 200 : 50} Roblox XP!`;
+            const wInfo = obbyWorldsData[wIdx] || obbyWorldsData[0];
+            const titleEl = document.getElementById('lblObbyCurrentLevelTitle');
+            const descEl = document.getElementById('lblObbyMechanicDesc');
+            if (titleEl) titleEl.innerText = `MÀN ${currentObbyLevel} - ${wInfo.name.toUpperCase()}`;
+            if (descEl) descEl.innerText = `Cơ chế: ${wInfo.desc}. Thưởng: +${currentObbyLevel % 10 === 0 ? 200 : 50} Roblox XP!`;
 
             drawObbyCanvas();
 
             obbyTimeLeft = currentObbyLevel === 100 ? 90 : (currentObbyLevel % 10 === 0 ? 60 : 45);
-            document.getElementById('lblObbyTimer').innerText = `Thời gian còn lại: 00:${obbyTimeLeft < 10 ? '0' + obbyTimeLeft : obbyTimeLeft}`;
+            const timerEl = document.getElementById('lblObbyTimer');
+            if (timerEl) timerEl.innerText = `Thời gian còn lại: 00:${obbyTimeLeft < 10 ? '0' + obbyTimeLeft : obbyTimeLeft}`;
 
             if (obbyTimerId) clearInterval(obbyTimerId);
             obbyTimerId = setInterval(() => {
                 if (obbyTimeLeft > 0) {
                     obbyTimeLeft--;
-                    document.getElementById('lblObbyTimer').innerText = `Thời gian còn lại: 00:${obbyTimeLeft < 10 ? '0' + obbyTimeLeft : obbyTimeLeft}`;
+                    const tEl = document.getElementById('lblObbyTimer');
+                    if (tEl) tEl.innerText = `Thời gian còn lại: 00:${obbyTimeLeft < 10 ? '0' + obbyTimeLeft : obbyTimeLeft}`;
                 } else {
                     clearInterval(obbyTimerId);
                     alert(`Hết thời gian vượt Màn ${currentObbyLevel}! Bạn trượt chân rơi khỏi platform. Quay lại Checkpoint trước!`);
@@ -2226,34 +2230,35 @@
                 }
             }, 1000);
 
-            // Fetch Question Challenge
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'wheel' })
-            });
-            
             const qList = [
                 { q: `Để vượt qua chướng ngại vật Màn ${currentObbyLevel}, đáp án đúng nào sau đây giúp kích hoạt khiên bảo vệ?`, opts: ["Phân số tối giản là phân số không thể rút gọn thêm", "1 + 1 = 3", "Nước sôi ở 50 độ C"], correct: "Phân số tối giản là phân số không thể rút gọn thêm" },
-                { q: `Cơ chế ${wInfo.name}: Chọn công thức đúng để vượt qua bẫy dung nham/bão tuyết:`, opts: ["Diện tích hình vuông = cạnh x cạnh", "Chu vi hình tròn = bán kính x 2 x 100", "1 giờ = 100 phút"], correct: "Diện tích hình vuông = cạnh x cạnh" }
+                { q: `Cơ chế ${wInfo.name}: Chọn công thức đúng để vượt qua bẫy dung nham/bão tuyết:`, opts: ["Diện tích hình vuông = cạnh x cạnh", "Chu vi hình tròn = bán kính x 2 x 100", "1 giờ = 100 phút"], correct: "Diện tích hình vuông = cạnh x cạnh" },
+                { q: `Khám phá Glitch World Màn ${currentObbyLevel}: Chọn khái niệm chính xác nhất:`, opts: ["Tam giác đều có 3 cạnh bằng nhau", "1 km = 100 mét", "Trái đất có hình vuông"], correct: "Tam giác đều có 3 cạnh bằng nhau" }
             ];
             obbyCurrentQ = qList[Math.floor(Math.random() * qList.length)];
             obbySelectedAns = "";
 
-            document.getElementById('lblObbyQText').innerText = obbyCurrentQ.q;
+            const qTextEl = document.getElementById('lblObbyQText');
+            if (qTextEl) qTextEl.innerText = obbyCurrentQ.q;
+            
             const optsContainer = document.getElementById('boxObbyOpts');
-            optsContainer.innerHTML = '';
-            obbyCurrentQ.opts.forEach(opt => {
-                const b = document.createElement('button');
-                b.className = 'option-btn';
-                b.innerText = opt;
-                b.onclick = () => {
-                    playClickSfx();
-                    obbySelectedAns = opt;
-                    submitObbyLevelAnswer();
-                };
-                optsContainer.appendChild(b);
-            });
+            if (optsContainer) {
+                optsContainer.innerHTML = '';
+                obbyCurrentQ.opts.forEach(opt => {
+                    const b = document.createElement('button');
+                    b.className = 'option-btn';
+                    b.style.cursor = 'pointer';
+                    b.style.pointerEvents = 'auto';
+                    b.innerText = opt;
+                    b.onclick = (e) => {
+                        if (e) e.stopPropagation();
+                        try { playClickSfx(); } catch(err) {}
+                        obbySelectedAns = opt;
+                        submitObbyLevelAnswer();
+                    };
+                    optsContainer.appendChild(b);
+                });
+            }
         }
 
         function submitObbyLevelAnswer() {
