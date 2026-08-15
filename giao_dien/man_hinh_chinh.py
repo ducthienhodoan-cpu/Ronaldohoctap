@@ -27,6 +27,7 @@ from giao_dien.man_hinh_so_tay_cong_thuc import ManHinhSoTayCongThuc
 from giao_dien.man_hinh_so_loi_sai import ManHinhSoLoiSai
 from giao_dien.man_hinh_ke_hoach_hoc import ManHinhKeHoachHoc
 from giao_dien.man_hinh_tap_thi_ielts import ManHinhTapThiIELTS
+from giao_dien.man_hinh_obby import ManHinhObby
 from giao_dien.hop_thoai_nhap_ten import HopThoaiNhapTen
 
 from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, kiem_tra_da_co_ten
@@ -117,7 +118,8 @@ class CuaSoChinh(QMainWindow):
             ("Sổ tay Công thức", 13),
             ("Sổ Lỗi Sai Bài Khó", 14),
             ("Lịch Học & Streak", 15),
-            ("Tập Thi IELTS", 16)
+            ("Tập Thi IELTS", 16),
+            ("Đấu Trường Obby 100 Màn", 17)
         ]
 
 
@@ -217,6 +219,7 @@ class CuaSoChinh(QMainWindow):
         self.screen_so_loi_sai = ManHinhSoLoiSai()
         self.screen_ke_hoach = ManHinhKeHoachHoc()
         self.screen_tap_thi_ielts = ManHinhTapThiIELTS()
+        self.screen_obby = ManHinhObby()
 
         self.screen_cai_dat.ten_da_thay_doi.connect(self.cap_nhat_hien_thi_ten)
 
@@ -237,6 +240,7 @@ class CuaSoChinh(QMainWindow):
         self.stacked_widget.addWidget(self.screen_so_loi_sai)          # 14
         self.stacked_widget.addWidget(self.screen_ke_hoach)            # 15
         self.stacked_widget.addWidget(self.screen_tap_thi_ielts)       # 16
+        self.stacked_widget.addWidget(self.screen_obby)                # 17
 
 
         right_layout.addWidget(self.stacked_widget)
@@ -420,7 +424,9 @@ class CuaSoChinh(QMainWindow):
             "Cài đặt Roblox Avatar & Đổi tên",
             "Sổ tay Công thức & Khái niệm Trọng tâm SGK",
             "Sổ Lỗi Sai & Ôn Lại Bài Khó (Mistake Notebook)",
-            "Lịch Học Tập & Nhắc Nhở Mục Tiêu (Roblox Streak)"
+            "Lịch Học Tập & Nhắc Nhở Mục Tiêu (Roblox Streak)",
+            "Tập Thi IELTS Tiếng Anh",
+            "Đấu Trường Obby 100 Màn Parkour Glitch World"
         ]
         
         if 0 <= index < len(titles):

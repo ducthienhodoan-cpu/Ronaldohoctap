@@ -488,6 +488,7 @@
             <button class="tab-btn" data-sec="notebook" onclick="switchSection('notebook', this)">Sổ Lỗi Sai Bài Khó</button>
             <button class="tab-btn" data-sec="plan" onclick="switchSection('plan', this)">Lịch Học & Streak</button>
             <button class="tab-btn" data-sec="stats" onclick="switchSection('stats', this)">Thống Kê & Bảng Vàng</button>
+            <button class="tab-btn" data-sec="obby" onclick="switchSection('obby', this)">Obby 100 Màn</button>
             <button class="tab-btn" data-sec="settings" onclick="switchSection('settings', this)">Cài Đặt Mục Tiêu</button>
         </div>
 
@@ -878,6 +879,46 @@
                 </div>
                 <button class="btn-primary" onclick="saveSettings()">Lưu Cấu Hình Mục Tiêu</button>
                 <div id="settingsMsg" style="margin-top: 18px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
+            </div>
+        <!-- 17. Đấu Trường Obby 100 Màn Parkour Glitch World -->
+        <div id="pane-obby" class="section-pane">
+            <div class="card">
+                <h3 style="color: #A855F7; font-size: 26px; margin-bottom: 12px; font-weight: 900; text-align: center;">ĐẤU TRƯỜNG OBBY 100 MÀN PARKOUR - GLITCH WORLD</h3>
+                <p style="text-align: center; color: #CBD5E1; font-size: 15px; margin-bottom: 20px;">Vượt qua 10 World, thu thập 10 Glitch Cores và đánh bại Boss cuối Glitch-X ở Màn 100 để sở hữu MASTER CORE!</p>
+
+                <div style="background: rgba(15, 23, 42, 0.9); border: 2px solid #A855F7; border-radius: 18px; padding: 18px; margin-bottom: 22px;">
+                    <div id="lblObbyCoreStatus" style="font-size: 16px; font-weight: 900; color: #06B6D4; margin-bottom: 14px; text-align: center;">
+                        Số Glitch Cores đã thu thập: 0 / 10 Cores | Checkpoint cao nhất mở khóa: Màn 1
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;" id="obbyWorldButtons"></div>
+                </div>
+
+                <div style="margin-bottom: 22px;">
+                    <h4 style="color: #F1F5F9; font-size: 16px; margin-bottom: 12px; font-weight: 900;" id="lblObbyWorldName">World 1 - Glitch City (Màn 1-10)</h4>
+                    <div id="gridObbyLevels" class="grid-5" style="gap: 10px;"></div>
+                </div>
+
+                <div style="background: #020617; border: 3px solid #06B6D4; border-radius: 20px; padding: 20px; margin-top: 20px;">
+                    <h4 id="lblObbyCurrentLevelTitle" style="color: #F59E0B; font-size: 20px; font-weight: 900; margin-bottom: 8px;">MÀN 1 - THE BEGINNING</h4>
+                    <div id="lblObbyMechanicDesc" style="color: #CBD5E1; font-size: 14px; margin-bottom: 14px; font-weight: 700;">Cơ chế: Obby cơ bản + thành phố bị lỗi. Chạy nhảy vượt qua các platform và chạm Checkpoint!</div>
+                    
+                    <!-- Interactive Obby Canvas Game -->
+                    <canvas id="canvasObby" width="760" height="200" style="width: 100%; border: 2px solid #3B82F6; border-radius: 14px; background: #0F172A; display: block; margin-bottom: 16px;"></canvas>
+
+                    <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
+                        <div id="lblObbyTimer" style="font-size: 16px; font-weight: 900; color: #10B981; background: #002B4D; padding: 8px 16px; border-radius: 10px; border: 2px solid #10B981;">Thời gian còn lại: 00:45</div>
+                        <button class="btn-primary" style="background: linear-gradient(135deg, #EC4899, #A855F7); font-size: 16px; padding: 12px 28px;" onclick="startObbyLevelGame()">BẮT ĐẦU VƯỢT MÀN OBBY</button>
+                    </div>
+
+                    <div id="boxObbyQuestion" style="background: #111214; border: 2px solid #A855F7; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+                        <div id="lblObbyQText" style="font-size: 16px; font-weight: bold; color: #FFFFFF; margin-bottom: 12px;">Bấm 'BẮT ĐẦU VƯỢT MÀN OBBY' để nhận thử thách Parkour!</div>
+                        <div id="boxObbyOpts" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                    </div>
+
+                    <div style="text-align: right;">
+                        <button class="btn-success" style="font-size: 16px; padding: 12px 32px;" onclick="submitObbyLevelAnswer()">NỘP BÀI & CHẠM CHECKPOINT</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2078,16 +2119,222 @@
                         first.card.da_lat = false;
                         second.card.da_lat = false;
                     }
-                    modalFlipped = [];
-                    renderModalMemoryGrid();
-                }, 800);
+        // OBBY 100 MÀN PARKOUR JAVASCRIPT ENGINE
+        let currentObbyLevel = 1;
+        let selectedObbyWorldIdx = 0;
+        let obbyCoresCollected = JSON.parse(localStorage.getItem('obby_cores') || '[]');
+        let obbyMaxLevel = parseInt(localStorage.getItem('obby_max_level') || '1', 10);
+        let obbyTimerId = null;
+        let obbyTimeLeft = 45;
+        let obbyCurrentQ = null;
+        let obbySelectedAns = "";
+
+        const obbyWorldsData = [
+            { id: 1, name: "World 1 - Glitch City", range: "Màn 1-10", desc: "Obby cơ bản, con đường vỡ, xe chạy, sàn sập, Glitch Portal" },
+            { id: 2, name: "World 2 - Lava Factory", range: "Màn 11-20", desc: "Dung nham, ống hơi nước, băng chuyền, máy ép, Lava Rise" },
+            { id: 3, name: "World 3 - Frozen Mountain", range: "Màn 21-30", desc: "Băng trượt, cầu tuyết lăn, bão tuyết, cầu vỡ" },
+            { id: 4, name: "World 4 - Poison Jungle", range: "Màn 31-40", desc: "Lá khổng lồ, đu dây, cây ăn thịt, đầm độc" },
+            { id: 5, name: "World 5 - Flooded City", range: "Màn 41-50", desc: "Nước dâng, sóng lớn, đường ống, Tsunami Escape" },
+            { id: 6, name: "World 6 - Space Station", range: "Màn 51-60", desc: "Trọng lực thấp, Gravity Switch, thiên thạch, vệ tinh" },
+            { id: 7, name: "World 7 - Robot Factory", range: "Màn 61-70", desc: "Băng chuyền tốc độ cao, tay robot, bánh răng, Mini Boss Robot" },
+            { id: 8, name: "World 8 - Time World", range: "Màn 71-80", desc: "Platform 2s biến mất, Time Stop, bánh răng đồng hồ" },
+            { id: 9, name: "World 9 - Cyber World", range: "Màn 81-90", desc: "Bàn phím khổng lồ, mạch điện, đường hầm dữ liệu, Virus Chase" },
+            { id: 10, name: "World 10 - Glitch Core", range: "Màn 91-100", desc: "Tổng hợp cơ chế, Màn 99 Final Run, Màn 100 Boss Glitch-X 3 Phase" }
+        ];
+
+        function renderObbyWorlds() {
+            const container = document.getElementById('obbyWorldButtons');
+            if (!container) return;
+            container.innerHTML = '';
+            obbyWorldsData.forEach((w, idx) => {
+                const btn = document.createElement('button');
+                btn.className = idx === selectedObbyWorldIdx ? 'btn-primary' : 'btn-secondary';
+                btn.style.fontSize = '12px';
+                btn.style.padding = '6px 12px';
+                btn.innerText = `W${w.id}: ${w.range}`;
+                btn.onclick = () => {
+                    selectedObbyWorldIdx = idx;
+                    renderObbyWorlds();
+                    renderObbyGrid(idx);
+                };
+                container.appendChild(btn);
+            });
+            document.getElementById('lblObbyCoreStatus').innerText = `Số Glitch Cores đã thu thập: ${obbyCoresCollected.length} / 10 Cores | Checkpoint cao nhất mở khóa: Màn ${obbyMaxLevel}`;
+        }
+
+        function renderObbyGrid(wIdx) {
+            const container = document.getElementById('gridObbyLevels');
+            const lblName = document.getElementById('lblObbyWorldName');
+            if (!container) return;
+            container.innerHTML = '';
+            const wInfo = obbyWorldsData[wIdx];
+            if (lblName) lblName.innerText = `${wInfo.name} (${wInfo.range})`;
+
+            const startLvl = wIdx * 10 + 1;
+            for (let l = startLvl; l < startLvl + 10; l++) {
+                const btn = document.createElement('button');
+                btn.style.fontWeight = '900';
+                btn.style.padding = '10px';
+                btn.style.borderRadius = '10px';
+                btn.style.cursor = 'pointer';
+                btn.innerText = `Màn ${l}`;
+
+                if (l < currentObbyLevel) {
+                    btn.style.background = '#10B981'; btn.style.color = '#FFF'; btn.style.border = 'none';
+                } else if (l === currentObbyLevel) {
+                    btn.style.background = '#F59E0B'; btn.style.color = '#000'; btn.style.border = '2px solid #FFF';
+                } else if (l <= obbyMaxLevel) {
+                    btn.style.background = '#3B82F6'; btn.style.color = '#FFF'; btn.style.border = 'none';
+                } else {
+                    btn.style.background = '#1E293B'; btn.style.color = '#64748B'; btn.style.border = '1px solid #334155'; btn.disabled = true;
+                }
+
+                btn.onclick = () => {
+                    currentObbyLevel = l;
+                    renderObbyGrid(wIdx);
+                    startObbyLevelGame();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        async function startObbyLevelGame() {
+            const wIdx = Math.floor((currentObbyLevel - 1) / 10);
+            const wInfo = obbyWorldsData[wIdx];
+            document.getElementById('lblObbyCurrentLevelTitle').innerText = `MÀN ${currentObbyLevel} - ${wInfo.name.toUpperCase()}`;
+            document.getElementById('lblObbyMechanicDesc').innerText = `Cơ chế: ${wInfo.desc}. Thưởng: +${currentObbyLevel % 10 === 0 ? 200 : 50} Roblox XP!`;
+
+            drawObbyCanvas();
+
+            obbyTimeLeft = currentObbyLevel === 100 ? 90 : (currentObbyLevel % 10 === 0 ? 60 : 45);
+            document.getElementById('lblObbyTimer').innerText = `Thời gian còn lại: 00:${obbyTimeLeft < 10 ? '0' + obbyTimeLeft : obbyTimeLeft}`;
+
+            if (obbyTimerId) clearInterval(obbyTimerId);
+            obbyTimerId = setInterval(() => {
+                if (obbyTimeLeft > 0) {
+                    obbyTimeLeft--;
+                    document.getElementById('lblObbyTimer').innerText = `Thời gian còn lại: 00:${obbyTimeLeft < 10 ? '0' + obbyTimeLeft : obbyTimeLeft}`;
+                } else {
+                    clearInterval(obbyTimerId);
+                    alert(`Hết thời gian vượt Màn ${currentObbyLevel}! Bạn trượt chân rơi khỏi platform. Quay lại Checkpoint trước!`);
+                    startObbyLevelGame();
+                }
+            }, 1000);
+
+            // Fetch Question Challenge
+            const res = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'wheel' })
+            });
+            
+            const qList = [
+                { q: `Để vượt qua chướng ngại vật Màn ${currentObbyLevel}, đáp án đúng nào sau đây giúp kích hoạt khiên bảo vệ?`, opts: ["Phân số tối giản là phân số không thể rút gọn thêm", "1 + 1 = 3", "Nước sôi ở 50 độ C"], correct: "Phân số tối giản là phân số không thể rút gọn thêm" },
+                { q: `Cơ chế ${wInfo.name}: Chọn công thức đúng để vượt qua bẫy dung nham/bão tuyết:`, opts: ["Diện tích hình vuông = cạnh x cạnh", "Chu vi hình tròn = bán kính x 2 x 100", "1 giờ = 100 phút"], correct: "Diện tích hình vuông = cạnh x cạnh" }
+            ];
+            obbyCurrentQ = qList[Math.floor(Math.random() * qList.length)];
+            obbySelectedAns = "";
+
+            document.getElementById('lblObbyQText').innerText = obbyCurrentQ.q;
+            const optsContainer = document.getElementById('boxObbyOpts');
+            optsContainer.innerHTML = '';
+            obbyCurrentQ.opts.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'option-btn';
+                b.innerText = opt;
+                b.onclick = () => {
+                    playClickSfx();
+                    obbySelectedAns = opt;
+                    Array.from(optsContainer.children).forEach(child => child.style.border = '1px solid rgba(255,255,255,0.1)');
+                    b.style.border = '2px solid #10B981';
+                };
+                optsContainer.appendChild(b);
+            });
+        }
+
+        function submitObbyLevelAnswer() {
+            if (obbyTimerId) clearInterval(obbyTimerId);
+            if (!obbyCurrentQ) return;
+            if (obbySelectedAns === obbyCurrentQ.correct) {
+                if (currentObbyLevel >= obbyMaxLevel) {
+                    obbyMaxLevel = Math.min(100, currentObbyLevel + 1);
+                    localStorage.setItem('obby_max_level', obbyMaxLevel.toString());
+                }
+
+                if (currentObbyLevel % 10 === 0) {
+                    const coreId = currentObbyLevel / 10;
+                    if (!obbyCoresCollected.includes(coreId)) {
+                        obbyCoresCollected.push(coreId);
+                        localStorage.setItem('obby_cores', JSON.stringify(obbyCoresCollected));
+                    }
+                }
+
+                if (currentObbyLevel === 100) {
+                    alert("YOU ESCAPED THE GLITCH WORLD!\n\nChúc mừng bạn đã đánh bại Boss Glitch-X Màn 100 và thu thập đủ 10 Glitch Cores!\nKích hoạt thành công MASTER CORE & Mở khóa HARD MODE!\nThưởng +2000 Roblox XP!");
+                    currentObbyLevel = 1;
+                } else if (currentObbyLevel % 10 === 0) {
+                    alert(`CHẠM CHECKPOINT THÀNH CÔNG!\n\nBạn đã thu thập thành công GLITCH CORE #${currentObbyLevel / 10}!\nThưởng +200 Roblox XP!`);
+                    currentObbyLevel++;
+                } else {
+                    alert(`VƯỢT MÀN OBBY ${currentObbyLevel} THÀNH CÔNG!\n\nThưởng +50 Roblox XP!`);
+                    currentObbyLevel++;
+                }
+
+                renderObbyWorlds();
+                renderObbyGrid(selectedObbyWorldIdx);
+                startObbyLevelGame();
+            } else {
+                alert(`VƯỢT MÀN THẤT BẠI!\n\nĐáp án chưa đúng. Bạn rơi khỏi platform Màn ${currentObbyLevel}. Hãy thử lại từ Checkpoint!`);
+                startObbyLevelGame();
             }
+        }
+
+        function drawObbyCanvas() {
+            const canvas = document.getElementById('canvasObby');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 760, 200);
+
+            // Background sky
+            ctx.fillStyle = '#0F172A';
+            ctx.fillRect(0, 0, 760, 200);
+
+            // Lava or Hazard Floor
+            ctx.fillStyle = currentObbyLevel > 10 && currentObbyLevel <= 20 ? '#EF4444' : '#020617';
+            ctx.fillRect(0, 170, 760, 30);
+
+            // Platforms
+            ctx.fillStyle = '#10B981';
+            ctx.fillRect(20, 140, 80, 15);
+            ctx.fillRect(160, 120, 70, 15);
+            ctx.fillRect(290, 100, 70, 15);
+            ctx.fillRect(420, 120, 80, 15);
+            ctx.fillRect(560, 110, 70, 15);
+            ctx.fillRect(670, 130, 70, 15);
+
+            // Checkpoint Flag
+            ctx.fillStyle = '#F59E0B';
+            ctx.fillRect(710, 85, 6, 45);
+            ctx.beginPath();
+            ctx.moveTo(716, 85);
+            ctx.lineTo(740, 97);
+            ctx.lineTo(716, 110);
+            ctx.fill();
+
+            // Player Sprite
+            ctx.fillStyle = '#06B6D4';
+            ctx.fillRect(45, 115, 20, 25);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(50, 118, 5, 5);
+            ctx.fillRect(58, 118, 5, 5);
         }
 
         window.onload = () => {
             loadStats();
             loadSavedGeminiApiKey();
             startBgMusic();
+            renderObbyWorlds();
+            renderObbyGrid(0);
         };
     </script>
 
