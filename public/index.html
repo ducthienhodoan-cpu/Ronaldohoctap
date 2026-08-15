@@ -904,6 +904,12 @@
                     <h4 id="lblObbyCurrentLevelTitle" style="color: #F59E0B; font-size: 20px; font-weight: 900; margin-bottom: 8px;">MÀN 1 - THE BEGINNING</h4>
                     <div id="lblObbyMechanicDesc" style="color: #CBD5E1; font-size: 14px; margin-bottom: 14px; font-weight: 700;">Cơ chế: Obby cơ bản + thành phố bị lỗi. Chạy nhảy vượt qua các platform và chạm Checkpoint!</div>
                     
+                    <!-- Control Bar: Voice Control AI -->
+                    <div style="background: rgba(16, 185, 129, 0.15); border: 2px solid #10B981; border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                        <button id="btnObbyVoice" class="btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); font-weight: 900; font-size: 14px;" onclick="toggleObbyVoiceControl()">BẬT ĐIỀU KHIỂN BẰNG GIỌNG NÓI AI</button>
+                        <div id="lblObbyVoiceStatus" style="font-size: 14px; font-weight: 900; color: #10B981; flex: 1; text-align: right;">Giọng nói AI: Đang tắt (Bấm để kích hoạt nói lệnh 'Nhảy', 'Đáp án A', 'Bắt đầu')</div>
+                    </div>
+
                     <!-- Interactive Obby Canvas Game -->
                     <canvas id="canvasObby" width="760" height="200" style="width: 100%; border: 2px solid #3B82F6; border-radius: 14px; background: #0F172A; display: block; margin-bottom: 16px;"></canvas>
 
@@ -2336,6 +2342,106 @@
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(50, 118, 5, 5);
             ctx.fillRect(58, 118, 5, 5);
+        // VOICE CONTROL AI RECOGNITION ENGINE
+        let obbySpeechRec = null;
+        let isObbyVoiceActive = false;
+
+        function toggleObbyVoiceControl() {
+            const btn = document.getElementById('btnObbyVoice');
+            const lbl = document.getElementById('lblObbyVoiceStatus');
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (!SpeechRec) {
+                alert("Trình duyệt của bạn chưa hỗ trợ Web Speech API. Vui lòng sử dụng Chrome, Edge hoặc Safari mới nhất!");
+                return;
+            }
+
+            if (isObbyVoiceActive) {
+                isObbyVoiceActive = false;
+                if (obbySpeechRec) {
+                    try { obbySpeechRec.stop(); } catch(e) {}
+                }
+                if (btn) {
+                    btn.innerText = "BẬT ĐIỀU KHIỂN BẰNG GIỌNG NÓI AI";
+                    btn.style.background = "linear-gradient(135deg, #10B981, #059669)";
+                }
+                if (lbl) lbl.innerText = "Giọng nói AI: Đang tắt (Bấm để kích hoạt)";
+            } else {
+                isObbyVoiceActive = true;
+                try {
+                    obbySpeechRec = new SpeechRec();
+                    obbySpeechRec.lang = 'vi-VN';
+                    obbySpeechRec.continuous = true;
+                    obbySpeechRec.interimResults = false;
+
+                    obbySpeechRec.onresult = (event) => {
+                        const lastResultIdx = event.results.length - 1;
+                        const transcript = event.results[lastResultIdx][0].transcript.toLowerCase().trim();
+                        if (lbl) lbl.innerText = `Giọng nói nhận diện: "${transcript}"`;
+                        processObbyVoiceCommand(transcript);
+                    };
+
+                    obbySpeechRec.onerror = (event) => {
+                        console.warn("Speech recognition error:", event.error);
+                    };
+
+                    obbySpeechRec.onend = () => {
+                        if (isObbyVoiceActive) {
+                            try { obbySpeechRec.start(); } catch(e) {}
+                        }
+                    };
+
+                    obbySpeechRec.start();
+                    if (btn) {
+                        btn.innerText = "TẮT ĐIỀU KHIỂN GIỌNG NÓI";
+                        btn.style.background = "linear-gradient(135deg, #EF4444, #DC2626)";
+                    }
+                    if (lbl) lbl.innerText = "Giọng nói AI: Đang lắng nghe... Hãy nói 'Nhảy', 'Đáp án A', 'Bắt đầu'...";
+                    try { playClickSfx(); } catch(e) {}
+                } catch(err) {
+                    alert("Không thể khởi động micro giọng nói: " + err.message);
+                }
+            }
+        }
+
+        function processObbyVoiceCommand(text) {
+            text = text.toLowerCase();
+            
+            // Voice command: Nhay / Parkour
+            if (text.includes("nhảy") || text.includes("nhay") || text.includes("parkour") || text.includes("nhảy lên")) {
+                try { playClickSfx(); } catch(e) {}
+                drawObbyCanvas();
+                return;
+            }
+
+            // Voice command: Bat dau / Choi
+            if (text.includes("bắt đầu") || text.includes("chơi") || text.includes("start")) {
+                startObbyLevelGame();
+                return;
+            }
+
+            // Voice command: Nop bai / Checkpoint
+            if (text.includes("nộp bài") || text.includes("chạm checkpoint") || text.includes("checkpoint")) {
+                submitObbyLevelAnswer();
+                return;
+            }
+
+            // Voice command: Dap an A / B / C
+            const optsContainer = document.getElementById('boxObbyOpts');
+            if (optsContainer && optsContainer.children.length > 0) {
+                if (text.includes("đáp án a") || text.includes("câu a") || text.includes("lựa chọn a") || text.includes("đáp án 1") || text === "a") {
+                    if (optsContainer.children[0]) optsContainer.children[0].click();
+                    return;
+                }
+                if (text.includes("đáp án b") || text.includes("câu b") || text.includes("lựa chọn b") || text.includes("đáp án 2") || text === "b") {
+                    if (optsContainer.children[1]) optsContainer.children[1].click();
+                    return;
+                }
+                if (text.includes("đáp án c") || text.includes("câu c") || text.includes("lựa chọn c") || text.includes("đáp án 3") || text === "c") {
+                    if (optsContainer.children[2]) optsContainer.children[2].click();
+                    return;
+                }
+            }
         }
 
         window.onload = () => {
