@@ -191,15 +191,12 @@ class ManHinhObby(QWidget):
             btn_lvl = QPushButton(f"Màn {lvl}")
             btn_lvl.setCursor(Qt.CursorShape.PointingHandCursor)
             
-            if lvl < self.man_hien_tai:
-                btn_lvl.setStyleSheet("color: #FFFFFF; font-weight: bold; background-color: #10B981; border-radius: 8px; padding: 8px;")
-            elif lvl == self.man_hien_tai:
+            if lvl == self.man_hien_tai:
                 btn_lvl.setStyleSheet("color: #FFFFFF; font-weight: bold; background-color: #F59E0B; border: 2px solid #FFFFFF; border-radius: 8px; padding: 8px;")
             elif lvl <= man_max:
-                btn_lvl.setStyleSheet("color: #FFFFFF; font-weight: bold; background-color: #3B82F6; border-radius: 8px; padding: 8px;")
+                btn_lvl.setStyleSheet("color: #FFFFFF; font-weight: bold; background-color: #10B981; border-radius: 8px; padding: 8px;")
             else:
-                btn_lvl.setStyleSheet("color: #94A3B8; font-weight: bold; background-color: #1E293B; border-radius: 8px; padding: 8px;")
-                btn_lvl.setEnabled(False)
+                btn_lvl.setStyleSheet("color: #FFFFFF; font-weight: bold; background-color: #3B82F6; border-radius: 8px; padding: 8px;")
 
             btn_lvl.clicked.connect(lambda checked, l=lvl: self.chon_man_choi(l))
             self.grid_levels_layout.addWidget(btn_lvl)

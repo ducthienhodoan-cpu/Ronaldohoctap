@@ -1137,6 +1137,11 @@
                 if (secId === 'stats') loadStats();
                 if (secId === 'notebook') loadNotebook();
                 if (secId === 'duaxe') initCanvasRaceGame();
+                if (secId === 'obby') {
+                    if (typeof renderObbyWorlds === 'function') renderObbyWorlds();
+                    if (typeof renderObbyGrid === 'function') renderObbyGrid(selectedObbyWorldIdx || 0);
+                    if (typeof startObbyLevelGame === 'function') startObbyLevelGame();
+                }
             } catch(err) {
                 console.error("Tab error:", err);
             }
@@ -2179,14 +2184,12 @@
                 btn.style.cursor = 'pointer';
                 btn.innerText = `Màn ${l}`;
 
-                if (l < currentObbyLevel) {
-                    btn.style.background = '#10B981'; btn.style.color = '#FFF'; btn.style.border = 'none';
-                } else if (l === currentObbyLevel) {
+                if (l === currentObbyLevel) {
                     btn.style.background = '#F59E0B'; btn.style.color = '#000'; btn.style.border = '2px solid #FFF';
                 } else if (l <= obbyMaxLevel) {
-                    btn.style.background = '#3B82F6'; btn.style.color = '#FFF'; btn.style.border = 'none';
+                    btn.style.background = '#10B981'; btn.style.color = '#FFF'; btn.style.border = 'none';
                 } else {
-                    btn.style.background = '#1E293B'; btn.style.color = '#64748B'; btn.style.border = '1px solid #334155'; btn.disabled = true;
+                    btn.style.background = '#3B82F6'; btn.style.color = '#FFF'; btn.style.border = 'none';
                 }
 
                 btn.onclick = () => {
