@@ -225,14 +225,15 @@ class ManHinhObby(QWidget):
                     w.setParent(None)
 
             widget_options = TheDapAnGroup(self.cau_hoi_current["dap_an"], dap_an_hien_tai="")
-            widget_options.dap_an_thay_doi.connect(self.luu_dap_an)
+            widget_options.dap_an_thay_doi.connect(self.luu_dap_an_va_nhay)
             self.vung_options_layout.addWidget(widget_options)
 
         self.thoi_gian_con_lai = info["thoi_gian_lim"]
         self.timer.start(1000)
 
-    def luu_dap_an(self, text):
+    def luu_dap_an_va_nhay(self, text):
         self.dap_an_user = text
+        self.tong_ket_man_obby()
 
     def cap_nhat_dong_ho(self):
         if self.thoi_gian_con_lai > 0:
