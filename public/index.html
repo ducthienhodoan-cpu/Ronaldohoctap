@@ -2224,6 +2224,11 @@
                         first.card.da_lat = false;
                         second.card.da_lat = false;
                     }
+                    modalFlipped = [];
+                    renderModalMemoryGrid();
+                }, 800);
+            }
+        }
         // OBBY 100 MÀN PARKOUR JAVASCRIPT ENGINE
         let currentObbyLevel = 1;
         let selectedObbyWorldIdx = 0;
@@ -2298,7 +2303,7 @@
                     startObbyLevelGame();
                 };
                 container.appendChild(btn);
-            });
+            }
         }
 
         function startObbyLevelGame() {
@@ -2434,6 +2439,8 @@
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(50, 118, 5, 5);
             ctx.fillRect(58, 118, 5, 5);
+        }
+
         // VOICE CONTROL AI RECOGNITION ENGINE
         let obbySpeechRec = null;
         let isObbyVoiceActive = false;
