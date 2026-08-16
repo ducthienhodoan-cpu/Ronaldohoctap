@@ -2391,30 +2391,24 @@
 
         let obbyJumpAnimId = null;
 
+        function getPlayerSpotCoords(stepIndex) {
+            const spots = [
+                { x: 55, y: 115 },  // Spot 0 (Cục 1)
+                { x: 165, y: 105 }, // Spot 1 (Cục 2)
+                { x: 275, y: 95 },  // Spot 2 (Cục 3)
+                { x: 385, y: 100 }, // Spot 3 (Cục 4)
+                { x: 495, y: 90 },  // Spot 4 (Cục 5)
+                { x: 605, y: 85 },  // Spot 5 (Cục 6)
+                { x: 685, y: 60 }   // Spot 6 (Cột Cờ Checkpoint)
+            ];
+            return spots[stepIndex] || spots[0];
+        }
+
         function animateObbyJump(fromStep, toStep, callback) {
             if (obbyJumpAnimId) cancelAnimationFrame(obbyJumpAnimId);
 
-            const platformPositions = [
-                { x: 30, y: 140 },
-                { x: 140, y: 130 },
-                { x: 250, y: 120 },
-                { x: 360, y: 125 },
-                { x: 470, y: 115 },
-                { x: 580, y: 110 }
-            ];
-
-            let startX = 45, startY = 115;
-            if (fromStep > 0 && fromStep <= 6) {
-                const p = platformPositions[fromStep - 1];
-                if (p) { startX = p.x + 25; startY = p.y - 25; }
-            }
-
-            let targetX = 45, targetY = 115;
-            if (toStep > 0 && toStep <= 6) {
-                const p = platformPositions[toStep - 1];
-                if (p) { targetX = p.x + 25; targetY = p.y - 25; }
-                else { targetX = 675; targetY = 60; }
-            }
+            const startPos = getPlayerSpotCoords(fromStep);
+            const targetPos = getPlayerSpotCoords(toStep);
 
             let startTime = null;
             const duration = 450; // 450ms smooth parabolic arc jump
@@ -2423,9 +2417,9 @@
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min(1, (timestamp - startTime) / duration);
 
-                const currentX = startX + (targetX - startX) * progress;
-                const arcHeight = Math.sin(progress * Math.PI) * 55;
-                const currentY = (startY + (targetY - startY) * progress) - arcHeight;
+                const currentX = startPos.x + (targetPos.x - startPos.x) * progress;
+                const arcHeight = Math.sin(progress * Math.PI) * 60;
+                const currentY = (startPos.y + (targetPos.y - startPos.y) * progress) - arcHeight;
 
                 drawObbyCanvas(fromStep, currentX, currentY);
 
@@ -2458,7 +2452,7 @@
 
                 try { playClickSfx(); } catch(e) {}
 
-                // Trigger 60fps Parabolic Arc Jump to Next Platform (Cục tiếp theo)!
+                // Trigger 60fps Parabolic Arc Jump from Cục N to Cục N+1!
                 animateObbyJump(fromStep, toStep, () => {
                     if (toStep < 6) {
                         renderObbyStepQuestion();
@@ -2562,24 +2556,16 @@
             ctx.fill();
 
             // Player Avatar Position
-            let playerX = 45;
-            let playerY = 115;
+            const defaultPos = getPlayerSpotCoords(step);
+            let playerX = defaultPos.x;
+            let playerY = defaultPos.y;
 
             if (typeof customPlayerX !== 'undefined' && typeof customPlayerY !== 'undefined') {
                 playerX = customPlayerX;
                 playerY = customPlayerY;
-            } else if (step > 0 && step <= 6) {
-                const targetP = platformPositions[step - 1];
-                if (targetP) {
-                    playerX = targetP.x + 25;
-                    playerY = targetP.y - 25;
-                } else {
-                    playerX = 675;
-                    playerY = 60;
-                }
             }
 
-            // Draw Player Sprite
+            // Draw Player Sprite (Con Xanh Đố)
             ctx.fillStyle = '#06B6D4';
             ctx.fillRect(playerX, playerY, 20, 25);
             ctx.fillStyle = '#FFFFFF';
