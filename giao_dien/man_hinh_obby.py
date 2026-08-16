@@ -213,29 +213,46 @@ class ManHinhObby(QWidget):
         self.bat_dau_man_obby()
 
     def bat_dau_man_obby(self):
-        """Bắt đầu màn chơi Obby hiện tại."""
+        """Bắt đầu màn chơi Obby hiện tại với cơ chế 6 Cục Parkour (6 Câu hỏi)."""
+        self.obby_step = 0
         info = lay_thong_tin_man_obby(self.man_hien_tai)
         self.lbl_level_title.setText(f"{info['ten_man'].upper()} - {info['ten_world'].upper()}")
-        self.lbl_mechanic_desc.setText(f"Cơ chế thi đấu: {info['co_che']}. Thời gian: {info['thoi_gian_lim']} giây. Thưởng: +{info['thuong_xp']} Roblox XP!")
+        self.lbl_mechanic_desc.setText(f"Cơ chế: Vượt qua 6 Cục Parkour (6 Câu hỏi). Thời gian: {info['thoi_gian_lim']} giây. Thưởng: +{info['thuong_xp']} Roblox XP!")
 
-        # Sinh câu hỏi thử thách Parkour
-        cau_hoi_list = chay_javascript_sinh_de("Lớp 6", "Toán", f"Obby {info['ten_world']}", 1)
-        if cau_hoi_list:
-            self.cau_hoi_current = cau_hoi_list[0]
-            self.lbl_question_text.setText(f"Thử thách tri thức Obby {info['ten_man']}: {self.cau_hoi_current['cau_hoi']}")
-            
-            # Clear options
-            for i in reversed(range(self.vung_options_layout.count())):
-                w = self.vung_options_layout.itemAt(i).widget()
-                if w:
-                    w.setParent(None)
+        # Sinh 6 câu hỏi thử thách cho 6 Cục Parkour
+        cau_hoi_list = chay_javascript_sinh_de("Lớp 6", "Toán", f"Obby {info['ten_world']}", 6)
+        if cau_hoi_list and len(cau_hoi_list) >= 6:
+            self.danh_sach_6_cau_hoi = cau_hoi_list[:6]
+        else:
+            self.danh_sach_6_cau_hoi = [
+                {"cau_hoi": f"CụC PARKOUR 1/6 (Màn {self.man_hien_tai}): Phân số tối giản là phân số nào?", "dap_an": ["Không thể rút gọn thêm", "Có tử bằng 0", "Có mẫu bằng 1"], "dap_an_dung": "Không thể rút gọn thêm"},
+                {"cau_hoi": f"CụC PARKOUR 2/6 (Màn {self.man_hien_tai}): Công thức diện tích hình vuông là gì?", "dap_an": ["cạnh x cạnh", "cạnh x 4", "cạnh + cạnh"], "dap_an_dung": "cạnh x cạnh"},
+                {"cau_hoi": f"CụC PARKOUR 3/6 (Màn {self.man_hien_tai}): Tam giác đều có đặc điểm gì?", "dap_an": ["3 cạnh bằng nhau", "2 cạnh bằng nhau", "3 góc vuông"], "dap_an_dung": "3 cạnh bằng nhau"},
+                {"cau_hoi": f"CụC PARKOUR 4/6 (Màn {self.man_hien_tai}): Số nguyên tố nhỏ nhất là số nào?", "dap_an": ["Số 2", "Số 1", "Số 0"], "dap_an_dung": "Số 2"},
+                {"cau_hoi": f"CụC PARKOUR 5/6 (Màn {self.man_hien_tai}): Công thức chu vi hình vuông?", "dap_an": ["cạnh x 4", "cạnh x 2", "cạnh x cạnh"], "dap_an_dung": "cạnh x 4"},
+                {"cau_hoi": f"CụC PARKOUR 6/6 - ĐÍCH ĐẾN (Màn {self.man_hien_tai}): 1 mét bằng bao nhiêu xentimét?", "dap_an": ["100 xentimét", "10 xentimét", "1000 xentimét"], "dap_an_dung": "100 xentimét"}
+            ]
 
-            widget_options = TheDapAnGroup(self.cau_hoi_current["dap_an"], dap_an_hien_tai="")
-            widget_options.dap_an_thay_doi.connect(self.luu_dap_an_va_nhay)
-            self.vung_options_layout.addWidget(widget_options)
-
+        self.hien_thi_cau_hoi_cuc_parkour()
         self.thoi_gian_con_lai = info["thoi_gian_lim"]
         self.timer.start(1000)
+
+    def hien_thi_cau_hoi_cuc_parkour(self):
+        if not hasattr(self, 'danh_sach_6_cau_hoi') or self.obby_step >= len(self.danh_sach_6_cau_hoi):
+            return
+
+        self.cau_hoi_current = self.danh_sach_6_cau_hoi[self.obby_step]
+        self.lbl_question_text.setText(f"[CỤC PARKOUR {self.obby_step + 1} / 6] - Màn {self.man_hien_tai}: {self.cau_hoi_current['cau_hoi']}")
+
+        # Clear vung options
+        for i in reversed(range(self.vung_options_layout.count())):
+            w = self.vung_options_layout.itemAt(i).widget()
+            if w:
+                w.setParent(None)
+
+        widget_options = TheDapAnGroup(self.cau_hoi_current["dap_an"], dap_an_hien_tai="")
+        widget_options.dap_an_thay_doi.connect(self.luu_dap_an_va_nhay)
+        self.vung_options_layout.addWidget(widget_options)
 
     def luu_dap_an_va_nhay(self, text):
         self.dap_an_user = text
@@ -251,7 +268,7 @@ class ManHinhObby(QWidget):
         if ok and text:
             cmd = text.strip().lower()
             if "nhảy" in cmd or "nhay" in cmd or "parkour" in cmd:
-                QMessageBox.information(self, "Lệnh Giọng Nói AI", "Đã nhận lệnh 'NHẢY'! Nhân vật thực hiện cú nhảy Parkour vượt chướng ngại vật!")
+                QMessageBox.information(self, "Lệnh Giọng Nói AI", f"Đã nhận lệnh 'NHẢY'! Nhân vật thực hiện cú nhảy lên Cục Parkour {self.obby_step + 1}!")
             elif "bắt đầu" in cmd or "start" in cmd or "chơi" in cmd:
                 self.bat_dau_man_obby()
             elif "nộp" in cmd or "checkpoint" in cmd:
@@ -275,11 +292,10 @@ class ManHinhObby(QWidget):
             self.lbl_timer_obby.setText(f"Thời gian vượt màn còn lại: {m:02d}:{s:02d}")
         else:
             self.timer.stop()
-            QMessageBox.warning(self, "Hết thời gian Obby", f"Hết thời gian vượt {lay_thong_tin_man_obby(self.man_hien_tai)['ten_man']}! Bạn rơi khỏi sàn parkour và quay lại Checkpoint trước.")
+            QMessageBox.warning(self, "Hết thời gian Obby", f"Hết thời gian vượt {lay_thong_tin_man_obby(self.man_hien_tai)['ten_man']}! Bạn ngã khỏi Cục Parkour {self.obby_step + 1} và quay lại Checkpoint trước.")
             self.bat_dau_man_obby()
 
     def tong_ket_man_obby(self):
-        self.timer.stop()
         if not self.cau_hoi_current:
             return
 
@@ -288,48 +304,54 @@ class ManHinhObby(QWidget):
         dap_an_user_str = str(self.dap_an_user).strip()
 
         if dap_an_user_str == dap_an_dung:
-            cong_phan_thuong(10.0, 1)
-            luu_hoan_thanh_man_obby(self.man_hien_tai)
-            self.tai_lai_ban_do()
-
-            if info["is_boss"]:
-                QMessageBox.information(
-                    self,
-                    "YOU ESCAPED THE GLITCH WORLD",
-                    "YOU ESCAPED THE GLITCH WORLD!\n\n"
-                    "Chúc mừng bạn đã đánh bại Boss Glitch-X Màn 100 và thu thập đủ 10 Glitch Cores để kích hoạt MASTER CORE!\n"
-                    "Cánh cổng thời gian mở ra, đưa bạn trở lại thành phố Glitch City bình yên!\n"
-                    f"Thưởng +{info['thuong_xp']} Roblox XP và Mở khóa HARD MODE!"
-                )
-                dlg_cert = HopThoaiChungNhan(
-                    parent=self,
-                    lop="Lớp 6",
-                    chu_de="MASTER CORE CHAMPION - THẦN THOẠI OBBY 100 MÀN",
-                    phan_tram_diem=100,
-                    diem_so=10.0
-                )
-                dlg_cert.exec()
-                self.man_hien_tai = 1
-                self.bat_dau_man_obby()
-            elif info["is_checkpoint"]:
-                QMessageBox.information(
-                    self,
-                    "CHẠM CHECKPOINT THÀNH CÔNG",
-                    f"XUẤT SẮC! Bạn đã vượt qua {info['ten_man'].upper()} ({info['ten_world'].upper()})!\n"
-                    f"Thu thập thành công GLITCH CORE #{info['so_man'] // 10}!\n"
-                    f"Đã lưu Checkpoint! Thưởng +{info['thuong_xp']} Roblox XP!"
-                )
-                self.man_hien_tai += 1
-                self.bat_dau_man_obby()
+            self.obby_step += 1
+            if self.obby_step < 6:
+                self.hien_thi_cau_hoi_cuc_parkour()
             else:
-                QMessageBox.information(
-                    self,
-                    "VƯỢT MÀN OBBY THÀNH CÔNG",
-                    f"XUẤT SẮC! Bạn đã vượt qua {info['ten_man'].upper()}!\nThưởng +{info['thuong_xp']} Roblox XP!"
-                )
-                self.man_hien_tai += 1
-                self.bat_dau_man_obby()
+                self.timer.stop()
+                cong_phan_thuong(10.0, 1)
+                luu_hoan_thanh_man_obby(self.man_hien_tai)
+                self.tai_lai_ban_do()
+
+                if info["is_boss"]:
+                    QMessageBox.information(
+                        self,
+                        "YOU ESCAPED THE GLITCH WORLD",
+                        "YOU ESCAPED THE GLITCH WORLD!\n\n"
+                        "Chúc mừng bạn đã hoàn thành 6 Cục Parkour Màn 100, đánh bại Boss Glitch-X và thu thập đủ 10 Glitch Cores để kích hoạt MASTER CORE!\n"
+                        "Cánh cổng thời gian mở ra, đưa bạn trở lại thành phố Glitch City bình yên!\n"
+                        f"Thưởng +{info['thuong_xp']} Roblox XP và Mở khóa HARD MODE!"
+                    )
+                    dlg_cert = HopThoaiChungNhan(
+                        parent=self,
+                        lop="Lớp 6",
+                        chu_de="MASTER CORE CHAMPION - THẦN THOẠI OBBY 100 MÀN",
+                        phan_tram_diem=100,
+                        diem_so=10.0
+                    )
+                    dlg_cert.exec()
+                    self.man_hien_tai = 1
+                    self.bat_dau_man_obby()
+                elif info["is_checkpoint"]:
+                    QMessageBox.information(
+                        self,
+                        "CHẠM CHECKPOINT THÀNH CÔNG",
+                        f"XUẤT SẮC! Bạn đã nhảy qua đủ 6 Cục Parkour và vượt qua {info['ten_man'].upper()} ({info['ten_world'].upper()})!\n"
+                        f"Thu thập thành công GLITCH CORE #{info['so_man'] // 10}!\n"
+                        f"Đã lưu Checkpoint! Thưởng +{info['thuong_xp']} Roblox XP!"
+                    )
+                    self.man_hien_tai += 1
+                    self.bat_dau_man_obby()
+                else:
+                    QMessageBox.information(
+                        self,
+                        "VƯỢT MÀN OBBY THÀNH CÔNG",
+                        f"XUẤT SẮC! Bạn đã vượt qua 6 Cục Parkour Màn {info['ten_man'].upper()}!\nThưởng +{info['thuong_xp']} Roblox XP!"
+                    )
+                    self.man_hien_tai += 1
+                    self.bat_dau_man_obby()
         else:
+            self.timer.stop()
             QMessageBox.warning(
                 self,
                 "VƯỢT MÀN THẤT BẠI",
