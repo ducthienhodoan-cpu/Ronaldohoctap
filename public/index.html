@@ -922,7 +922,13 @@
 
                     <div id="boxObbyQuestion" style="background: #111214; border: 2px solid #A855F7; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
                         <div id="lblObbyQText" style="font-size: 16px; font-weight: bold; color: #FFFFFF; margin-bottom: 12px;">Bấm 'BẮT ĐẦU VƯỢT MÀN OBBY' để nhận thử thách Parkour!</div>
-                        <div id="boxObbyOpts" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                        <div id="boxObbyOpts" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;"></div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1E293B; padding-top: 10px; margin-top: 8px;">
+                            <button class="btn-primary" style="background: linear-gradient(135deg, #06B6D4, #3B82F6); font-size: 13px; padding: 6px 16px;" onclick="toggleObbySolution()">BÀI GIẢI CHI TIẾT</button>
+                            <span style="font-size: 12px; color: #94A3B8;">(Hướng dẫn bài giải từng bước chi tiết)</span>
+                        </div>
+                        <div id="boxObbySolution" style="display: none; background: rgba(15, 23, 42, 0.95); border: 1.5px solid #06B6D4; padding: 14px 18px; border-radius: 12px; margin-top: 10px; font-size: 14px; line-height: 1.6; color: #E2E8F0; white-space: pre-line;"></div>
                     </div>
 
                     <div style="text-align: right;">
@@ -2380,6 +2386,13 @@
             { w: "STRENGTHEN", m: "Củng cố, làm mạnh", s: "Reinforce", a: "Weaken" }
         ];
 
+        function toggleObbySolution() {
+            const box = document.getElementById('boxObbySolution');
+            if (box) {
+                box.style.display = (box.style.display === 'none' || !box.style.display) ? 'block' : 'none';
+            }
+        }
+
         function generateProceduralObby6Questions(level) {
             const list = [];
             const wIdx = Math.floor((level - 1) / 10);
@@ -2392,6 +2405,7 @@
                 let qText = "";
                 let opts = [];
                 let correct = "";
+                let explain = "";
 
                 if (qType === 0) {
                     // Tu vung Tieng Anh IELTS
@@ -2401,14 +2415,17 @@
                         qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Chọn từ ĐỒNG NGHĨA (Synonym) gần nhất với từ IELTS '${vocab.w}':`;
                         correct = vocab.s;
                         opts = [vocab.s, vocab.a, "Random", "Negligible"];
+                        explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Từ vựng IELTS '${vocab.w}' có nghĩa Tiếng Việt là '${vocab.m}'.\nStep 2: Xét nghĩa các phương án, từ đồng nghĩa (Synonym) chính xác nhất là '${vocab.s}' (mang nghĩa gần nhất với ${vocab.w}).\nStep 3: Từ trái nghĩa là '${vocab.a}'.\n-> ĐÁP ÁN ĐÚNG: ${vocab.s}`;
                     } else if (subType === 1) {
                         qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Nghĩa Tiếng Việt chính xác của từ vựng IELTS '${vocab.w}' là gì?`;
                         correct = vocab.m;
                         opts = [vocab.m, "Tạm hoãn", "Gây hại", "Không cố định"];
+                        explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Tra cứu từ điển Academic IELTS cho từ '${vocab.w}'.\nStep 2: Từ '${vocab.w}' được dịch chính xác sang Tiếng Việt là '${vocab.m}'.\nStep 3: Ví dụ câu: This element is ${vocab.w.toLowerCase()} in nature.\n-> ĐÁP ÁN ĐÚNG: ${vocab.m}`;
                     } else {
                         qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Chọn từ TRÁI NGHĨA (Antonym) với từ IELTS '${vocab.w}':`;
                         correct = vocab.a;
                         opts = [vocab.a, vocab.s, "Normal", "Constant"];
+                        explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Từ vựng '${vocab.w}' có nghĩa là '${vocab.m}' (Đồng nghĩa: ${vocab.s}).\nStep 2: Từ trái nghĩa (Antonym) phản bác lại nghĩa gốc là '${vocab.a}'.\n-> ĐÁP ÁN ĐÚNG: ${vocab.a}`;
                     }
                 } else if (qType === 1) {
                     // Toan hoc - Dai so & Phep tinh
@@ -2419,6 +2436,7 @@
                     qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Tính giá trị biểu thức P = ${a} x ${c} + ${b}:`;
                     correct = `${val}`;
                     opts = [`${val}`, `${val + 5}`, `${val - 3}`, `${val + 10}`];
+                    explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Áp dụng quy tắc thứ tự thực hiện phép tính (Phép nhân thực hiện trước phép cộng).\nStep 2: Tính tích: ${a} x ${c} = ${a * c}.\nStep 3: Cộng tiếp số b: ${a * c} + ${b} = ${val}.\n-> ĐÁP SỐ ĐÚNG: ${val}`;
                 } else if (qType === 2) {
                     // Toan hoc - Hinh hoc & Dien tich
                     const w = (seed % 12) + 4;
@@ -2427,6 +2445,7 @@
                     qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Diện tích hình chữ nhật có chiều dài ${w} cm và chiều rộng ${h} cm là:`;
                     correct = `${area} cm²`;
                     opts = [`${area} cm²`, `${area + 6} cm²`, `${area - 4} cm²`, `${area + 12} cm²`].sort(() => Math.random() - 0.5);
+                    explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Công thức tính diện tích hình chữ nhật: S = Chiều dài x Chiều rộng.\nStep 2: Thay số chiều dài = ${w} cm, chiều rộng = ${h} cm.\nStep 3: Tính toán: S = ${w} x ${h} = ${area} (cm²).\n-> ĐÁP SỐ ĐÚNG: ${area} cm²`;
                 } else if (qType === 3) {
                     // Tin hoc & Python
                     const n = (seed % 20) + 2;
@@ -2435,6 +2454,7 @@
                     qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Kết quả của biểu thức Python print(${n} * ${p}) là:`;
                     correct = `${res}`;
                     opts = [`${res}`, `${res + 3}`, `${n + p}`, `${res - 2}`].sort(() => Math.random() - 0.5);
+                    explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Trong ngôn ngữ lập trình Python, toán tử * biểu thị phép nhân.\nStep 2: Thực hiện phép nhân số nguyên: ${n} x ${p} = ${res}.\nStep 3: Lệnh print() in giá trị kết quả ${res} ra màn hình terminal/console.\n-> ĐÁP ÁN ĐÚNG: ${res}`;
                 } else if (qType === 4) {
                     // Vat ly & Hoa hoc
                     const v = (seed % 30) + 20;
@@ -2443,26 +2463,28 @@
                     qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): Một vật di chuyển đều với vận tốc v = ${v} km/h trong t = ${t} giờ. Quãng đường s đi được là:`;
                     correct = `${dist} km`;
                     opts = [`${dist} km`, `${dist + 15} km`, `${dist - 10} km`, `${dist + 25} km`].sort(() => Math.random() - 0.5);
+                    explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Công thức tính quãng đường trong chuyển động thẳng đều: s = v x t.\nStep 2: Thay số vận tốc v = ${v} km/h và thời gian t = ${t} giờ.\nStep 3: Tính toán: s = ${v} x ${t} = ${dist} (km).\n-> ĐÁP SỐ ĐÚNG: ${dist} km`;
                 } else {
                     // Dinh nghia Trong tam SGK
                     const sgkList = [
-                        { q: `Đơn vị đo độ dài hợp pháp của Việt Nam là gì?`, c: "Mét (m)", o: ["Mét (m)", "Xentimét (cm)", "Kilômét (km)", "Milimét (mm)"] },
-                        { q: `Khối lượng riêng của một chất được tính theo công thức nào?`, c: "D = m / V", o: ["D = m / V", "D = m x V", "D = V / m", "D = m + V"] },
-                        { q: `Kim loại duy nhất ở dạng lỏng ở nhiệt độ phòng là gì?`, c: "Thủy ngân (Hg)", o: ["Thủy ngân (Hg)", "Sắt (Fe)", "Đồng (Cu)", "Nhôm (Al)"] },
-                        { q: `Công thức hóa học của muối ăn hàng ngày là gì?`, c: "NaCl", o: ["NaCl", "NaOH", "HCl", "CaCO3"] },
-                        { q: `Bào quan nào là 'nhà máy năng lượng' của tế bào?`, c: "Ti thể", o: ["Ti thể", "Nhân tế bào", "Lưới nội chất", "Không bào"] }
+                        { q: `Đơn vị đo độ dài hợp pháp của Việt Nam là gì?`, c: "Mét (m)", o: ["Mét (m)", "Xentimét (cm)", "Kilômét (km)", "Milimét (mm)"], e: "Theo chuẩn Hệ đo lường quốc tế (SI) và pháp luật Việt Nam, đơn vị đo độ dài cơ bản là Mét (kí hiệu m)." },
+                        { q: `Khối lượng riêng của một chất được tính theo công thức nào?`, c: "D = m / V", o: ["D = m / V", "D = m x V", "D = V / m", "D = m + V"], e: "Khối lượng riêng D của một chất được xác định bằng khối lượng m của một thể tích V chất đó: D = m / V (kg/m³)." },
+                        { q: `Kim loại duy nhất ở dạng lỏng ở nhiệt độ phòng là gì?`, c: "Thủy ngân (Hg)", o: ["Thủy ngân (Hg)", "Sắt (Fe)", "Đồng (Cu)", "Nhôm (Al)"], e: "Thủy ngân (Hg - Mercury) là kim loại duy nhất tồn tại ở thể lỏng ở nhiệt độ và áp suất tiêu chuẩn." },
+                        { q: `Công thức hóa học của muối ăn hàng ngày là gì?`, c: "NaCl", o: ["NaCl", "NaOH", "HCl", "CaCO3"], e: "Muối ăn tinh khiết là hợp chất Natri Clorua được cấu tạo từ 1 nguyên tử Na và 1 nguyên tử Cl (NaCl)." },
+                        { q: `Bào quan nào là 'nhà máy năng lượng' của tế bào?`, c: "Ti thể", o: ["Ti thể", "Nhân tế bào", "Lưới nội chất", "Không bào"], e: "Ti thể (Mitochondria) đóng vai trò hô hấp tế bào, chuyển hóa chất dinh dưỡng thành ATP năng lượng." }
                     ];
                     const item = sgkList[seed % sgkList.length];
                     qText = `CỤC PARKOUR ${step}/6 (Màn ${level}): ${item.q}`;
                     correct = item.c;
                     opts = item.o.sort(() => Math.random() - 0.5);
+                    explain = `BÀI GIẢI CHI TIẾT:\nStep 1: Xóa tan hoài nghi bằng kiến thức SGK định hình chuẩn xác: ${item.q}\nStep 2: Căn cứ khoa học: ${item.e}\n-> ĐÁP ÁN ĐÚNG: ${item.c}`;
                 }
 
                 if (!opts.includes(correct)) opts[0] = correct;
                 opts = Array.from(new Set(opts)).sort(() => Math.random() - 0.5);
                 if (opts.length < 3) opts.push("Đáp án khác");
 
-                list.push({ q: qText, opts: opts, correct: correct });
+                list.push({ q: qText, opts: opts, correct: correct, explain: explain });
             }
             return list;
         }
@@ -2470,6 +2492,11 @@
         function renderObbyStepQuestion() {
             drawObbyCanvas(obbyStep);
             updateObbyLivesDisplay();
+
+            const solBox = document.getElementById('boxObbySolution');
+            if (solBox) {
+                solBox.style.display = 'none';
+            }
 
             if (obbyStep >= 6) {
                 return;
@@ -2481,6 +2508,10 @@
             const qTextEl = document.getElementById('lblObbyQText');
             if (qTextEl) qTextEl.innerHTML = `<span style="color: #F59E0B; font-weight: 900;">[CỤC PARKOUR ${obbyStep + 1} / 6]</span> - ${currentQ.q}`;
             
+            if (solBox && currentQ.explain) {
+                solBox.innerText = currentQ.explain;
+            }
+
             const optsContainer = document.getElementById('boxObbyOpts');
             if (optsContainer) {
                 optsContainer.innerHTML = '';
@@ -2612,9 +2643,12 @@
                     }
                 });
             } else {
-                // Incorrect answer -> Deduct 1 Life (-1 Mạng)
+                // Incorrect answer -> Deduct 1 Life (-1 Mạng) & Automatically Show Step-by-Step Solution!
                 obbyLives--;
                 updateObbyLivesDisplay();
+
+                const solBox = document.getElementById('boxObbySolution');
+                if (solBox) solBox.style.display = 'block';
 
                 if (btnEl) {
                     btnEl.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
@@ -2623,7 +2657,7 @@
 
                 if (obbyLives > 0) {
                     setTimeout(() => {
-                        alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Hãy thử lại câu hỏi tại Cục Parkour ${obbyStep + 1}!`);
+                        alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Hãy đọc bài giải chi tiết bên dưới và thử lại tại Cục Parkour ${obbyStep + 1}!`);
                     }, 150);
                 } else {
                     if (obbyTimerId) clearInterval(obbyTimerId);
