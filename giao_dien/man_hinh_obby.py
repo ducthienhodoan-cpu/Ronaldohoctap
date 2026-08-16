@@ -34,6 +34,7 @@ class ManHinhObby(QWidget):
         self.dap_an_user = ""
         self.thoi_gian_con_lai = 45
         self.boss_phase = 1
+        self.obby_mang = 3 # 3 Mang choi trong 1 luot
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.cap_nhat_dong_ho)
@@ -351,10 +352,20 @@ class ManHinhObby(QWidget):
                     self.man_hien_tai += 1
                     self.bat_dau_man_obby()
         else:
-            self.timer.stop()
-            QMessageBox.warning(
-                self,
-                "VƯỢT MÀN THẤT BẠI",
-                f"Rất tiếc! Đáp án chưa chính xác. Bạn trượt chân rơi khỏi platform của {info['ten_man']}!\n"
-                f"Đáp án đúng là: {dap_an_dung}. Hãy thử lại từ Checkpoint nhé!"
-            )
+            self.obby_mang -= 1
+            if self.obby_mang > 0:
+                QMessageBox.warning(
+                    self,
+                    "ĐÁP ÁN CHƯA CHÍNH XÁC",
+                    f"Rất tiếc! Đáp án chưa chính xác. Bạn bị trừ 1 mạng chơi (Còn {self.obby_mang}/3 mạng).\n"
+                    f"Hãy thử lại câu hỏi tại Cục Parkour {self.obby_step + 1}!"
+                )
+            else:
+                self.timer.stop()
+                QMessageBox.warning(
+                    self,
+                    "BẠN ĐÃ HẾT 3 MẠNG CHƠI",
+                    f"Bạn đã hết 3 mạng chơi trong lượt này! Bạn ngã khỏi Màn Obby {info['ten_man']}.\n"
+                    f"Quay lại Cục 1 để bắt đầu lại lượt chơi mới."
+                )
+                self.bat_dau_man_obby()

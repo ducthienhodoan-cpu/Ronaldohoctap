@@ -916,6 +916,7 @@
 
                     <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
                         <div id="lblObbyTimer" style="font-size: 16px; font-weight: 900; color: #10B981; background: #002B4D; padding: 8px 16px; border-radius: 10px; border: 2px solid #10B981;">Thời gian còn lại: 00:45</div>
+                        <div id="lblObbyLives" style="font-size: 16px; font-weight: 900; color: #EF4444; background: #2B0000; padding: 8px 16px; border-radius: 10px; border: 2px solid #EF4444;">Mạng sống: 3 / 3 mạng</div>
                         <button class="btn-primary" style="background: linear-gradient(135deg, #EC4899, #A855F7); font-size: 16px; padding: 12px 28px;" onclick="startObbyLevelGame()">BẮT ĐẦU VƯỢT MÀN OBBY</button>
                     </div>
 
@@ -2237,6 +2238,7 @@
         let obbyTimerId = null;
         let obbyTimeLeft = 45;
         let obbyStep = 0; // 0 den 6 cuc Parkour
+        let obbyLives = 3; // 3 Mang choi moi luot
         let obby6Questions = [];
         let obbySelectedAns = "";
 
@@ -2252,6 +2254,11 @@
             { id: 9, name: "World 9 - Cyber World", range: "Màn 81-90", desc: "Bàn phím khổng lồ, mạch điện, đường hầm dữ liệu, Virus Chase" },
             { id: 10, name: "World 10 - Glitch Core", range: "Màn 91-100", desc: "Tổng hợp cơ chế, Màn 99 Final Run, Màn 100 Boss Glitch-X 3 Phase" }
         ];
+
+        function updateObbyLivesDisplay() {
+            const lbl = document.getElementById('lblObbyLives');
+            if (lbl) lbl.innerText = `Mạng sống: ${obbyLives} / 3 mạng`;
+        }
 
         function renderObbyWorlds() {
             const container = document.getElementById('obbyWorldButtons');
@@ -2302,6 +2309,7 @@
                 btn.onclick = () => {
                     currentObbyLevel = l;
                     obbyStep = 0;
+                    obbyLives = 3;
                     renderObbyGrid(wIdx);
                     startObbyLevelGame();
                 };
@@ -2311,12 +2319,15 @@
 
         function startObbyLevelGame() {
             obbyStep = 0;
+            obbyLives = 3;
+            updateObbyLivesDisplay();
+
             const wIdx = Math.floor((currentObbyLevel - 1) / 10);
             const wInfo = obbyWorldsData[wIdx] || obbyWorldsData[0];
             const titleEl = document.getElementById('lblObbyCurrentLevelTitle');
             const descEl = document.getElementById('lblObbyMechanicDesc');
             if (titleEl) titleEl.innerText = `MÀN ${currentObbyLevel} - ${wInfo.name.toUpperCase()}`;
-            if (descEl) descEl.innerText = `Cơ chế: Vượt qua 6 Cục Parkour (6 Câu hỏi). Thưởng: +${currentObbyLevel % 10 === 0 ? 200 : 50} Roblox XP!`;
+            if (descEl) descEl.innerText = `Cơ chế: 6 Cục Parkour | 3 Mạng chơi. Thưởng: +${currentObbyLevel % 10 === 0 ? 200 : 50} Roblox XP!`;
 
             obbyTimeLeft = currentObbyLevel === 100 ? 120 : (currentObbyLevel % 10 === 0 ? 90 : 60);
             const timerEl = document.getElementById('lblObbyTimer');
@@ -2350,6 +2361,7 @@
 
         function renderObbyStepQuestion() {
             drawObbyCanvas(obbyStep);
+            updateObbyLivesDisplay();
 
             if (obbyStep >= 6) {
                 return;
@@ -2485,23 +2497,35 @@
                         }
 
                         obbyStep = 0;
+                        obbyLives = 3;
                         renderObbyWorlds();
                         renderObbyGrid(selectedObbyWorldIdx);
                         startObbyLevelGame();
                     }
                 });
             } else {
-                // Incorrect answer -> Highlight RED & Fall off platform!
+                // Incorrect answer -> Deduct 1 Life (-1 Mạng)
+                obbyLives--;
+                updateObbyLivesDisplay();
+
                 if (btnEl) {
                     btnEl.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
                     btnEl.style.color = '#FFFFFF';
                 }
-                if (obbyTimerId) clearInterval(obbyTimerId);
-                setTimeout(() => {
-                    alert(`VƯỢT MÀN THẤT BẠI!\n\nĐáp án chưa chính xác. Bạn ngã khỏi Cục Parkour ${obbyStep + 1}! Quay lại Cục 1 để thử lại từ đầu.`);
-                    obbyStep = 0;
-                    startObbyLevelGame();
-                }, 200);
+
+                if (obbyLives > 0) {
+                    setTimeout(() => {
+                        alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Hãy thử lại câu hỏi tại Cục Parkour ${obbyStep + 1}!`);
+                    }, 150);
+                } else {
+                    if (obbyTimerId) clearInterval(obbyTimerId);
+                    setTimeout(() => {
+                        alert(`BẠN ĐÃ HẾT 3 MẠNG CHƠI!\n\nBạn sẩy chân ngã khỏi Màn Obby ${currentObbyLevel}. Quay lại Cục 1 để bắt đầu lại lượt chơi mới.`);
+                        obbyStep = 0;
+                        obbyLives = 3;
+                        startObbyLevelGame();
+                    }, 200);
+                }
             }
         }
 
