@@ -2359,22 +2359,30 @@
             obbySelectedAns = "";
 
             const qTextEl = document.getElementById('lblObbyQText');
-            if (qTextEl) qTextEl.innerText = `[CỤC PARKOUR ${obbyStep + 1} / 6] - ${currentQ.q}`;
+            if (qTextEl) qTextEl.innerHTML = `<span style="color: #F59E0B; font-weight: 900;">[CỤC PARKOUR ${obbyStep + 1} / 6]</span> - ${currentQ.q}`;
             
             const optsContainer = document.getElementById('boxObbyOpts');
             if (optsContainer) {
                 optsContainer.innerHTML = '';
-                currentQ.opts.forEach(opt => {
+                const badgeLetters = ['A', 'B', 'C', 'D'];
+                currentQ.opts.forEach((opt, idx) => {
+                    const letter = badgeLetters[idx] || (idx + 1);
                     const b = document.createElement('button');
                     b.className = 'option-btn';
                     b.style.cursor = 'pointer';
                     b.style.pointerEvents = 'auto';
-                    b.innerText = opt;
+                    b.style.display = 'flex';
+                    b.style.alignItems = 'center';
+                    b.style.gap = '10px';
+                    b.style.padding = '12px 18px';
+                    b.style.margin = '4px 0';
+                    b.style.borderRadius = '12px';
+                    b.innerHTML = `<span class="option-badge" style="background: #06B6D4; color: #020617; font-weight: 900; padding: 4px 10px; border-radius: 8px;">${letter}</span> <span>${opt}</span>`;
+                    
                     b.onclick = (e) => {
                         if (e) e.stopPropagation();
-                        try { playClickSfx(); } catch(err) {}
-                        obbySelectedAns = opt;
-                        submitObbyLevelAnswer();
+                        // 1-Click Instant Answer Evaluation & Platform Jump!
+                        handleObbyOptionClick(opt, b);
                     };
                     optsContainer.appendChild(b);
                 });
@@ -2432,23 +2440,30 @@
             obbyJumpAnimId = requestAnimationFrame(stepAnim);
         }
 
-        function submitObbyLevelAnswer() {
+        function handleObbyOptionClick(optText, btnEl) {
             if (!obby6Questions || obbyStep >= 6) return;
-
             const currentQ = obby6Questions[obbyStep];
-            if (obbySelectedAns === currentQ.correct) {
+
+            if (optText === currentQ.correct) {
+                // Change button color to GREEN for instant visual feedback
+                if (btnEl) {
+                    btnEl.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                    btnEl.style.color = '#FFFFFF';
+                    btnEl.style.border = '2px solid #FFFFFF';
+                }
+
                 const fromStep = obbyStep;
                 obbyStep++;
                 const toStep = obbyStep;
 
                 try { playClickSfx(); } catch(e) {}
 
-                // Phat hieu ung nhay sang Cuc Parkour tiep theo
+                // Trigger 60fps Parabolic Arc Jump to Next Platform (Cục tiếp theo)!
                 animateObbyJump(fromStep, toStep, () => {
                     if (toStep < 6) {
                         renderObbyStepQuestion();
                     } else {
-                        // Da nhay du 6 cuc Parkour -> Cham Checkpoint Flag!
+                        // Successfully completed all 6 Parkour platforms!
                         if (obbyTimerId) clearInterval(obbyTimerId);
 
                         if (currentObbyLevel >= obbyMaxLevel) {
@@ -2482,10 +2497,17 @@
                     }
                 });
             } else {
+                // Incorrect answer -> Highlight RED & Fall off platform!
+                if (btnEl) {
+                    btnEl.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+                    btnEl.style.color = '#FFFFFF';
+                }
                 if (obbyTimerId) clearInterval(obbyTimerId);
-                alert(`VƯỢT MÀN THẤT BẠI!\n\nĐáp án chưa chính xác. Bạn sẩy chân rơi khỏi Cục Parkour ${obbyStep + 1}! Quay lại Cục 1 để làm lại từ đầu.`);
-                obbyStep = 0;
-                startObbyLevelGame();
+                setTimeout(() => {
+                    alert(`VƯỢT MÀN THẤT BẠI!\n\nĐáp án chưa chính xác. Bạn ngã khỏi Cục Parkour ${obbyStep + 1}! Quay lại Cục 1 để thử lại từ đầu.`);
+                    obbyStep = 0;
+                    startObbyLevelGame();
+                }, 200);
             }
         }
 
