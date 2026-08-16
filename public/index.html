@@ -1133,26 +1133,74 @@
                 if (activeBtn) activeBtn.classList.add('active');
             }
 
-            try {
-                if (secId === 'ielts') loadIeltsQuestions();
-                if (secId === 'luyen') loadPracticeQuiz();
-                if (secId === 'hoc') loadStudyContent();
-                if (secId === 'formula') loadFormulas();
-                if (secId === 'minigames') drawWheelCanvas();
-                if (secId === 'worldcup') { renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); }
-                if (secId === 'c1') { renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); }
-                if (secId === 'plan') loadPlan();
-                if (secId === 'stats') loadStats();
-                if (secId === 'notebook') loadNotebook();
-                if (secId === 'duaxe') initCanvasRaceGame();
-                if (secId === 'obby') {
+            // Trien khai an toan cho tung tab chuc nang
+            if (secId === 'ielts') { try { loadIeltsQuestions(); } catch(e) { console.warn(e); } }
+            if (secId === 'luyen') { try { loadPracticeQuiz(); } catch(e) { console.warn(e); } }
+            if (secId === 'hoc') { try { loadStudyContent(); } catch(e) { console.warn(e); } }
+            if (secId === 'formula') { try { loadFormulas(); } catch(e) { console.warn(e); } }
+            if (secId === 'minigames') { try { drawWheelCanvas(); } catch(e) { console.warn(e); } }
+            if (secId === 'worldcup') { try { renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); } catch(e) { console.warn(e); } }
+            if (secId === 'c1') { try { renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); } catch(e) { console.warn(e); } }
+            if (secId === 'plan') { try { loadPlan(); } catch(e) { console.warn(e); } }
+            if (secId === 'stats') { try { loadStats(); } catch(e) { console.warn(e); } }
+            if (secId === 'notebook') { try { loadNotebook(); } catch(e) { console.warn(e); } }
+            if (secId === 'duaxe') { try { initCanvasRaceGame(); } catch(e) { console.warn(e); } }
+            if (secId === 'obby') {
+                try {
                     if (typeof renderObbyWorlds === 'function') renderObbyWorlds();
                     if (typeof renderObbyGrid === 'function') renderObbyGrid(selectedObbyWorldIdx || 0);
                     if (typeof startObbyLevelGame === 'function') startObbyLevelGame();
-                }
-            } catch(err) {
-                console.error("Tab error:", err);
+                } catch(e) { console.warn(e); }
             }
+        }
+
+        function loadStudyContent() {
+            const lopEl = document.getElementById('selLopHoc');
+            const monEl = document.getElementById('selMonHoc');
+            const lop = lopEl ? lopEl.value : 'Lớp 6';
+            const mon = monEl ? monEl.value : 'Toán';
+            const display = document.getElementById('studyContentDisplay');
+            if (!display) return;
+
+            const databaseBaiHoc = {
+                "Toán": [
+                    { t: "Bài 1: Tập hợp và phần tử của tập hợp", c: "Tập hợp là khái niệm cơ bản trong toán học. Một tập hợp bao gồm các phần tử xác định. Ví dụ A = {1, 2, 3, 4, 5}." },
+                    { t: "Bài 2: Các phép tính Cộng, Trừ, Nhân, Chia", c: "Các tính chất giao hoán, kết hợp, phân phối của phép nhân đối với phép cộng: a x (b + c) = a x b + a x c." },
+                    { t: "Bài 3: Lũy thừa với số mũ tự nhiên", c: "Lũy thừa bậc n của a là tích của n thừa số bằng a. Công thức nhân 2 lũy thừa cùng cơ số: a^m . a^n = a^(m+n)." },
+                    { t: "Bài 4: Tính chia hết và Dấu hiệu chia hết cho 2, 3, 5, 9", c: "Các số có chữ số tận cùng là 0, 2, 4, 6, 8 thì chia hết cho 2. Tổng các chữ số chia hết cho 3 thì số đó chia hết cho 3." }
+                ],
+                "Vật lý": [
+                    { t: "Bài 1: Đo độ dài và đo thể tích", c: "Đơn vị đo độ dài hợp pháp của Việt Nam là mét (m). Dùng thước đo để xác định chiều dài của vật." },
+                    { t: "Bài 2: Khối lượng và Khối lượng riêng", c: "Khối lượng riêng của một chất được xác định bằng khối lượng của một đơn vị thể tích chất đó: D = m / V." }
+                ],
+                "Hóa học": [
+                    { t: "Bài 1: Chất và Nguyên tử", c: "Mọi vật thể xung quanh chúng ta đều được cấu tạo từ các chất. Nguyên tử là hạt cực kỳ nhỏ và trung hòa về điện." },
+                    { t: "Bài 2: Phản ứng hóa học", c: "Phản ứng hóa học là quá trình biến đổi chất này thành chất khác. Định luật bảo toàn khối lượng: m_chất_tham_gia = m_sản_phẩm." }
+                ],
+                "Sinh học": [
+                    { t: "Bài 1: Cấu tạo tế bào thực vật và động vật", c: "Tế bào là đơn vị cấu trúc và chức năng cơ bản của mọi sinh vật sống." }
+                ],
+                "Tin học": [
+                    { t: "Bài 1: Thông tin và Dữ liệu", c: "Thông tin là những gì mang lại hiểu biết cho con người về thế giới xung quanh. Dữ liệu là thông tin dưới dạng được lưu trữ." },
+                    { t: "Bài 2: Thuật toán và Lập trình Python / Scratch", c: "Thuật toán là dãy các bước chỉ dẫn rõ ràng để hoàn thành một nhiệm vụ hoặc giải một bài toán." }
+                ],
+                "Tiếng Anh": [
+                    { t: "Unit 1: My New School & Vocabulary", c: "Grammar: Present Simple Tense & Adverbs of Frequency (always, usually, often, sometimes, never)." },
+                    { t: "Unit 2: My House & Rooms", c: "Vocabulary: House types, furniture, prepositions of place (in, on, under, behind, next to)." }
+                ]
+            };
+
+            const ds = databaseBaiHoc[mon] || databaseBaiHoc["Toán"];
+            let html = `<h4 style="color: #F59E0B; font-size: 20px; margin-bottom: 14px; font-weight: 900;">NỘI DUNG SGK TRỌNG TÂM - ${lop.toUpperCase()} - MÔN ${mon.toUpperCase()}</h4>`;
+            ds.forEach((b) => {
+                html += `
+                    <div style="background: rgba(15, 23, 42, 0.8); border: 1.5px solid #06B6D4; padding: 14px 18px; border-radius: 14px; margin-bottom: 12px;">
+                        <div style="color: #10B981; font-weight: 900; font-size: 16px; margin-bottom: 6px;">${b.t}</div>
+                        <div style="color: #CBD5E1; font-size: 14.5px;">${b.c}</div>
+                    </div>
+                `;
+            });
+            display.innerHTML = html;
         }
 
         // CAR RACING ENGINE

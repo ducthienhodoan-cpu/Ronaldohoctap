@@ -437,3 +437,6 @@ class CuaSoChinh(QMainWindow):
         
         if index == 12:
             self.screen_cai_dat.tai_lai_thong_tin()
+        elif index == 17:
+            if hasattr(self, 'screen_obby'):
+                self.screen_obby.tai_lai_ban_do()
