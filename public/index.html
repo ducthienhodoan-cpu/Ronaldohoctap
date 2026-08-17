@@ -1101,60 +1101,64 @@
         let tourTypeCurrent = 'world_cup';
 
         function switchSection(secId, btnEl) {
-            if (!userHasInteracted) {
-                userHasInteracted = true;
-                startBgMusic();
-            }
+            try {
+                if (!userHasInteracted) {
+                    userHasInteracted = true;
+                    try { startBgMusic(); } catch(e) {}
+                }
 
-            try { playClickSfx(); } catch(e) {}
+                try { playClickSfx(); } catch(e) {}
 
-            // Dung tro choi 3D dua xe neu nguoi dung chuyen sang sang muc khac
-            if (secId !== 'duaxe' && typeof isRace3DRunning !== 'undefined') {
-                isRace3DRunning = false;
-            }
+                // Dung tro choi 3D dua xe neu nguoi dung chuyen sang sang muc khac
+                if (secId !== 'duaxe' && typeof isRace3DRunning !== 'undefined') {
+                    isRace3DRunning = false;
+                }
 
-            const panes = document.querySelectorAll('.section-pane');
-            for (let i = 0; i < panes.length; i++) {
-                panes[i].classList.remove('active');
-                panes[i].style.display = 'none';
-            }
+                const panes = document.querySelectorAll('.section-pane');
+                for (let i = 0; i < panes.length; i++) {
+                    panes[i].classList.remove('active');
+                    panes[i].style.display = 'none';
+                }
 
-            const btns = document.querySelectorAll('.tab-btn');
-            for (let i = 0; i < btns.length; i++) {
-                btns[i].classList.remove('active');
-            }
+                const btns = document.querySelectorAll('.tab-btn');
+                for (let i = 0; i < btns.length; i++) {
+                    btns[i].classList.remove('active');
+                }
 
-            const targetPane = document.getElementById('pane-' + secId);
-            if (targetPane) {
-                targetPane.classList.add('active');
-                targetPane.style.display = 'block';
-            }
+                const targetPane = document.getElementById('pane-' + secId);
+                if (targetPane) {
+                    targetPane.classList.add('active');
+                    targetPane.style.display = 'block';
+                }
 
-            if (btnEl) {
-                btnEl.classList.add('active');
-            } else {
-                const activeBtn = document.querySelector('.tab-btn[data-sec="' + secId + '"]');
-                if (activeBtn) activeBtn.classList.add('active');
-            }
+                if (btnEl) {
+                    btnEl.classList.add('active');
+                } else {
+                    const activeBtn = document.querySelector('.tab-btn[data-sec="' + secId + '"]');
+                    if (activeBtn) activeBtn.classList.add('active');
+                }
 
-            // Trien khai an toan cho tung tab chuc nang
-            if (secId === 'ielts') { try { loadIeltsQuestions(); } catch(e) { console.warn(e); } }
-            if (secId === 'luyen') { try { loadPracticeQuiz(); } catch(e) { console.warn(e); } }
-            if (secId === 'hoc') { try { loadStudyContent(); } catch(e) { console.warn(e); } }
-            if (secId === 'formula') { try { loadFormulas(); } catch(e) { console.warn(e); } }
-            if (secId === 'minigames') { try { drawWheelCanvas(); } catch(e) { console.warn(e); } }
-            if (secId === 'worldcup') { try { renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); } catch(e) { console.warn(e); } }
-            if (secId === 'c1') { try { renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); } catch(e) { console.warn(e); } }
-            if (secId === 'plan') { try { loadPlan(); } catch(e) { console.warn(e); } }
-            if (secId === 'stats') { try { loadStats(); } catch(e) { console.warn(e); } }
-            if (secId === 'notebook') { try { loadNotebook(); } catch(e) { console.warn(e); } }
-            if (secId === 'duaxe') { try { initCanvasRaceGame(); } catch(e) { console.warn(e); } }
-            if (secId === 'obby') {
-                try {
-                    if (typeof renderObbyWorlds === 'function') renderObbyWorlds();
-                    if (typeof renderObbyGrid === 'function') renderObbyGrid(selectedObbyWorldIdx || 0);
-                    if (typeof startObbyLevelGame === 'function') startObbyLevelGame();
-                } catch(e) { console.warn(e); }
+                // Trien khai an toan cho tung tab chuc nang
+                if (secId === 'ielts') { try { if (typeof loadIeltsQuestions === 'function') loadIeltsQuestions(); } catch(e) {} }
+                if (secId === 'luyen') { try { if (typeof loadPracticeQuiz === 'function') loadPracticeQuiz(); } catch(e) {} }
+                if (secId === 'hoc') { try { if (typeof loadStudyContent === 'function') loadStudyContent(); } catch(e) {} }
+                if (secId === 'formula') { try { if (typeof loadFormulas === 'function') loadFormulas(); } catch(e) {} }
+                if (secId === 'minigames') { try { if (typeof drawWheelCanvas === 'function') drawWheelCanvas(); } catch(e) {} }
+                if (secId === 'worldcup') { try { if (typeof renderWcTeams === 'function') renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); } catch(e) {} }
+                if (secId === 'c1') { try { if (typeof renderC1Clubs === 'function') renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); } catch(e) {} }
+                if (secId === 'plan') { try { if (typeof loadPlan === 'function') loadPlan(); } catch(e) {} }
+                if (secId === 'stats') { try { if (typeof loadStats === 'function') loadStats(); } catch(e) {} }
+                if (secId === 'notebook') { try { if (typeof loadNotebook === 'function') loadNotebook(); } catch(e) {} }
+                if (secId === 'duaxe') { try { if (typeof initCanvasRaceGame === 'function') initCanvasRaceGame(); } catch(e) {} }
+                if (secId === 'obby') {
+                    try {
+                        if (typeof renderObbyWorlds === 'function') renderObbyWorlds();
+                        if (typeof renderObbyGrid === 'function') renderObbyGrid(selectedObbyWorldIdx || 0);
+                        if (typeof startObbyLevelGame === 'function') startObbyLevelGame();
+                    } catch(e) {}
+                }
+            } catch(err) {
+                console.error("Lỗi khi chuyển tab:", err);
             }
         }
 
@@ -3179,6 +3183,16 @@
             if (playerBox && playerHeader) {
                 makeElementDraggable(playerBox, playerHeader);
             }
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const secId = btn.getAttribute('data-sec');
+                    if (secId) {
+                        switchSection(secId, btn);
+                    }
+                });
+            });
         });
     </script>
 </body>
