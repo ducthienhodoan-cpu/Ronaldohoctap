@@ -2581,18 +2581,101 @@
             obbyJumpAnimId = requestAnimationFrame(stepAnim);
         }
 
+        let obbySolutionCountdownId = null;
+
+        function startObby10sJumpTimer(fromStep, toStep) {
+            if (obbySolutionCountdownId) clearInterval(obbySolutionCountdownId);
+
+            let secondsLeft = 10;
+            const solBox = document.getElementById('boxObbySolution');
+            
+            function updateSolutionHeader() {
+                if (solBox) {
+                    const currentQ = obby6Questions[fromStep];
+                    const explainText = currentQ ? currentQ.explain : "";
+                    solBox.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                            <span style="font-weight: 900; color: #10B981; font-size: 15px;">ĐÁP ÁN CHÍNH XÁC! Hướng dẫn giải chi tiết [Cục ${fromStep + 1}]</span>
+                            <span style="background: #020617; border: 1px solid #10B981; color: #F59E0B; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px;">Tự động nhảy trong: ${secondsLeft}s</span>
+                        </div>
+                        <div style="margin-bottom: 12px; line-height: 1.6;">${explainText}</div>
+                        <div style="text-align: right;">
+                            <button class="btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); font-weight: 900; font-size: 13px; padding: 8px 20px;" onclick="executeObbyJumpNow(${fromStep}, ${toStep})">NHẢY NGAY (Bỏ qua ${secondsLeft}s)</button>
+                        </div>
+                    `;
+                    solBox.style.display = 'block';
+                }
+            }
+
+            updateSolutionHeader();
+
+            obbySolutionCountdownId = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    updateSolutionHeader();
+                } else {
+                    clearInterval(obbySolutionCountdownId);
+                    executeObbyJumpNow(fromStep, toStep);
+                }
+            }, 1000);
+        }
+
+        function executeObbyJumpNow(fromStep, toStep) {
+            if (obbySolutionCountdownId) clearInterval(obbySolutionCountdownId);
+            
+            const solBox = document.getElementById('boxObbySolution');
+            if (solBox) solBox.style.display = 'none';
+
+            try { playClickSfx(); } catch(e) {}
+
+            // Trigger 60fps Parabolic Arc Jump from Cục N to Cục N+1!
+            animateObbyJump(fromStep, toStep, () => {
+                if (toStep < 6) {
+                    renderObbyStepQuestion();
+                } else {
+                    // Successfully completed all 6 Parkour platforms!
+                    if (obbyTimerId) clearInterval(obbyTimerId);
+
+                    if (currentObbyLevel >= obbyMaxLevel) {
+                        obbyMaxLevel = Math.min(100, currentObbyLevel + 1);
+                        localStorage.setItem('obby_max_level', obbyMaxLevel.toString());
+                    }
+
+                    if (currentObbyLevel % 10 === 0) {
+                        const coreId = currentObbyLevel / 10;
+                        if (!obbyCoresCollected.includes(coreId)) {
+                            obbyCoresCollected.push(coreId);
+                            localStorage.setItem('obby_cores', JSON.stringify(obbyCoresCollected));
+                        }
+                    }
+
+                    if (currentObbyLevel === 100) {
+                        alert("YOU ESCAPED THE GLITCH WORLD!\n\nChúc mừng bạn đã nhảy hoàn thành 6 Cục Parkour Màn 100, đánh bại Boss Glitch-X và thu thập đủ 10 Glitch Cores!\nKích hoạt thành công MASTER CORE & Mở khóa HARD MODE!\nThưởng +2000 Roblox XP!");
+                        currentObbyLevel = 1;
+                    } else if (currentObbyLevel % 10 === 0) {
+                        alert(`CHẠM CHECKPOINT THÀNH CÔNG!\n\nBạn đã nhảy qua đủ 6 Cục Parkour Màn ${currentObbyLevel} và thu thập GLITCH CORE #${currentObbyLevel / 10}!\nThưởng +200 Roblox XP!`);
+                        currentObbyLevel++;
+                    } else {
+                        alert(`VƯỢT MÀN OBBY ${currentObbyLevel} THÀNH CÔNG!\n\nBạn đã nhảy qua đủ 6 Cục Parkour! Thưởng +50 Roblox XP!`);
+                        currentObbyLevel++;
+                    }
+
+                    obbyStep = 0;
+                    obbyLives = 3;
+                    renderObbyWorlds();
+                    renderObbyGrid(selectedObbyWorldIdx);
+                    startObbyLevelGame();
+                }
+            });
+        }
+
         function handleObbyOptionClick(optText, btnEl) {
             if (!obby6Questions || obbyStep >= 6) return;
             const currentQ = obby6Questions[obbyStep];
             const solBox = document.getElementById('boxObbySolution');
 
             if (optText === currentQ.correct) {
-                // Trả lời ĐÚNG -> Lộ bài giải chi tiết CHỈ CÂU ĐÓ & nhảy sang Cục tiếp theo!
-                if (solBox && currentQ.explain) {
-                    solBox.innerText = currentQ.explain;
-                    solBox.style.display = 'block';
-                }
-
+                // Trả lời ĐÚNG -> Lộ bài giải chi tiết 10 GIÂY rồi tự động nhảy sang Cục tiếp theo!
                 if (btnEl) {
                     btnEl.style.background = 'linear-gradient(135deg, #10B981, #059669)';
                     btnEl.style.color = '#FFFFFF';
@@ -2603,47 +2686,8 @@
                 obbyStep++;
                 const toStep = obbyStep;
 
-                try { playClickSfx(); } catch(e) {}
-
-                // Trigger 60fps Parabolic Arc Jump from Cục N to Cục N+1!
-                animateObbyJump(fromStep, toStep, () => {
-                    if (toStep < 6) {
-                        renderObbyStepQuestion();
-                    } else {
-                        // Successfully completed all 6 Parkour platforms!
-                        if (obbyTimerId) clearInterval(obbyTimerId);
-
-                        if (currentObbyLevel >= obbyMaxLevel) {
-                            obbyMaxLevel = Math.min(100, currentObbyLevel + 1);
-                            localStorage.setItem('obby_max_level', obbyMaxLevel.toString());
-                        }
-
-                        if (currentObbyLevel % 10 === 0) {
-                            const coreId = currentObbyLevel / 10;
-                            if (!obbyCoresCollected.includes(coreId)) {
-                                obbyCoresCollected.push(coreId);
-                                localStorage.setItem('obby_cores', JSON.stringify(obbyCoresCollected));
-                            }
-                        }
-
-                        if (currentObbyLevel === 100) {
-                            alert("YOU ESCAPED THE GLITCH WORLD!\n\nChúc mừng bạn đã nhảy hoàn thành 6 Cục Parkour Màn 100, đánh bại Boss Glitch-X và thu thập đủ 10 Glitch Cores!\nKích hoạt thành công MASTER CORE & Mở khóa HARD MODE!\nThưởng +2000 Roblox XP!");
-                            currentObbyLevel = 1;
-                        } else if (currentObbyLevel % 10 === 0) {
-                            alert(`CHẠM CHECKPOINT THÀNH CÔNG!\n\nBạn đã nhảy qua đủ 6 Cục Parkour Màn ${currentObbyLevel} và thu thập GLITCH CORE #${currentObbyLevel / 10}!\nThưởng +200 Roblox XP!`);
-                            currentObbyLevel++;
-                        } else {
-                            alert(`VƯỢT MÀN OBBY ${currentObbyLevel} THÀNH CÔNG!\n\nBạn đã nhảy qua đủ 6 Cục Parkour! Thưởng +50 Roblox XP!`);
-                            currentObbyLevel++;
-                        }
-
-                        obbyStep = 0;
-                        obbyLives = 3;
-                        renderObbyWorlds();
-                        renderObbyGrid(selectedObbyWorldIdx);
-                        startObbyLevelGame();
-                    }
-                });
+                // Bat dau dem nguoc 10s hien thi bai gia chi tiet truoc khi nhay!
+                startObby10sJumpTimer(fromStep, toStep);
             } else {
                 // Trả lời SAI -> Trừ 1 Mạng
                 obbyLives--;
@@ -2661,18 +2705,36 @@
                         alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Cấm lộ bài giải khi vẫn còn mạng. Hãy thử chọn đáp án khác tại Cục Parkour ${obbyStep + 1}!`);
                     }, 150);
                 } else {
-                    // Đã sai hết 3 mạng -> LỘ BÀI GIẢI CHỈ CÂU ĐÓ trước khi làm lại lượt mới!
-                    if (solBox && currentQ.explain) {
-                        solBox.innerText = currentQ.explain;
-                        solBox.style.display = 'block';
-                    }
+                    // Đã sai hết 3 mạng -> LỘ BÀI GIẢI CHỈ CÂU ĐÓ 10s trước khi làm lại lượt mới!
                     if (obbyTimerId) clearInterval(obbyTimerId);
-                    setTimeout(() => {
-                        alert(`BẠN ĐÃ HẾT 3 MẠNG CHƠI (SAI HẾT 3 ĐÁP ÁN)!\n\nBài giải chi tiết cho Cục Parkour ${obbyStep + 1} đã được hiển thị bên dưới. Hãy đọc kỹ trước khi thử lại lượt chơi mới.`);
-                        obbyStep = 0;
-                        obbyLives = 3;
-                        startObbyLevelGame();
-                    }, 200);
+                    
+                    let failSecs = 10;
+                    const updateFailBox = () => {
+                        if (solBox && currentQ.explain) {
+                            solBox.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                                    <span style="font-weight: 900; color: #EF4444; font-size: 15px;">HẾT 3 MẠNG CHƠI! Bài giải chi tiết [Cục ${obbyStep + 1}]</span>
+                                    <span style="background: #2B0000; border: 1px solid #EF4444; color: #EF4444; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px;">Chơi lại trong: ${failSecs}s</span>
+                                </div>
+                                <div style="line-height: 1.6;">${currentQ.explain}</div>
+                            `;
+                            solBox.style.display = 'block';
+                        }
+                    };
+
+                    updateFailBox();
+                    const failTimerId = setInterval(() => {
+                        failSecs--;
+                        if (failSecs > 0) {
+                            updateFailBox();
+                        } else {
+                            clearInterval(failTimerId);
+                            if (solBox) solBox.style.display = 'none';
+                            obbyStep = 0;
+                            obbyLives = 3;
+                            startObbyLevelGame();
+                        }
+                    }, 1000);
                 }
             }
         }
