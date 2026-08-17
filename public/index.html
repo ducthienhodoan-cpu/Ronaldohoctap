@@ -2581,48 +2581,53 @@
             obbyJumpAnimId = requestAnimationFrame(stepAnim);
         }
 
-        let obbySolutionCountdownId = null;
-
-        function startObby10sJumpTimer(fromStep, toStep) {
-            if (obbySolutionCountdownId) clearInterval(obbySolutionCountdownId);
-
-            let secondsLeft = 10;
+        function showObbySolutionWithJumpButton(fromStep, toStep) {
             const solBox = document.getElementById('boxObbySolution');
-            
-            function updateSolutionHeader() {
-                if (solBox) {
-                    const currentQ = obby6Questions[fromStep];
-                    const explainText = currentQ ? currentQ.explain : "";
-                    solBox.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-                            <span style="font-weight: 900; color: #10B981; font-size: 15px;">ĐÁP ÁN CHÍNH XÁC! Hướng dẫn giải chi tiết [Cục ${fromStep + 1}]</span>
-                            <span style="background: #020617; border: 1px solid #10B981; color: #F59E0B; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px;">Tự động nhảy trong: ${secondsLeft}s</span>
-                        </div>
-                        <div style="margin-bottom: 12px; line-height: 1.6;">${explainText}</div>
-                        <div style="text-align: right;">
-                            <button class="btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); font-weight: 900; font-size: 13px; padding: 8px 20px;" onclick="executeObbyJumpNow(${fromStep}, ${toStep})">NHẢY NGAY (Bỏ qua ${secondsLeft}s)</button>
-                        </div>
-                    `;
-                    solBox.style.display = 'block';
-                }
+            if (solBox) {
+                const currentQ = obby6Questions[fromStep];
+                const explainText = currentQ ? currentQ.explain : "";
+                solBox.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <span style="font-weight: 900; color: #10B981; font-size: 16px;">ĐÁP ÁN CHÍNH XÁC! Hướng dẫn giải chi tiết [Cục ${fromStep + 1}]</span>
+                        <span style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; color: #10B981; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px;">Không giới hạn thời gian xem bài giải</span>
+                    </div>
+                    <div style="margin-bottom: 16px; line-height: 1.7; font-size: 14px;">${explainText}</div>
+                    <div style="text-align: center; padding-top: 6px;">
+                        <button class="btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); font-weight: 900; font-size: 16px; padding: 12px 36px; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); cursor: pointer;" onclick="executeObbyJumpNow(${fromStep}, ${toStep})">NHẢY SANG CỤC TIẾP THEO</button>
+                    </div>
+                `;
+                solBox.style.display = 'block';
             }
+        }
 
-            updateSolutionHeader();
+        function showObbyFailSolutionWithRetryButton(stepIndex) {
+            const solBox = document.getElementById('boxObbySolution');
+            if (solBox) {
+                const currentQ = obby6Questions[stepIndex];
+                const explainText = currentQ ? currentQ.explain : "";
+                solBox.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <span style="font-weight: 900; color: #EF4444; font-size: 16px;">HẾT 3 MẠNG CHƠI! Bài giải chi tiết [Cục ${stepIndex + 1}]</span>
+                        <span style="background: rgba(239, 68, 68, 0.15); border: 1px solid #EF4444; color: #EF4444; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px;">Không giới hạn thời gian xem bài giải</span>
+                    </div>
+                    <div style="margin-bottom: 16px; line-height: 1.7; font-size: 14px;">${explainText}</div>
+                    <div style="text-align: center; padding-top: 6px;">
+                        <button class="btn-primary" style="background: linear-gradient(135deg, #EF4444, #DC2626); font-weight: 900; font-size: 16px; padding: 12px 36px; border-radius: 12px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); cursor: pointer;" onclick="restartObbyLevelGameNow()">THỬ LẠI LƯỢT CHƠI MỚI (VỀ CỤC 1)</button>
+                    </div>
+                `;
+                solBox.style.display = 'block';
+            }
+        }
 
-            obbySolutionCountdownId = setInterval(() => {
-                secondsLeft--;
-                if (secondsLeft > 0) {
-                    updateSolutionHeader();
-                } else {
-                    clearInterval(obbySolutionCountdownId);
-                    executeObbyJumpNow(fromStep, toStep);
-                }
-            }, 1000);
+        function restartObbyLevelGameNow() {
+            const solBox = document.getElementById('boxObbySolution');
+            if (solBox) solBox.style.display = 'none';
+            obbyStep = 0;
+            obbyLives = 3;
+            startObbyLevelGame();
         }
 
         function executeObbyJumpNow(fromStep, toStep) {
-            if (obbySolutionCountdownId) clearInterval(obbySolutionCountdownId);
-            
             const solBox = document.getElementById('boxObbySolution');
             if (solBox) solBox.style.display = 'none';
 
@@ -2675,7 +2680,7 @@
             const solBox = document.getElementById('boxObbySolution');
 
             if (optText === currentQ.correct) {
-                // Trả lời ĐÚNG -> Lộ bài giải chi tiết 10 GIÂY rồi tự động nhảy sang Cục tiếp theo!
+                // Trả lời ĐÚNG -> Đổi màu nút XANH và LỘ BÀI GIẢI CHI TIẾT không giới hạn kèm nút 'NHẢY SANG CỤC TIẾP THEO'!
                 if (btnEl) {
                     btnEl.style.background = 'linear-gradient(135deg, #10B981, #059669)';
                     btnEl.style.color = '#FFFFFF';
@@ -2686,8 +2691,8 @@
                 obbyStep++;
                 const toStep = obbyStep;
 
-                // Bat dau dem nguoc 10s hien thi bai gia chi tiet truoc khi nhay!
-                startObby10sJumpTimer(fromStep, toStep);
+                // Hien thi bai gia chi tiet khong gioi han thoi gian va co nut NHAY SANG CUC TIEP THEO!
+                showObbySolutionWithJumpButton(fromStep, toStep);
             } else {
                 // Trả lời SAI -> Trừ 1 Mạng
                 obbyLives--;
@@ -2705,36 +2710,9 @@
                         alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Cấm lộ bài giải khi vẫn còn mạng. Hãy thử chọn đáp án khác tại Cục Parkour ${obbyStep + 1}!`);
                     }, 150);
                 } else {
-                    // Đã sai hết 3 mạng -> LỘ BÀI GIẢI CHỈ CÂU ĐÓ 10s trước khi làm lại lượt mới!
+                    // Đã sai hết 3 mạng -> LỘ BÀI GIẢI CHỈ CÂU ĐÓ không giới hạn thời gian kèm nút 'THỬ LẠI LƯỢT CHƠI MỚI'!
                     if (obbyTimerId) clearInterval(obbyTimerId);
-                    
-                    let failSecs = 10;
-                    const updateFailBox = () => {
-                        if (solBox && currentQ.explain) {
-                            solBox.innerHTML = `
-                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-                                    <span style="font-weight: 900; color: #EF4444; font-size: 15px;">HẾT 3 MẠNG CHƠI! Bài giải chi tiết [Cục ${obbyStep + 1}]</span>
-                                    <span style="background: #2B0000; border: 1px solid #EF4444; color: #EF4444; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px;">Chơi lại trong: ${failSecs}s</span>
-                                </div>
-                                <div style="line-height: 1.6;">${currentQ.explain}</div>
-                            `;
-                            solBox.style.display = 'block';
-                        }
-                    };
-
-                    updateFailBox();
-                    const failTimerId = setInterval(() => {
-                        failSecs--;
-                        if (failSecs > 0) {
-                            updateFailBox();
-                        } else {
-                            clearInterval(failTimerId);
-                            if (solBox) solBox.style.display = 'none';
-                            obbyStep = 0;
-                            obbyLives = 3;
-                            startObbyLevelGame();
-                        }
-                    }, 1000);
+                    showObbyFailSolutionWithRetryButton(obbyStep);
                 }
             }
         }
