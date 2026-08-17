@@ -21,7 +21,7 @@ function khoi_tao_dua_xe_3d() {
     raceScene3D.background = new THREE.Color(0x070a13);
     raceScene3D.fog = new THREE.FogExp2(0x070a13, 0.025);
 
-    const aspect = canvas.clientWidth / canvas.clientHeight || (800 / 380);
+    const aspect = (canvas.clientWidth && canvas.clientHeight) ? (canvas.clientWidth / canvas.clientHeight) : (800 / 380);
     raceCamera3D = new THREE.PerspectiveCamera(60, aspect, 0.1, 200);
     raceCamera3D.position.set(0, 4.5, 9);
     raceCamera3D.lookAt(0, 1, -10);

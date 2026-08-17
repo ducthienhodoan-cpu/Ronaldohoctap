@@ -20,7 +20,7 @@ function khoi_tao_gap_thu_3d() {
     clawScene3D = new THREE.Scene();
     clawScene3D.background = new THREE.Color(0x0f172a);
 
-    const aspect = (canvas.clientWidth || 240) / (canvas.clientHeight || 200);
+    const aspect = (canvas.clientWidth && canvas.clientHeight) ? (canvas.clientWidth / canvas.clientHeight) : (240 / 200);
     clawCamera3D = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
     clawCamera3D.position.set(0, 0.5, 6);
     clawCamera3D.lookAt(0, 0, 0);

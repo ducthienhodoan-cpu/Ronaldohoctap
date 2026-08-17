@@ -11,7 +11,7 @@ function khoi_tao_cup_vo_dich_3d(canvasId, loaiCup) {
     trophyScene3D = new THREE.Scene();
     trophyScene3D.background = new THREE.Color(0x020617);
 
-    const aspect = canvas.clientWidth / canvas.clientHeight || 1;
+    const aspect = (canvas.clientWidth && canvas.clientHeight) ? (canvas.clientWidth / canvas.clientHeight) : 1;
     trophyCamera3D = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
     trophyCamera3D.position.set(0, 2.5, 7);
     trophyCamera3D.lookAt(0, 1, 0);

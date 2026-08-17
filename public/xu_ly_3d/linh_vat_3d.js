@@ -11,7 +11,7 @@ function khoi_tao_linh_vat_3d() {
 
     mascotScene3D = new THREE.Scene();
 
-    const aspect = canvas.clientWidth / canvas.clientHeight || 1;
+    const aspect = (canvas.clientWidth && canvas.clientHeight) ? (canvas.clientWidth / canvas.clientHeight) : 1;
     mascotCamera3D = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
     mascotCamera3D.position.set(0, 0, 5);
     mascotCamera3D.lookAt(0, 0, 0);

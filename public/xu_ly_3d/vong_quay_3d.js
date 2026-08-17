@@ -12,7 +12,7 @@ function khoi_tao_vong_quay_3d() {
     wheelScene3D = new THREE.Scene();
     wheelScene3D.background = new THREE.Color(0x1e1b4b);
 
-    const aspect = canvas.clientWidth / canvas.clientHeight || 1;
+    const aspect = (canvas.clientWidth && canvas.clientHeight) ? (canvas.clientWidth / canvas.clientHeight) : 1;
     wheelCamera3D = new THREE.PerspectiveCamera(50, aspect, 0.1, 100);
     wheelCamera3D.position.set(0, 0, 5.5);
     wheelCamera3D.lookAt(0, 0, 0);
