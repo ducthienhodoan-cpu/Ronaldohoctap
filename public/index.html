@@ -924,11 +924,7 @@
                         <div id="lblObbyQText" style="font-size: 16px; font-weight: bold; color: #FFFFFF; margin-bottom: 12px;">Bấm 'BẮT ĐẦU VƯỢT MÀN OBBY' để nhận thử thách Parkour!</div>
                         <div id="boxObbyOpts" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;"></div>
                         
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1E293B; padding-top: 10px; margin-top: 8px;">
-                            <button class="btn-primary" style="background: linear-gradient(135deg, #06B6D4, #3B82F6); font-size: 13px; padding: 6px 16px;" onclick="toggleObbySolution()">BÀI GIẢI CHI TIẾT</button>
-                            <span style="font-size: 12px; color: #94A3B8;">(Hướng dẫn bài giải từng bước chi tiết)</span>
-                        </div>
-                        <div id="boxObbySolution" style="display: none; background: rgba(15, 23, 42, 0.95); border: 1.5px solid #06B6D4; padding: 14px 18px; border-radius: 12px; margin-top: 10px; font-size: 14px; line-height: 1.6; color: #E2E8F0; white-space: pre-line;"></div>
+                        <div id="boxObbySolution" style="display: none; background: rgba(15, 23, 42, 0.95); border: 1.5px solid #10B981; padding: 14px 18px; border-radius: 12px; margin-top: 10px; font-size: 14px; line-height: 1.6; color: #E2E8F0; white-space: pre-line;"></div>
                     </div>
 
                     <div style="text-align: right;">
@@ -2588,9 +2584,15 @@
         function handleObbyOptionClick(optText, btnEl) {
             if (!obby6Questions || obbyStep >= 6) return;
             const currentQ = obby6Questions[obbyStep];
+            const solBox = document.getElementById('boxObbySolution');
 
             if (optText === currentQ.correct) {
-                // Change button color to GREEN for instant visual feedback
+                // Trả lời ĐÚNG -> Lộ bài giải chi tiết CHỈ CÂU ĐÓ & nhảy sang Cục tiếp theo!
+                if (solBox && currentQ.explain) {
+                    solBox.innerText = currentQ.explain;
+                    solBox.style.display = 'block';
+                }
+
                 if (btnEl) {
                     btnEl.style.background = 'linear-gradient(135deg, #10B981, #059669)';
                     btnEl.style.color = '#FFFFFF';
@@ -2643,12 +2645,9 @@
                     }
                 });
             } else {
-                // Incorrect answer -> Deduct 1 Life (-1 Mạng) & Automatically Show Step-by-Step Solution!
+                // Trả lời SAI -> Trừ 1 Mạng
                 obbyLives--;
                 updateObbyLivesDisplay();
-
-                const solBox = document.getElementById('boxObbySolution');
-                if (solBox) solBox.style.display = 'block';
 
                 if (btnEl) {
                     btnEl.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
@@ -2656,13 +2655,20 @@
                 }
 
                 if (obbyLives > 0) {
+                    // Vẫn còn mạng -> CẤM LỘ BÀI GIẢI!
+                    if (solBox) solBox.style.display = 'none';
                     setTimeout(() => {
-                        alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Hãy đọc bài giải chi tiết bên dưới và thử lại tại Cục Parkour ${obbyStep + 1}!`);
+                        alert(`ĐÁP ÁN CHƯA CHÍNH XÁC!\n\nBạn bị trừ 1 mạng chơi (Còn ${obbyLives}/3 mạng). Cấm lộ bài giải khi vẫn còn mạng. Hãy thử chọn đáp án khác tại Cục Parkour ${obbyStep + 1}!`);
                     }, 150);
                 } else {
+                    // Đã sai hết 3 mạng -> LỘ BÀI GIẢI CHỈ CÂU ĐÓ trước khi làm lại lượt mới!
+                    if (solBox && currentQ.explain) {
+                        solBox.innerText = currentQ.explain;
+                        solBox.style.display = 'block';
+                    }
                     if (obbyTimerId) clearInterval(obbyTimerId);
                     setTimeout(() => {
-                        alert(`BẠN ĐÃ HẾT 3 MẠNG CHƠI!\n\nBạn sẩy chân ngã khỏi Màn Obby ${currentObbyLevel}. Quay lại Cục 1 để bắt đầu lại lượt chơi mới.`);
+                        alert(`BẠN ĐÃ HẾT 3 MẠNG CHƠI (SAI HẾT 3 ĐÁP ÁN)!\n\nBài giải chi tiết cho Cục Parkour ${obbyStep + 1} đã được hiển thị bên dưới. Hãy đọc kỹ trước khi thử lại lượt chơi mới.`);
                         obbyStep = 0;
                         obbyLives = 3;
                         startObbyLevelGame();
