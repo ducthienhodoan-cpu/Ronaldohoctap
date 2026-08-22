@@ -231,21 +231,42 @@ function xuat_ket_qua_vong_quay_10_o(targetIndex, loaiQuay) {
     localStorage.setItem('lucky_meter', data.lucky_meter.toString());
     localStorage.setItem('chuoi_quay', data.chuoi_quay.toString());
 
-    cap_nhat_giao_dien_vong_quay_10_o();
-
+    // 1. Xu ly phan thuong Ve Gap
     if (reward.label.includes("Vé Gắp")) {
-        let v = parseInt(localStorage.getItem('ve_gap') || '3', 10) + 1;
+        let soLuong = 1;
+        if (reward.label.includes("3")) soLuong = 3;
+        let v = parseInt(localStorage.getItem('ve_gap') || '5', 10) + soLuong;
         localStorage.setItem('ve_gap', v.toString());
-    } else if (reward.label.includes("Golden Ticket") || reward.label.includes("Vé Vàng")) {
-        let vv = parseInt(localStorage.getItem('ve_vang') || '1', 10) + 1;
+    }
+
+    // 2. Xu ly phan thuong Golden Ticket / Ve Vang
+    if (reward.label.includes("Golden Ticket") || reward.label.includes("Vé Vàng")) {
+        let soLuongVang = 1;
+        if (reward.label.includes("2")) soLuongVang = 2;
+        if (reward.label.includes("3")) soLuongVang = 3;
+        let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10) + soLuongVang;
         localStorage.setItem('ve_vang', vv.toString());
+    }
+
+    // 3. Xu ly phan thuong Ve Quay
+    if (reward.label.includes("Vé Quay")) {
+        let soLuongQuay = 1;
+        if (reward.label.includes("3")) soLuongQuay = 3;
+        let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10) + soLuongQuay;
+        localStorage.setItem('ve_quay', vq.toString());
+    }
+
+    // 4. Dong bo cap nhat giao dien Vong Quay va May Gap Thu ngay lap tuc
+    cap_nhat_giao_dien_vong_quay_10_o();
+    if (typeof cap_nhat_hien_thi_ve_gap === 'function') {
+        cap_nhat_hien_thi_ve_gap();
     }
 
     if (typeof updateXPDisplay === 'function') updateXPDisplay(150);
 
     const resDiv = document.getElementById('wheelResult');
     const resModalDiv = document.getElementById('modalWheelResult');
-    const strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}! (CỘNG NGAY VÀO TÀI KHOẢN)`;
+    const strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}! (ĐÃ CẬP NHẬT VÀO VÍ VÉ)`;
 
     if (resDiv) {
         resDiv.innerHTML = `<div style="background: linear-gradient(135deg, #10B981, #06B6D4); padding: 10px 14px; border-radius: 12px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px;">${strMsg}</div>`;
