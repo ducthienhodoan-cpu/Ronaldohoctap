@@ -12,13 +12,14 @@ from xu_ly_tro_choi.minigame_giua_gio import (
     tao_danh_sach_the_lat_tri_nho, quay_vong_quay_may_man, xu_ly_sut_phat_penalty
 )
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
+from giao_dien.man_hinh_gap_thu_moi import ManHinhGapThuMoi
 
 class HopThoaiMinigameGiuaGioDialog(QDialog):
-    """Hộp thoại Minigame thư giãn giữa giờ học giúp học sinh giải trí và tích lũy XP (Bộ 3 Minigames)."""
+    """Hộp thoại Minigame thư giãn giữa giờ học giúp học sinh giải trí và tích lũy XP (Bộ 4 Minigames)."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("MINIGAME THƯ GIÃN GIỮA GIỜ HỌC & LUYỆN TẬP - BỘ 3 MINIGAMES")
+        self.setWindowTitle("MINIGAME THƯ GIÃN GIỮA GIỜ HỌC & LUYỆN TẬP - BỘ 4 MINIGAMES")
         self.resize(720, 600)
 
         self.the_list = []
@@ -65,6 +66,10 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
         self.init_tab_penalty()
         self.tabs.addTab(self.tab_penalty, "3. Sút Phạt Penalty")
 
+        # Tab 4: Máy gắp thú 3D
+        self.tab_gap_thu = ManHinhGapThuMoi(self)
+        self.tabs.addTab(self.tab_gap_thu, "4. Gắp Thú 3D Siêu Cấp")
+
         main_layout.addWidget(self.tabs)
 
         # Nút đóng
@@ -79,9 +84,9 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
         main_layout.addLayout(btn_layout)
 
     def mo_tab_ngau_nhien(self, cau_so=1):
-        """Mở ngẫu nhiên 1 trong 3 tab Minigame sau khi học sinh làm xong câu hỏi."""
+        """Mở ngẫu nhiên 1 trong 4 tab Minigame sau khi học sinh làm xong câu hỏi."""
         import random
-        idx_tab = random.randint(0, 2)
+        idx_tab = random.randint(0, 3)
         self.tabs.setCurrentIndex(idx_tab)
         self.lbl_header.setText(f"CHÚC MỪNG BẠN ĐÃ TRẢ LỜI CÂU {cau_so}! CHƠI MINIGAME NHẬN THƯỞNG!")
 

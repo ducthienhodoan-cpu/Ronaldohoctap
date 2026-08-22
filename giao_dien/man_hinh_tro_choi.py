@@ -21,6 +21,7 @@ from xu_ly_tro_choi.quan_ly_tro_choi import (
     luu_ghi_chu_hoc_tap, lay_ghi_chu_hoc_tap
 )
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
+from giao_dien.man_hinh_gap_thu_moi import ManHinhGapThuMoi
 
 class ManHinhTroChoi(QWidget):
     """Màn hình Trung tâm Trò chơi Minigame và Ứng dụng Học tập với BỐ CỤC CUỘN TỰ ĐỘNG KHÔNG BỊ CHE CHỮ KHÔNG BỊ CHE NÚT."""
@@ -128,9 +129,17 @@ class ManHinhTroChoi(QWidget):
         btn_g3 = QPushButton("Siêu Gõ Phím (Đoạn văn 3 Phút)")
         btn_g3.setProperty("class", "btn-secondary")
         btn_g3.setStyleSheet("color: #FFFFFF; font-weight: bold;")
+        btn_g3.clicked.connect(lambda: self.stack_game.setCurrentIndex(2))
+
+        btn_g4 = QPushButton("Máy Gắp Thú 3D Siêu Cấp")
+        btn_g4.setProperty("class", "btn-primary")
+        btn_g4.setStyleSheet("background: linear-gradient(135deg, #EC4899, #A855F7); color: #FFFFFF; font-weight: bold;")
+        btn_g4.clicked.connect(lambda: self.stack_game.setCurrentIndex(3))
+
         nav_game_layout.addWidget(btn_g1)
         nav_game_layout.addWidget(btn_g2)
         nav_game_layout.addWidget(btn_g3)
+        nav_game_layout.addWidget(btn_g4)
         layout_games.addLayout(nav_game_layout)
 
         # StackedWidget các trò chơi Minigame
@@ -138,6 +147,7 @@ class ManHinhTroChoi(QWidget):
         self.stack_game.addWidget(self.create_math_racer_widget())
         self.stack_game.addWidget(self.create_memory_match_widget())
         self.stack_game.addWidget(self.create_super_typing_widget())
+        self.stack_game.addWidget(ManHinhGapThuMoi())
         self.stack_game.currentChanged.connect(self.on_stack_game_changed)
 
         layout_games.addWidget(self.stack_game)
