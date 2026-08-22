@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v2.0 (Da xoa chuc nang Gap Thu)
+// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v3.0 (Kiem tra Ve gap & Dem nguoc 20s)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v2.0';
+const CACHE_NAME = 'sieu-club-hoc-tap-v3.0';
 const ASSETS_TO_CACHE = [
     './',
     './index.html'
@@ -17,7 +17,7 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-// Su kien khich hoat Service Worker va dón dẹp cache cu
+// Su kien khich hoat Service Worker va dón dep cache cu
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
