@@ -220,6 +220,21 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
         self.btn_spin.clicked.connect(self.bat_dau_quay)
         layout.addWidget(self.btn_spin)
 
+        # Bang chu thich Huong dan Dieu kien Kiem Ve Vang
+        lbl_huong_dan_ve_vang = QLabel(
+            "ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ):\n"
+            "Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:\n"
+            "- Hoàn thành xuất sắc nhiệm vụ ngày (+1 Vé Vàng)\n"
+            "- Đạt điểm 10 / Xuất sắc bài kiểm tra (+1 Vé Vàng)\n"
+            "- Đạt chuỗi Streak học tập liên tục 7 ngày (+1 Vé Vàng)"
+        )
+        lbl_huong_dan_ve_vang.setWordWrap(True)
+        lbl_huong_dan_ve_vang.setStyleSheet(
+            "background-color: #0F172A; color: #F59E0B; font-size: 13px; font-weight: bold; "
+            "border: 2px solid #F59E0B; border-radius: 12px; padding: 10px; margin-top: 10px;"
+        )
+        layout.addWidget(lbl_huong_dan_ve_vang)
+
         layout.addStretch()
 
     def bat_dau_quay(self):
