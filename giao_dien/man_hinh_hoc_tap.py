@@ -7,18 +7,21 @@ from PyQt6.QtWidgets import (
     QComboBox, QListWidget, QListWidgetItem, QFrame,
     QTextEdit, QPushButton, QMessageBox, QScrollArea
 )
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from du_lieu.kho_noi_dung_hoc import (
     lay_danh_sach_lop, lay_danh_sach_mon_hoc, lay_chu_de_theo_lop_va_mon
 )
 from du_lieu.noi_dung_chi_tiet import lay_noi_dung_bai_hoc_chi_tiet
 from xu_ly_kiem_tra.dong_co_javascript import chay_javascript_sinh_de
 from xu_ly_kiem_tra.bo_cham_diem import cham_bai_lam
+from xu_ly_tro_choi.quan_ly_luot_choi import them_luot_choi_obby, lay_so_luot_choi_obby
 from giao_dien.dap_an_tuong_tac import TheDapAnGroup
 from xu_ly_bao_ve.ngan_sao_chep import thiet_lap_ngan_copy_text_edit
 
 class ManHinhHocTap(QWidget):
     """Màn hình xem nội dung học tập tích hợp chọn Môn học và 5 Chủ đề học tập với TẤT CẢ VĂN BẢN ĐỀU LÀ CHỮ TRẮNG SÁNG."""
+    
+    yeu_cau_chuyen_obby = pyqtSignal()
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -365,13 +368,31 @@ class ManHinhHocTap(QWidget):
 
         self.da_nop_bai = True
         ket_qua = cham_bai_lam(self.de_thi, self.dap_an_user)
+
+        # Cong 1 luot choi Obby khi hoan thanh bài luyen tap
+        luot_moi = them_luot_choi_obby(1)
+
         msg = f"""
 KẾT QUẢ BÀI LÀM:
 - Đề thi: {self.lbl_de_title.text()}
 - Điểm số: {ket_qua['diem_so']} / 10 ({ket_qua['phan_tram']}%)
 - Số câu đúng: {ket_qua['so_cau_dung']} / {ket_qua['tong_cau']}
 - Xếp loại: {ket_qua['xep_loai']}
+- Phần thưởng: +1 LƯỢT CHƠI OBBY!
 - Nguồn đề thi: JavaScript & Internet API
         """
         QMessageBox.information(self, "Kết quả luyện tập", msg)
         self.cap_nhat_lbl_giai_thich()
+
+        reply = QMessageBox.question(
+            self,
+            "THƯỞNG LƯỢT CHƠI OBBY",
+            f"CHÚC MỪNG! Em đã làm xong bài tập và nhận được +1 LƯỢT CHƠI OBBY!\n"
+            f"Số lượt chơi Obby khả dụng hiện tại: {luot_moi} lượt.\n\n"
+            f"Em có muốn sang Đấu Trường Obby để chơi ngay không?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.Yes
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            self.yeu_cau_chuyen_obby.emit()

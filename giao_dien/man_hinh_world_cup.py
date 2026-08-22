@@ -14,8 +14,10 @@ from PyQt6.QtGui import QPixmap
 
 from du_lieu.kho_noi_dung_hoc import lay_danh_sach_lop, lay_danh_sach_mon_hoc
 from xu_ly_tro_choi.quan_ly_world_cup import (
-    lay_danh_sach_doi_tuyen, lay_vong_dau_world_cup, sinh_tran_dau_world_cup
+    lay_danh_sach_doi_tuyen, lay_vong_dau_world_cup, sinh_tran_dau_world_cup,
+    doc_luot_choi_world_cup, luu_luot_choi_world_cup
 )
+from xu_ly_tro_choi.quan_ly_vong_bang import kiem_tra_qua_vong_bang, tao_chuoi_tom_tat_vong_bang
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
 from giao_dien.dap_an_tuong_tac import TheDapAnGroup
 from giao_dien.hop_thoai_chung_nhan import HopThoaiChungNhan
@@ -28,12 +30,17 @@ class ManHinhWorldCup(QWidget):
         self.danh_sach_doi = lay_danh_sach_doi_tuyen()
         self.doi_user = self.danh_sach_doi[0]
         self.vong_idx = 0
+        self.vong_bang_tran_idx = 0  # 0, 1, 2 cho 3 tran Vong Bang
+        self.vong_bang_results = []   # Luu ket qua ["thang", "thang", "hoa"] cua 3 tran Vong Bang
         self.cau_idx = 0
         self.so_ban_thang = 0
         self.cau_hoi_world_cup = []
         self.dap_an_user = {}
-        self.last_played_date = ""
-        self.so_luot_hom_nay = 0
+
+        # Doc luot choi World Cup tu file JSON co dinh
+        data_luot = doc_luot_choi_world_cup()
+        self.last_played_date = data_luot.get("ngay_choi", "")
+        self.so_luot_hom_nay = data_luot.get("so_luot_hom_nay", 0)
 
         self.thoi_gian_con_lai = 300
         self.timer = QTimer(self)
@@ -212,7 +219,6 @@ class ManHinhWorldCup(QWidget):
         nav_layout.addWidget(self.btn_giai_thich)
         nav_layout.addStretch()
         nav_layout.addWidget(self.btn_submit_match)
-
         main_layout.addLayout(nav_layout)
 
     def thay_doi_doi_tuyen(self, index):
@@ -224,13 +230,18 @@ class ManHinhWorldCup(QWidget):
                 self.lbl_match_title.setText(f"{self.vong_info['ten'].upper()}: {doi_ten.upper()} VS {doi_thu.upper()}")
 
     def bat_dau_giai_dau(self):
-        """Khởi động trận đấu World Cup mới (Kiểm tra giới hạn 3 lượt chơi/ngày)."""
+        """Khởi động trận đấu World Cup mới với Vòng Bảng 3 trận đấu (Chưa trừ lượt nếu chưa trả lời câu hỏi)."""
         hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
-        if self.last_played_date != hom_nay:
-            self.last_played_date = hom_nay
+        
+        # Doc lai luot choi da luu tu file
+        data_luot = doc_luot_choi_world_cup()
+        if data_luot.get("ngay_choi") == hom_nay:
+            self.so_luot_hom_nay = data_luot.get("so_luot_hom_nay", 0)
+        else:
             self.so_luot_hom_nay = 0
+            self.last_played_date = hom_nay
 
-        if self.vong_idx == 0:
+        if self.vong_idx == 0 and self.vong_bang_tran_idx == 0:
             if self.so_luot_hom_nay >= 3:
                 QMessageBox.warning(
                     self, 
@@ -238,12 +249,12 @@ class ManHinhWorldCup(QWidget):
                     f"Mỗi ngày chỉ có tối đa 3 lượt tham gia Đấu trường World Cup! Em đã sử dụng hết {self.so_luot_hom_nay}/3 lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
                 )
                 return
-            self.so_luot_hom_nay += 1
+            self.da_tinh_luot_choi_tran_nay = False
 
         ten_lop = self.cbo_lop.currentText()
         ten_mon = self.cbo_mon.currentText()
         
-        tran_data = sinh_tran_dau_world_cup(self.vong_idx, ten_lop, ten_mon, self.doi_user["ten"])
+        tran_data = sinh_tran_dau_world_cup(self.vong_idx, ten_lop, ten_mon, self.doi_user["ten"], self.vong_bang_tran_idx)
         self.vong_info = tran_data["vong_info"]
         self.cau_hoi_world_cup = tran_data["cau_hoi"]
         
@@ -254,11 +265,20 @@ class ManHinhWorldCup(QWidget):
         doi_ten = self.doi_user["ten"]
         doi_thu = self.vong_info["doi_thu"]
         self.lbl_match_title.setText(f"{self.vong_info['ten'].upper()}: {doi_ten.upper()} VS {doi_thu.upper()}")
-        self.lbl_score_board.setText(f"Tỷ số Penalty: 0 - 0 | Tổng Bàn Thắng: {self.so_ban_thang}")
+        self.lbl_score_board.setText(f"Tỷ số Penalty: 0 - 0 | Tổng Bàn Thắng World Cup: {self.so_ban_thang}")
 
         self.thoi_gian_con_lai = 300
         self.timer.start(1000)
         self.hien_thi_cau_hoi()
+
+    def tru_luot_choi_world_cup_neu_can(self):
+        """Trừ lượt chơi World Cup khi học sinh bắt đầu thực sự trả lời câu hỏi đầu tiên."""
+        if self.vong_idx == 0 and self.vong_bang_tran_idx == 0 and not self.da_tinh_luot_choi_tran_nay:
+            self.da_tinh_luot_choi_tran_nay = True
+            hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+            self.so_luot_hom_nay += 1
+            self.last_played_date = hom_nay
+            luu_luot_choi_world_cup(hom_nay, self.so_luot_hom_nay)
 
     def cap_nhat_dong_ho(self):
         if self.thoi_gian_con_lai > 0:
@@ -292,6 +312,8 @@ class ManHinhWorldCup(QWidget):
 
     def luu_dap_an(self, text):
         self.dap_an_user[self.cau_idx] = text
+        if text and str(text).strip():
+            self.tru_luot_choi_world_cup_neu_can()
 
     def luot_sut_truoc(self):
         if self.cau_idx > 0:
@@ -317,6 +339,9 @@ class ManHinhWorldCup(QWidget):
         self.timer.stop()
         if not self.cau_hoi_world_cup:
             return
+
+        if len(self.dap_an_user) > 0:
+            self.tru_luot_choi_world_cup_neu_can()
 
         # Luu ngay choi hôm nay
         hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
@@ -348,43 +373,93 @@ class ManHinhWorldCup(QWidget):
         self.so_ban_thang += ban_thang_tran
         self.lbl_score_board.setText(f"Tỷ số Penalty: {doi_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu} | Tổng Bàn Thắng World Cup: {self.so_ban_thang}")
 
-        if ban_thang_tran > ban_thang_doi_thu:
-            cong_phan_thuong(10.0, ban_thang_tran)
-            if self.vong_idx < len(lay_vong_dau_world_cup()) - 1:
+        match_res = "thang" if ban_thang_tran > ban_thang_doi_thu else ("hoa" if ban_thang_tran == ban_thang_doi_thu else "thua")
+
+        if self.vong_idx == 0:
+            # XU LY VONG BANG 3 TRAN
+            self.vong_bang_results.append(match_res)
+            
+            if self.vong_bang_tran_idx < 2:
+                self.vong_bang_tran_idx += 1
+                res_str = "Thắng" if match_res == "thang" else ("Hòa" if match_res == "hoa" else "Thua")
                 QMessageBox.information(
-                    self, 
-                    "VICTORY", 
-                    f"VICTORY!\n"
-                    f"Xuất sắc! Đội tuyển {doi_ten} đã chiến thắng {doi_thu} với tỷ số Penalty {ban_thang_tran} - {ban_thang_doi_thu}!\n"
-                    f"Em đã giành vé vào VÒNG ĐẤU TIẾP THEO của World Cup!\nThưởng +{ban_thang_tran * 20} XP!"
+                    self,
+                    f"KẾT QUẢ TRẬN {self.vong_bang_tran_idx}/3 VÒNG BẢNG",
+                    f"Kết quả Trận {self.vong_bang_tran_idx}/3 Vòng Bảng: Đội tuyển {doi_ten} {res_str} {doi_thu} ({ban_thang_tran} - {ban_thang_doi_thu})!\n\n"
+                    f"Bấm OK để thi đấu Trận {self.vong_bang_tran_idx + 1}/3 Vòng Bảng tiếp theo nhé!"
                 )
-                self.vong_idx += 1
                 self.bat_dau_giai_dau()
             else:
-                # VO DICH CHUNG KET WORLD CUP!
-                QMessageBox.information(
-                    self, 
-                    "CHAMMMMMMMMMMMMPION", 
-                    f"CHAMMMMMMMMMMMMPION!\n"
-                    f"CHÚC MỪNG NHÀ VÔ ĐỊCH WORLD CUP!\n"
-                    f"Đội tuyển {doi_ten} đã xuất sắc nâng cao CÚP VÀNG WORLD CUP!\n"
-                    f"Tổng số bàn thắng: {self.so_ban_thang} Bàn Thắng!\nThưởng +500 XP và Cúp Vàng World Cup 3D!"
-                )
-                dlg_cert = HopThoaiChungNhan(
-                    parent=self, 
-                    lop=self.cbo_lop.currentText(), 
-                    chu_de="NHÀ VÔ ĐỊCH WORLD CUP TRI THỨC", 
-                    phan_tram_diem=100, 
-                    diem_so=10.0
-                )
-                dlg_cert.exec()
-                self.vong_idx = 0
+                # Da hoan thanh 3 tran Vong Bang!
+                summary_str = tao_chuoi_tom_tat_vong_bang(self.vong_bang_results)
+                if kiem_tra_qua_vong_bang(self.vong_bang_results):
+                    cong_phan_thuong(10.0, self.so_ban_thang)
+                    QMessageBox.information(
+                        self,
+                        "XUẤT SẮC VƯỢT QUA VÒNG BẢNG WORLD CUP",
+                        f"CHÚC MỪNG ĐỘI TUYỂN {doi_ten.upper()}!\n"
+                        f"Kết quả 3 trận Vòng Bảng:\n{summary_str}\n\n"
+                        f"Đạt điều kiện qua vòng bảng! Đội tuyển chính thức giành vé vào VÒNG TỨ KẾT WORLD CUP!\n"
+                        f"Thưởng +100 XP!"
+                    )
+                    self.vong_idx = 1
+                    self.vong_bang_tran_idx = 0
+                    self.vong_bang_results = []
+                    self.bat_dau_giai_dau()
+                else:
+                    QMessageBox.warning(
+                        self,
+                        "BỊ LOẠI Ở VÒNG BẢNG WORLD CUP",
+                        f"RẤT TIẾC! Đội tuyển {doi_ten} đã thi đấu 3 trận Vòng Bảng:\n{summary_str}\n\n"
+                        f"Quy tắc Vòng Bảng: Đội bóng phải đạt kết quả Thắng-Thắng-Thắng, Thắng-Thắng-Thua hoặc Thắng-Thắng-Hòa mới đủ điều kiện vào Tứ Kết!\n"
+                        f"Đội tuyển bị loại và phải bắt đầu lại Vòng Bảng."
+                    )
+                    self.vong_idx = 0
+                    self.vong_bang_tran_idx = 0
+                    self.vong_bang_results = []
         else:
-            QMessageBox.warning(
-                self, 
-                "DEFEAT", 
-                f"DEFEAT!\n"
-                f"Trận đấu kết thúc với tỷ số: {doi_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu}.\n"
-                f"Lượt chơi hôm nay đã kết thúc! Hãy quay lại vào ngày mai để thử sức lại nhé!"
-            )
-            self.vong_idx = 0
+            # KNOCKOUT STAGE (Tu Ket, Ban Ket, Chung Ket)
+            if ban_thang_tran > ban_thang_doi_thu:
+                cong_phan_thuong(10.0, ban_thang_tran)
+                if self.vong_idx < len(lay_vong_dau_world_cup()) - 1:
+                    QMessageBox.information(
+                        self, 
+                        "VICTORY", 
+                        f"VICTORY!\n"
+                        f"Xuất sắc! Đội tuyển {doi_ten} đã chiến thắng {doi_thu} với tỷ số Penalty {ban_thang_tran} - {ban_thang_doi_thu}!\n"
+                        f"Em đã giành vé vào VÒNG ĐẤU TIẾP THEO của World Cup!\nThưởng +{ban_thang_tran * 20} XP!"
+                    )
+                    self.vong_idx += 1
+                    self.bat_dau_giai_dau()
+                else:
+                    # VO DICH CHUNG KET WORLD CUP!
+                    QMessageBox.information(
+                        self, 
+                        "CHAMMMMMMMMMMMMPION", 
+                        f"CHAMMMMMMMMMMMMPION!\n"
+                        f"CHÚC MỪNG NHÀ VÔ ĐỊCH WORLD CUP!\n"
+                        f"Đội tuyển {doi_ten} đã xuất sắc nâng cao CÚP VÀNG WORLD CUP!\n"
+                        f"Tổng số bàn thắng: {self.so_ban_thang} Bàn Thắng!\nThưởng +500 XP và Cúp Vàng World Cup 3D!"
+                    )
+                    dlg_cert = HopThoaiChungNhan(
+                        parent=self, 
+                        lop=self.cbo_lop.currentText(), 
+                        chu_de="NHÀ VÔ ĐỊCH WORLD CUP TRI THỨC", 
+                        phan_tram_diem=100, 
+                        diem_so=10.0
+                    )
+                    dlg_cert.exec()
+                    self.vong_idx = 0
+                    self.vong_bang_tran_idx = 0
+                    self.vong_bang_results = []
+            else:
+                QMessageBox.warning(
+                    self, 
+                    "DEFEAT", 
+                    f"DEFEAT!\n"
+                    f"Trận đấu kết thúc với tỷ số: {doi_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu}.\n"
+                    f"Đội tuyển bị loại khỏi World Cup. Hãy thử sức lại lại nhé!"
+                )
+                self.vong_idx = 0
+                self.vong_bang_tran_idx = 0
+                self.vong_bang_results = []

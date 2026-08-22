@@ -80,6 +80,22 @@ class ManHinhMenuBatDau(QWidget):
         h_thoat = int(h * 0.138)
         self.btn_thoat.setGeometry(x_thoat, y_thoat, w_thoat, h_thoat)
 
+    def mousePressEvent(self, event):
+        """Đảm bảo 100% nhấp chuột bất kỳ đâu trên màn hình chào mừng đều tương tác mở ứng dụng."""
+        if event.button() == Qt.MouseButton.LeftButton:
+            # Kiểm tra nếu nhấp đúng vùng nút Thoát
+            if hasattr(self, 'btn_thoat') and self.btn_thoat.geometry().contains(event.pos()):
+                self.xu_ly_thoat()
+            else:
+                self.xu_ly_vao_ung_dung()
+        super().mousePressEvent(event)
+
+    def keyPressEvent(self, event):
+        """Hỗ trợ nhấn phím Enter, Space hoặc phím bất kỳ để vào ứng dụng."""
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Space):
+            self.xu_ly_vao_ung_dung()
+        super().keyPressEvent(event)
+
     def xu_ly_vao_ung_dung(self):
         """Xử lý khi học sinh bấm vào nút VÀO ỨNG DỤNG."""
         QuanLyAmThanh.get_instance().phat_hieu_ung_tra_loi_dung()

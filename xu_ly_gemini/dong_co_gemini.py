@@ -6,15 +6,18 @@ import json
 import ssl
 import urllib.request
 import urllib.parse
-from xu_ly_gemini.quan_ly_api_key import lay_gemini_api_key
+from xu_ly_gemini.quan_ly_api_key import lay_gemini_api_key, lay_model_gemini
+from xu_ly_mang.kiem_tra_ket_noi import kiem_tra_ket_noi_internet
 
 # Danh sach cac phien ban mo hinh Gemini hoat dong tot nhat
 DANH_SACH_MODEL_GEMINI = [
     "gemini-3.6-flash",
     "gemini-3.5-flash",
-    "gemini-flash-latest",
-    "gemini-flash-lite-latest",
-    "gemini-2.0-flash-lite"
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+    "gemini-flash-latest"
 ]
 
 def tao_de_thi_gemini_fallback(ten_lop, ten_mon, muc_do="Trung bình", ten_chuong="Kiến thức tổng hợp", so_cau=5):
@@ -39,12 +42,16 @@ def tao_de_thi_gemini_fallback(ten_lop, ten_mon, muc_do="Trung bình", ten_chuon
             "chuong": ten_chuong,
             "muc_do": muc_do,
             "mon_hoc": ten_mon,
-            "nguon": "Động Cơ AI Dự Phòng Hệ Thống"
+            "nguon": "Động Cơ AI Ngoại Tuyến"
         })
     return danh_sach
 
 def tao_de_thi_gemini_api(ten_lop="Lớp 7", ten_mon="Toán", ten_chuong="Biểu thức đại số", so_cau=5, muc_do="Trung bình", api_key=""):
-    """Tạo danh sách câu hỏi trắc nghiệm tự động từ Gemini API hoặc Động cơ dự phòng."""
+    """Tạo danh sách câu hỏi trắc nghiệm tự động từ Gemini API hoặc Động cơ dự phòng ngoại tuyến."""
+    # Neu ngat ket noi internet, chuyen ngay sang Dong co Ngoai tuyen khong lam treo thoi gian
+    if not kiem_tra_ket_noi_internet():
+        return tao_de_thi_gemini_fallback(ten_lop, ten_mon, muc_do, ten_chuong, so_cau)
+
     key_su_dung = api_key.strip() if api_key else lay_gemini_api_key()
     
     if key_su_dung:
@@ -86,8 +93,11 @@ Mỗi câu hỏi phải có đúng 4 phương án đáp án, và 'dap_an_dung' p
 
         json_data = json.dumps(payload).encode("utf-8")
 
-        # Thu lan luot cac model gemini cho den khi thanh cong
-        for model in DANH_SACH_MODEL_GEMINI:
+        # Tạo danh sách model thử nghiệm ưu tiên model người dùng chọn
+        user_model = lay_model_gemini()
+        models_to_try = [user_model] + [m for m in DANH_SACH_MODEL_GEMINI if m != user_model]
+
+        for model in models_to_try:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key_su_dung}"
             try:
                 req = urllib.request.Request(

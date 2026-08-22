@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Vercel Deployment Trigger: 2026-08-16 v2.0 - Complete Tab Navigation Fix -->
+<!-- Vercel Deployment Trigger: 2026-08-22 v3.0 - Completely Removed Claw Machine -->
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,6 @@
     <script src="/xu_ly_3d/cup_vo_dich_3d.js"></script>
     <script src="/xu_ly_3d/vong_quay_3d.js"></script>
     <script src="/xu_ly_3d/linh_vat_3d.js"></script>
-    <script src="/xu_ly_3d/gap_thu_3d.js"></script>
     <style>
         :root {
             --bg-body: #020617;
@@ -651,8 +650,18 @@
                 <h3 style="color: #06B6D4; margin-bottom: 22px; font-size: 25px; font-weight: 900;">TỰ ĐỘNG SINH BÀI TẬP BẰNG GEMINI AI KEY</h3>
                 <div class="form-group">
                     <label>Gemini API Key:</label>
-                    <input type="password" id="txtApiKey" placeholder="Dán Gemini API Key vào đây..." style="width: 280px;" oninput="saveGeminiApiKey(this.value)">
-                    <button class="btn-success" style="padding: 14px 20px; font-size: 14px;" onclick="explicitSaveApiKey()">Lưu API Key</button>
+                    <input type="password" id="txtApiKey" placeholder="Dán Gemini API Key vào đây..." style="width: 240px;" oninput="saveGeminiApiKey(this.value)">
+                    <button class="btn-success" style="padding: 14px 20px; font-size: 14px;" onclick="explicitSaveApiKey()">Lưu Key</button>
+                    <label>Phiên bản Model AI:</label>
+                    <select id="selAiModel">
+                        <option value="gemini-3.6-flash" selected>Gemini 3.6 Flash (Mới nhất)</option>
+                        <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                        <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                        <option value="gemini-flash-latest">Gemini Auto-Latest</option>
+                    </select>
                     <label>Lớp:</label>
                     <select id="selAiLop">
                         <option value="Lớp 6" selected>Lớp 6</option><option value="Lớp 7">Lớp 7</option><option value="Lớp 8">Lớp 8</option><option value="Lớp 9">Lớp 9</option>
@@ -662,7 +671,7 @@
                     <select id="selAiMon">
                         <option value="Toán" selected>Toán học</option><option value="Vật lý">Vật lý</option><option value="Hóa học">Hóa học</option><option value="Tin học">Tin học</option><option value="Tiếng Anh">Tiếng Anh</option>
                     </select>
-                    <button class="btn-primary" onclick="generateAiExam()">Lưu Key & Sinh Đề AI Ngay</button>
+                    <button class="btn-primary" onclick="generateAiExam()">Lưu Cấu Hình & Sinh Đề AI</button>
                 </div>
                 <div id="lblKeySaveMsg" style="margin-top: 10px; font-weight: 800; color: #10B981; font-size: 15px;"></div>
                 <div id="aiStatus" style="font-weight: 900; margin-top: 14px; color: #06B6D4; font-size: 17px;"></div>
@@ -757,22 +766,13 @@
         <!-- 11. Bộ Minigames -->
         <div id="pane-minigames" class="section-pane">
             <div class="card">
-                <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ 4 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
+                <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ 3 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
                     <div class="game-stadium-card">
                         <h4>Vòng Quay May Mắn</h4>
                         <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%;"></canvas><br>
                         <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
                         <div id="wheelResult" style="margin-top: 16px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
-                    </div>
-                    <div class="game-stadium-card">
-                        <h4>Máy Gắp Thú May Mắn 3D</h4>
-                        <canvas id="canvasClaw" width="220" height="150" style="margin: 10px 0; border-radius: 16px; border: 2px solid #EC4899;"></canvas><br>
-                        <div style="font-size: 11px; color: #CBD5E1; margin-bottom: 10px; line-height: 1.4;">
-                            Tỉ lệ thành công 70% (30% rớt). Trúng 1 trong 3: Gấu Thường (+50 XP), Thỏ Hiếm (+200 XP), Rồng Huyền Thoại (+500 XP)
-                        </div>
-                        <button class="btn-primary" style="font-size: 15px; font-weight: 900; padding: 12px 20px; width: 100%; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web()">GẮP THÚ</button>
-                        <div id="clawResult" style="margin-top: 12px; font-weight: 900; color: #10B981; font-size: 14px;"></div>
                     </div>
                     <div class="game-stadium-card">
                         <h4>Sút Phạt Penalty 5 Góc</h4>
@@ -2235,7 +2235,7 @@
             if (!modal) return;
             document.getElementById('lblMinigameModalHeader').innerText = `MINIGAME THƯ GIÃN GIỮA GIỜ (CÂU ${cauSo || 1}) - THƯỞNG +XP`;
             modal.style.display = 'flex';
-            const tabs = ['vongquay', 'penalty', 'latthe', 'gapthu'];
+            const tabs = ['vongquay', 'penalty', 'latthe'];
             const randTab = tabs[Math.floor(Math.random() * tabs.length)];
             showMinigameModalTab(randTab);
             try { playClickSfx(); } catch(e) {}
@@ -2250,11 +2250,9 @@
             document.getElementById('tabModalVongQuay').style.display = tabName === 'vongquay' ? 'block' : 'none';
             document.getElementById('tabModalPenalty').style.display = tabName === 'penalty' ? 'block' : 'none';
             document.getElementById('tabModalLatThe').style.display = tabName === 'latthe' ? 'block' : 'none';
-            document.getElementById('tabModalGapThu').style.display = tabName === 'gapthu' ? 'block' : 'none';
             
             if (tabName === 'vongquay') drawModalWheelCanvas();
             if (tabName === 'latthe') initModalMemoryCards();
-            if (tabName === 'gapthu' && typeof khoi_tao_modal_gap_thu_3d === 'function') setTimeout(khoi_tao_modal_gap_thu_3d, 100);
         }
 
         function drawModalWheelCanvas() {
@@ -2889,30 +2887,6 @@
             }
         }
 
-        function bat_dau_gap_thu_web() {
-            const resDiv = document.getElementById('modalClawResult');
-            if (resDiv) {
-                resDiv.innerText = "Đang hạ tay gắp thú... 🦾";
-                resDiv.style.color = "#F59E0B";
-                setTimeout(() => {
-                    const rand = Math.random();
-                    if (rand < 0.3) {
-                        resDiv.innerText = "Rất tiếc! Tay gắp bị trượt rớt thú. Thử lại lượt sau!";
-                        resDiv.style.color = "#EF4444";
-                    } else if (rand < 0.7) {
-                        resDiv.innerText = "GẮP THÀNH CÔNG GẤU BÔNG THƯỜNG! Thưởng +50 Roblox XP!";
-                        resDiv.style.color = "#10B981";
-                    } else if (rand < 0.95) {
-                        resDiv.innerText = "GẮP THÀNH CÔNG THỎ BÔNG HIẾM! Thưởng +200 Roblox XP!";
-                        resDiv.style.color = "#F59E0B";
-                    } else {
-                        resDiv.innerText = "GẮP THÀNH CÔNG RỒNG HUYỀN THOẠI! Thưởng +500 Roblox XP!";
-                        resDiv.style.color = "#EC4899";
-                    }
-                }, 1000);
-            }
-        }
-
 
 
         function drawObbyCanvas(step, customPlayerX, customPlayerY) {
@@ -3099,13 +3073,12 @@
         <div style="background: linear-gradient(135deg, #0F172A, #1E1B4B); border: 3px solid #06B6D4; border-radius: 28px; width: 90%; max-width: 680px; padding: 28px; box-shadow: 0 0 50px rgba(6, 182, 212, 0.6); position: relative; max-height: 90vh; overflow-y: auto;">
             <button onclick="closeMinigameModal()" style="position: absolute; top: 18px; right: 22px; background: #EF4444; color: #FFFFFF; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 18px; font-weight: 900; display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0; margin: 0; cursor: pointer; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6);">X</button>
             <h3 id="lblMinigameModalHeader" style="color: #F59E0B; font-size: 22px; margin-bottom: 14px; text-align: center;">MINIGAME THƯ GIÃN GIỮA GIỜ - THƯỞNG +XP</h3>
-            <p style="text-align: center; color: #F1F5F9; font-size: 15px; margin-bottom: 20px;">Chúc mừng bạn đã trả lời câu hỏi! Chọn 1 trong 4 Minigame dưới đây để thư giãn và tích lũy XP:</p>
+            <p style="text-align: center; color: #F1F5F9; font-size: 15px; margin-bottom: 20px;">Chúc mừng bạn đã trả lời câu hỏi! Chọn 1 trong 3 Minigame dưới đây để thư giãn và tích lũy XP:</p>
             
             <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
                 <button class="btn-primary" onclick="showMinigameModalTab('vongquay')">1. Vòng Quay</button>
                 <button class="btn-secondary" onclick="showMinigameModalTab('penalty')">2. Sút Penalty</button>
                 <button class="btn-success" onclick="showMinigameModalTab('latthe')">3. Lật Thẻ</button>
-                <button class="btn-primary" style="background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="showMinigameModalTab('gapthu')">4. Gắp Thú 3D</button>
             </div>
 
             <div id="tabModalVongQuay" style="text-align: center;">
@@ -3130,14 +3103,6 @@
                 <p style="text-align: center; font-size: 14px; margin-bottom: 12px; color: #06B6D4;">Nhấp lật 2 thẻ trùng khớp để nhận +100 XP thưởng!</p>
                 <div id="modalMemoryGrid" class="grid-4" style="gap: 12px;"></div>
                 <div id="modalMemoryResult" style="text-align: center; margin-top: 14px; font-weight: 900; color: #10B981; font-size: 16px;"></div>
-            </div>
-
-            <div id="tabModalGapThu" style="display: none; text-align: center;">
-                <div style="font-size: 12px; color: #CBD5E1; margin-bottom: 10px; line-height: 1.4;">
-                    Tỉ lệ thành công 70% (30% rớt). Trúng 1 trong 3: Gấu Thường (+50 XP), Thỏ Hiếm (+200 XP), Rồng Huyền Thoại (+500 XP)
-                </div>
-                <button class="btn-primary" style="font-size: 16px; font-weight: 900; padding: 14px 24px; width: 100%; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web()">GẮP THÚ</button>
-                <div id="modalClawResult" style="margin-top: 12px; font-weight: 900; color: #10B981; font-size: 15px;"></div>
             </div>
 
             <div style="text-align: center; margin-top: 24px;">
@@ -3243,6 +3208,26 @@
                     }
                 });
             });
+
+            // Dang ky Service Worker ho tro Offline PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('Service Worker da dang ky thanh cong offline PWA:', reg.scope);
+                }).catch(err => {
+                    console.log('Chua dang ky SW:', err);
+                });
+            }
+
+            // Lang nghe trang thai ket noi mang
+            function updateOnlineStatus() {
+                if (!navigator.onLine) {
+                    console.log('Trang thai web: Ngoai tuyen (Offline Mode)');
+                } else {
+                    console.log('Trang thai web: Truc tuyen (Online Mode)');
+                }
+            }
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
         });
     </script>
 </body>

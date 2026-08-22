@@ -17,8 +17,10 @@ from du_lieu.kho_noi_dung_hoc import (
 )
 from xu_ly_tro_choi.quan_ly_champions_league import (
     lay_danh_sach_clb_champions_league, lay_vong_dau_champions_league,
-    sinh_tran_dau_champions_league
+    sinh_tran_dau_champions_league, doc_luot_choi_champions_league,
+    luu_luot_choi_champions_league
 )
+from xu_ly_tro_choi.quan_ly_vong_bang import kiem_tra_qua_vong_bang, tao_chuoi_tom_tat_vong_bang
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
 from giao_dien.dap_an_tuong_tac import TheDapAnGroup
 from giao_dien.hop_thoai_chung_nhan import HopThoaiChungNhan
@@ -31,12 +33,17 @@ class ManHinhChampionsLeague(QWidget):
         self.danh_sach_clb = lay_danh_sach_clb_champions_league()
         self.clb_user = self.danh_sach_clb[0]
         self.vong_idx = 0
+        self.vong_bang_tran_idx = 0  # 0, 1, 2 cho 3 tran Vong Bang
+        self.vong_bang_results = []   # Luu ket qua ["thang", "thang", "hoa"] cua 3 tran Vong Bang
         self.cau_idx = 0
         self.so_ban_thang = 0
         self.cau_hoi_cl = []
         self.dap_an_user = {}
-        self.last_played_date = ""
-        self.so_luot_hom_nay = 0
+
+        # Doc luot choi Champions League tu file JSON co dinh
+        data_luot = doc_luot_choi_champions_league()
+        self.last_played_date = data_luot.get("ngay_choi", "")
+        self.so_luot_hom_nay = data_luot.get("so_luot_hom_nay", 0)
 
         self.thoi_gian_con_lai = 300
         self.timer = QTimer(self)
@@ -261,13 +268,18 @@ class ManHinhChampionsLeague(QWidget):
         self.cbo_chu_de.blockSignals(False)
 
     def bat_dau_giai_dau(self):
-        """Khởi động trận đấu Champions League mới cho 1 Chủ đề được chọn (Kiểm tra giới hạn 3 lượt/ngày)."""
+        """Khởi động trận đấu Champions League mới với Vòng Bảng 3 trận đấu cho 1 Chủ đề được chọn (Kiểm tra giới hạn 3 lượt/ngày)."""
         hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
-        if self.last_played_date != hom_nay:
-            self.last_played_date = hom_nay
+        
+        # Doc lai luot choi da luu tu file
+        data_luot = doc_luot_choi_champions_league()
+        if data_luot.get("ngay_choi") == hom_nay:
+            self.so_luot_hom_nay = data_luot.get("so_luot_hom_nay", 0)
+        else:
             self.so_luot_hom_nay = 0
+            self.last_played_date = hom_nay
 
-        if self.vong_idx == 0:
+        if self.vong_idx == 0 and self.vong_bang_tran_idx == 0:
             if self.so_luot_hom_nay >= 3:
                 QMessageBox.warning(
                     self, 
@@ -275,13 +287,13 @@ class ManHinhChampionsLeague(QWidget):
                     f"Mỗi ngày chỉ có tối đa 3 lượt tham gia Giải đấu Cúp C1 Champions League! Em đã sử dụng hết {self.so_luot_hom_nay}/3 lượt chơi hôm nay, hãy quay lại vào ngày mai nhé!"
                 )
                 return
-            self.so_luot_hom_nay += 1
+            self.da_tinh_luot_choi_tran_nay = False
 
         ten_lop = self.cbo_lop.currentText()
         ten_mon = self.cbo_mon.currentText()
         ten_chu_de = self.cbo_chu_de.currentText() if self.cbo_chu_de.currentText() else "Chủ đề 1"
 
-        tran_data = sinh_tran_dau_champions_league(self.vong_idx, ten_lop, ten_mon, ten_chu_de, self.clb_user["ten"])
+        tran_data = sinh_tran_dau_champions_league(self.vong_idx, ten_lop, ten_mon, ten_chu_de, self.clb_user["ten"], self.vong_bang_tran_idx)
         self.vong_info = tran_data["vong_info"]
         self.cau_hoi_cl = tran_data["cau_hoi"]
 
@@ -297,6 +309,15 @@ class ManHinhChampionsLeague(QWidget):
         self.thoi_gian_con_lai = 300
         self.timer.start(1000)
         self.hien_thi_cau_hoi()
+
+    def tru_luot_choi_champions_league_neu_can(self):
+        """Trừ lượt chơi Champions League khi học sinh bắt đầu thực sự trả lời câu hỏi đầu tiên."""
+        if self.vong_idx == 0 and self.vong_bang_tran_idx == 0 and not self.da_tinh_luot_choi_tran_nay:
+            self.da_tinh_luot_choi_tran_nay = True
+            hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+            self.so_luot_hom_nay += 1
+            self.last_played_date = hom_nay
+            luu_luot_choi_champions_league(hom_nay, self.so_luot_hom_nay)
 
     def cap_nhat_dong_ho(self):
         if self.thoi_gian_con_lai > 0:
@@ -330,6 +351,8 @@ class ManHinhChampionsLeague(QWidget):
 
     def luu_dap_an(self, text):
         self.dap_an_user[self.cau_idx] = text
+        if text and str(text).strip():
+            self.tru_luot_choi_champions_league_neu_can()
 
     def luot_sut_truoc(self):
         if self.cau_idx > 0:
@@ -355,6 +378,9 @@ class ManHinhChampionsLeague(QWidget):
         self.timer.stop()
         if not self.cau_hoi_cl:
             return
+
+        if len(self.dap_an_user) > 0:
+            self.tru_luot_choi_champions_league_neu_can()
 
         # Luu ngay choi hôm nay
         hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
@@ -387,44 +413,95 @@ class ManHinhChampionsLeague(QWidget):
         self.so_ban_thang += ban_thang_tran
         self.lbl_score_board.setText(f"Tỷ số Penalty: {clb_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu} | Tổng Bàn Thắng Cúp C1: {self.so_ban_thang}")
 
-        if ban_thang_tran > ban_thang_doi_thu:
-            cong_phan_thuong(10.0, ban_thang_tran)
-            if self.vong_idx < len(lay_vong_dau_champions_league()) - 1:
+        match_res = "thang" if ban_thang_tran > ban_thang_doi_thu else ("hoa" if ban_thang_tran == ban_thang_doi_thu else "thua")
+
+        if self.vong_idx == 0:
+            # XU LY VONG BANG 3 TRAN CUP C1
+            self.vong_bang_results.append(match_res)
+            
+            if self.vong_bang_tran_idx < 2:
+                self.vong_bang_tran_idx += 1
+                res_str = "Thắng" if match_res == "thang" else ("Hòa" if match_res == "hoa" else "Thua")
                 QMessageBox.information(
-                    self, 
-                    "VICTORY", 
-                    f"VICTORY!\n"
-                    f"Xuất sắc! Câu lạc bộ {clb_ten} đã đánh bại {doi_thu} với tỷ số Penalty {ban_thang_tran} - {ban_thang_doi_thu}!\n"
-                    f"Em đã giúp đội bóng tiến vào VÒNG TIẾP THEO CÚP C1 CHAMPIONS LEAGUE!\n"
-                    f"Chủ đề chinh phục: {ten_chu_de}\nThưởng +{ban_thang_tran * 20} XP!"
+                    self,
+                    f"KẾT QUẢ TRẬN {self.vong_bang_tran_idx}/3 VÒNG BẢNG CÚP C1",
+                    f"Kết quả Trận {self.vong_bang_tran_idx}/3 Vòng Bảng Cúp C1: Câu lạc bộ {clb_ten} {res_str} {doi_thu} ({ban_thang_tran} - {ban_thang_doi_thu})!\n\n"
+                    f"Bấm OK để thi đấu Trận {self.vong_bang_tran_idx + 1}/3 Vòng Bảng tiếp theo nhé!"
                 )
-                self.vong_idx += 1
                 self.bat_dau_giai_dau()
             else:
-                # VO DICH CHUNG KET CUP C1!
-                QMessageBox.information(
-                    self, 
-                    "CHAMMMMMMMMMMMMPION", 
-                    f"CHAMMMMMMMMMMMMPION!\n"
-                    f"CHÚC MỪNG NHÀ VÔ ĐỊCH CÚP C1 CHAMPIONS LEAGUE!\n"
-                    f"Câu lạc bộ {clb_ten} đã xuất sắc nâng cao CÚP TAI VOI BẠC CHAMPIONS LEAGUE!\n"
-                    f"Chủ đề đã làm chủ hoàn toàn: {ten_chu_de}\n"
-                    f"Tổng bàn thắng Cúp C1: {self.so_ban_thang} Bàn Thắng!\nThưởng +500 XP và Cúp Tai Voi 3D!"
-                )
-                dlg_cert = HopThoaiChungNhan(
-                    parent=self, 
-                    lop=self.cbo_lop.currentText(), 
-                    chu_de=f"NHÀ VÔ ĐỊCH CÚP C1 - {ten_chu_de}", 
-                    phan_tram_diem=100, 
-                    diem_so=10.0
-                )
-                dlg_cert.exec()
-                self.vong_idx = 0
+                # Da hoan thanh 3 tran Vong Bang Cup C1!
+                summary_str = tao_chuoi_tom_tat_vong_bang(self.vong_bang_results)
+                if kiem_tra_qua_vong_bang(self.vong_bang_results):
+                    cong_phan_thuong(10.0, self.so_ban_thang)
+                    QMessageBox.information(
+                        self,
+                        "XUẤT SẮC VƯỢT QUA VÒNG BẢNG CÚP C1",
+                        f"CHÚC MỪNG CÂU LẠC BỘ {clb_ten.upper()}!\n"
+                        f"Kết quả 3 trận Vòng Bảng Cúp C1:\n{summary_str}\n\n"
+                        f"Đạt điều kiện qua vòng bảng! Câu lạc bộ chính thức giành vé vào VÒNG TỨ KẾT CÚP C1 CHAMPIONS LEAGUE!\n"
+                        f"Chủ đề chinh phục: {ten_chu_de}\nThưởng +100 XP!"
+                    )
+                    self.vong_idx = 1
+                    self.vong_bang_tran_idx = 0
+                    self.vong_bang_results = []
+                    self.bat_dau_giai_dau()
+                else:
+                    QMessageBox.warning(
+                        self,
+                        "BỊ LOẠI Ở VÒNG BẢNG CÚP C1",
+                        f"RẤT TIẾC! Câu lạc bộ {clb_ten} đã thi đấu 3 trận Vòng Bảng:\n{summary_str}\n\n"
+                        f"Quy tắc Vòng Bảng: Câu lạc bộ phải đạt kết quả Thắng-Thắng-Thắng, Thắng-Thắng-Thua hoặc Thắng-Thắng-Hòa mới đủ điều kiện vào Tứ Kết Cúp C1!\n"
+                        f"Đội bóng bị loại và phải bắt đầu lại Vòng Bảng."
+                    )
+                    self.vong_idx = 0
+                    self.vong_bang_tran_idx = 0
+                    self.vong_bang_results = []
         else:
-            QMessageBox.warning(
-                self, 
-                "DEFEAT", 
-                f"DEFEAT!\n"
-                f"Trận đấu kết thúc với tỷ số: {clb_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu}.\n"
-                f"Chủ đề {ten_chu_de} rất hấp dẫn, hãy tiếp tục rèn luyện và thử sức lại nhé!"
-            )
+            # KNOCKOUT STAGE (Tu Ket, Ban Ket, Chung Ket C1)
+            if ban_thang_tran > ban_thang_doi_thu:
+                cong_phan_thuong(10.0, ban_thang_tran)
+                if self.vong_idx < len(lay_vong_dau_champions_league()) - 1:
+                    QMessageBox.information(
+                        self, 
+                        "VICTORY", 
+                        f"VICTORY!\n"
+                        f"Xuất sắc! Câu lạc bộ {clb_ten} đã đánh bại {doi_thu} với tỷ số Penalty {ban_thang_tran} - {ban_thang_doi_thu}!\n"
+                        f"Em đã giúp đội bóng tiến vào VÒNG TIẾP THEO CÚP C1 CHAMPIONS LEAGUE!\n"
+                        f"Chủ đề chinh phục: {ten_chu_de}\nThưởng +{ban_thang_tran * 20} XP!"
+                    )
+                    self.vong_idx += 1
+                    self.bat_dau_giai_dau()
+                else:
+                    # VO DICH CHUNG KET CUP C1!
+                    QMessageBox.information(
+                        self, 
+                        "CHAMMMMMMMMMMMMPION", 
+                        f"CHAMMMMMMMMMMMMPION!\n"
+                        f"CHÚC MỪNG NHÀ VÔ ĐỊCH CÚP C1 CHAMPIONS LEAGUE!\n"
+                        f"Câu lạc bộ {clb_ten} đã xuất sắc nâng cao CÚP TAI VOI BẠC CHAMPIONS LEAGUE!\n"
+                        f"Chủ đề đã làm chủ hoàn toàn: {ten_chu_de}\n"
+                        f"Tổng bàn thắng Cúp C1: {self.so_ban_thang} Bàn Thắng!\nThưởng +500 XP và Cúp Tai Voi 3D!"
+                    )
+                    dlg_cert = HopThoaiChungNhan(
+                        parent=self, 
+                        lop=self.cbo_lop.currentText(), 
+                        chu_de=f"NHÀ VÔ ĐỊCH CÚP C1 - {ten_chu_de}", 
+                        phan_tram_diem=100, 
+                        diem_so=10.0
+                    )
+                    dlg_cert.exec()
+                    self.vong_idx = 0
+                    self.vong_bang_tran_idx = 0
+                    self.vong_bang_results = []
+            else:
+                QMessageBox.warning(
+                    self, 
+                    "DEFEAT", 
+                    f"DEFEAT!\n"
+                    f"Trận đấu kết thúc với tỷ số: {clb_ten} {ban_thang_tran} - {ban_thang_doi_thu} {doi_thu}.\n"
+                    f"Chủ đề {ten_chu_de} rất hấp dẫn, hãy tiếp tục rèn luyện và thử sức lại nhé!"
+                )
+                self.vong_idx = 0
+                self.vong_bang_tran_idx = 0
+                self.vong_bang_results = []

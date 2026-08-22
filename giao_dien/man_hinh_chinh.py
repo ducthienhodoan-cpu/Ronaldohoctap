@@ -32,6 +32,8 @@ from giao_dien.hop_thoai_nhap_ten import HopThoaiNhapTen
 
 from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, kiem_tra_da_co_ten
 from xu_ly_am_thanh.quan_ly_am_thanh import QuanLyAmThanh
+from xu_ly_tro_choi.quan_ly_luot_choi import don_dep_tien_do_tam_thoi_khi_thoat
+from xu_ly_mang.kiem_tra_ket_noi import LuongKiemTraMang
 
 class CuaSoChinh(QMainWindow):
     """Cửa sổ chính phần mềm Siêu Club Học Tập tích hợp Màn hình Menu Khởi đầu có nút Bắt đầu và Nút Thoát."""
@@ -54,6 +56,11 @@ class CuaSoChinh(QMainWindow):
         self.kiem_tra_nhap_ten_ban_dau()
 
         self.init_ui()
+
+        # Khoi tao luong ngam kiem tra mang va cap nhat giao dien
+        self.luong_mang = LuongKiemTraMang(chu_ky_giay=10, parent=self)
+        self.luong_mang.mang_thay_doi.connect(self.cap_nhat_trang_thai_mang)
+        self.luong_mang.start()
 
         # Phat nhac nen Piano Sunrise tu dong khi mo ung dung
         QuanLyAmThanh.get_instance().phat_nhac_nen()
@@ -159,6 +166,10 @@ class CuaSoChinh(QMainWindow):
         self.lbl_header_title = QLabel("Menu Khởi Đầu")
         self.lbl_header_title.setStyleSheet("font-size: 20px; font-weight: bold; color: #FFFFFF;")
         
+        # Nhan hien thi trang thai ket noi mang True/False
+        self.lbl_trang_thai_mang = QLabel("Kiểm tra kết nối...")
+        self.lbl_trang_thai_mang.setStyleSheet("background-color: #333333; color: #FFFFFF; border-radius: 12px; padding: 4px 12px; font-weight: bold; font-size: 13px;")
+
         ten_hoc_sinh = lay_ten_nguoi_dung()
         self.lbl_user = QLabel(f"Học sinh: {ten_hoc_sinh} | Roblox Level 2")
         self.lbl_user.setStyleSheet("background-color: #002B4D; color: #FFFFFF; border: 2px solid #00A2FF; padding: 6px 16px; border-radius: 14px; font-weight: bold; font-size: 14px;")
@@ -187,6 +198,7 @@ class CuaSoChinh(QMainWindow):
 
         header_layout.addWidget(self.lbl_header_title)
         header_layout.addStretch()
+        header_layout.addWidget(self.lbl_trang_thai_mang)
         header_layout.addWidget(self.lbl_user)
         header_layout.addWidget(btn_doi_ten_nhanh)
         header_layout.addWidget(btn_nhac_nen)
@@ -222,6 +234,8 @@ class CuaSoChinh(QMainWindow):
         self.screen_obby = ManHinhObby()
 
         self.screen_cai_dat.ten_da_thay_doi.connect(self.cap_nhat_hien_thi_ten)
+        self.screen_luyen_tap.yeu_cau_chuyen_obby.connect(lambda: self.chuyen_man_hinh(17))
+        self.screen_hoc_tap.yeu_cau_chuyen_obby.connect(lambda: self.chuyen_man_hinh(17))
 
         self.stacked_widget.addWidget(self.screen_menu_bat_dau)        # 0
         self.stacked_widget.addWidget(self.screen_trang_chu)           # 1
@@ -373,9 +387,21 @@ class CuaSoChinh(QMainWindow):
         except Exception:
             pass
 
+    def cap_nhat_trang_thai_mang(self, is_online):
+        """Cập nhật giao diện nhãn thể hiện trạng thái kết nối mạng trên thanh Header bar."""
+        if is_online:
+            self.lbl_trang_thai_mang.setText("Trạng thái: Trực tuyến")
+            self.lbl_trang_thai_mang.setStyleSheet("background-color: #007E3E; color: #FFFFFF; border-radius: 12px; padding: 4px 12px; font-weight: bold; font-size: 13px;")
+        else:
+            self.lbl_trang_thai_mang.setText("Trạng thái: Ngoại tuyến (Offline Mode)")
+            self.lbl_trang_thai_mang.setStyleSheet("background-color: #D35400; color: #FFFFFF; border-radius: 12px; padding: 4px 12px; font-weight: bold; font-size: 13px;")
+
     def closeEvent(self, event):
-        """Dừng tất cả đồng hồ khi đóng ứng dụng."""
+        """Dừng tất cả đồng hồ, dọn dẹp luồng ngầm và tiến độ tạm thời khi thoát ứng dụng."""
+        if hasattr(self, 'luong_mang'):
+            self.luong_mang.dung_luong()
         self.dung_tat_ca_dong_ho()
+        don_dep_tien_do_tam_thoi_khi_thoat()
         super().closeEvent(event)
 
     def bat_tat_nhac_nen(self):

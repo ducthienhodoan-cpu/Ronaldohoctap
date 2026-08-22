@@ -41,13 +41,16 @@ def luu_thong_tin_thuong(du_lieu):
         print("Lỗi khi lưu hệ thống thưởng:", e)
 
 def cong_phan_thuong(diem_so=0, so_cau_dung=None):
-    """Cộng XP và Coin dựa trên kết quả bài làm hoặc cộng điểm XP trực tiếp mà không bị TypeError."""
+    """Cộng XP và Coin dựa trên kết quả bài làm hoặc cộng điểm XP trực tiếp mà không bị TypeError/ValueError."""
     du_lieu = lay_thong_tin_thuong()
     
-    if so_cau_dung is None:
-        # Nếu chỉ truyền 1 tham số (vd: cong_phan_thuong(100)), coi đó là số điểm XP nhận trực tiếp
-        xp_nhan = int(diem_so)
-        coin_nhan = int(diem_so // 5)
+    if so_cau_dung is None or not isinstance(so_cau_dung, (int, float)):
+        # Nếu chỉ truyền 1 tham số (vd: cong_phan_thuong(100)) hoặc so_cau_dung là chuỗi, coi diem_so là XP trực tiếp
+        try:
+            xp_nhan = int(diem_so)
+        except Exception:
+            xp_nhan = 50
+        coin_nhan = max(1, xp_nhan // 5)
     else:
         xp_nhan = int(so_cau_dung * 10)
         coin_nhan = int(so_cau_dung * 2)

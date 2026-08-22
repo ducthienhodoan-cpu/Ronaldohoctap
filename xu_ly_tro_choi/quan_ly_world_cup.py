@@ -4,6 +4,8 @@
 
 import random
 from xu_ly_kiem_tra.dong_co_javascript import chay_javascript_sinh_de
+from xu_ly_tro_choi.quan_ly_luot_choi import doc_luot_choi_world_cup, luu_luot_choi_world_cup
+from xu_ly_tro_choi.quan_ly_vong_bang import lay_danh_sach_doi_thu_vong_bang
 
 def lay_danh_sach_doi_tuyen():
     """Trả về danh sách 8 Đội tuyển Quốc gia tham gia Giải đấu World Cup."""
@@ -18,26 +20,28 @@ def lay_danh_sach_doi_tuyen():
         {"id": "es", "ten": "Tây Ban Nha", "co": "ES", "suc_manh": 91}
     ]
 
-def lay_vong_dau_world_cup(ten_doi_user="Việt Nam"):
-    """Trả về 4 vòng đấu chính của World Cup với đội đối thủ ngẫu nhiên khác đội của học sinh."""
+def lay_vong_dau_world_cup(ten_doi_user="Việt Nam", vong_bang_tran_idx=0):
+    """Trả về các vòng đấu chính của World Cup với Vòng Bảng 3 trận đấu."""
     tat_ca_doi = [d["ten"] for d in lay_danh_sach_doi_tuyen() if d["ten"] != ten_doi_user]
     random.shuffle(tat_ca_doi)
     
-    doi_thu_v1 = tat_ca_doi[0] if len(tat_ca_doi) > 0 else "Nhật Bản"
+    doi_thu_vb = lay_danh_sach_doi_thu_vong_bang(ten_doi_user, tat_ca_doi)
+    doi_thu_v1 = doi_thu_vb[min(vong_bang_tran_idx, len(doi_thu_vb) - 1)]
+    
     doi_thu_v2 = tat_ca_doi[1] if len(tat_ca_doi) > 1 else "Đức"
     doi_thu_v3 = tat_ca_doi[2] if len(tat_ca_doi) > 2 else "Brazil"
     doi_thu_v4 = tat_ca_doi[3] if len(tat_ca_doi) > 3 else "Argentina"
 
     return [
-        {"vong": 1, "ten": "Vòng Bảng World Cup", "doi_thu": doi_thu_v1, "so_cau": 5},
+        {"vong": 1, "ten": f"Vòng Bảng World Cup (Trận {vong_bang_tran_idx + 1}/3)", "doi_thu": doi_thu_v1, "so_cau": 5, "tran_idx": vong_bang_tran_idx},
         {"vong": 2, "ten": "Vòng Tứ Kết World Cup", "doi_thu": doi_thu_v2, "so_cau": 5},
         {"vong": 3, "ten": "Vòng Bán Kết World Cup", "doi_thu": doi_thu_v3, "so_cau": 5},
         {"vong": 4, "ten": "TRẬN CHUNG KẾT WORLD CUP", "doi_thu": doi_thu_v4, "so_cau": 5}
     ]
 
-def sinh_tran_dau_world_cup(vong_idx, ten_lop="Lớp 6", ten_mon="Toán", ten_doi_user="Việt Nam"):
+def sinh_tran_dau_world_cup(vong_idx, ten_lop="Lớp 6", ten_mon="Toán", ten_doi_user="Việt Nam", vong_bang_tran_idx=0):
     """Sinh bộ câu hỏi sút phạt Penalty cho trận đấu World Cup."""
-    vong_list = lay_vong_dau_world_cup(ten_doi_user)
+    vong_list = lay_vong_dau_world_cup(ten_doi_user, vong_bang_tran_idx)
     vong_info = vong_list[min(vong_idx, len(vong_list) - 1)]
     danh_sach_cau_hoi = chay_javascript_sinh_de(ten_lop, ten_mon, f"World Cup {vong_info['ten']}", vong_info["so_cau"])
     return {

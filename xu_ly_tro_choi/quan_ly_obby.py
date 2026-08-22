@@ -5,6 +5,8 @@
 import os
 import json
 
+from xu_ly_tro_choi.quan_ly_checkpoint import tinh_man_checkpoint_gan_nhat, is_checkpoint_5_man
+
 FILE_TIEN_DO_OBBY = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "du_lieu", "tien_do_obby.json"))
 
 def lay_danh_sach_10_world():
@@ -23,7 +25,7 @@ def lay_danh_sach_10_world():
     ]
 
 def lay_thong_tin_man_obby(so_man):
-    """Tra ve thong tin co che va chuong ngoai vat cua man choi bat ky tu 1 den 100."""
+    """Tra ve thong tin co che va chuong ngoai vat cua man choi bat ky tu 1 den 100 voi Checkpoint 5 man."""
     so_man = max(1, min(100, int(so_man)))
     world_id = ((so_man - 1) // 10) + 1
     danh_sach_world = lay_danh_sach_10_world()
@@ -31,7 +33,7 @@ def lay_thong_tin_man_obby(so_man):
 
     # Ten man va mo ta chi tiet
     ten_man = f"Màn {so_man}"
-    is_checkpoint = (so_man % 10 == 0)
+    is_checkpoint = is_checkpoint_5_man(so_man)
     is_boss = (so_man == 100)
 
     return {
@@ -41,6 +43,7 @@ def lay_thong_tin_man_obby(so_man):
         "ten_world": world_info["ten"],
         "co_che": world_info["co_che"],
         "is_checkpoint": is_checkpoint,
+        "checkpoint_start": tinh_man_checkpoint_gan_nhat(so_man),
         "is_boss": is_boss,
         "thoi_gian_lim": 90 if is_boss else (60 if is_checkpoint else 45),
         "thuong_xp": 500 if is_boss else (200 if is_checkpoint else 50)

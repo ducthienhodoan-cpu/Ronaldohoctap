@@ -16,6 +16,8 @@ from xu_ly_tro_choi.quan_ly_obby import (
     lay_danh_sach_10_world, lay_thong_tin_man_obby,
     doc_tien_do_obby, luu_hoan_thanh_man_obby
 )
+from xu_ly_tro_choi.quan_ly_checkpoint import tinh_man_checkpoint_gan_nhat
+from xu_ly_tro_choi.quan_ly_luot_choi import lay_so_luot_choi_obby, su_dung_luot_choi_obby
 from xu_ly_kiem_tra.dong_co_javascript import chay_javascript_sinh_de
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
 from giao_dien.dap_an_tuong_tac import TheDapAnGroup
@@ -77,7 +79,12 @@ class ManHinhObby(QWidget):
         info_vbox = QVBoxLayout()
         self.lbl_core_progress = QLabel("Số Glitch Cores đã thu thập: 0 / 10 Cores | Checkpoint cao nhất: Màn 1")
         self.lbl_core_progress.setStyleSheet("font-size: 15px; font-weight: bold; color: #06B6D4;")
+        
+        self.lbl_luot_obby = QLabel("Số lượt chơi Obby khả dụng: 1 lượt (Hoàn thành 1 bài luyện tập để nhận +1 lượt)")
+        self.lbl_luot_obby.setStyleSheet("font-size: 15px; font-weight: bold; color: #00FFCC;")
+
         info_vbox.addWidget(self.lbl_core_progress)
+        info_vbox.addWidget(self.lbl_luot_obby)
 
         row_sel = QHBoxLayout()
         lbl_world = QLabel("Chọn World Obby:")
@@ -172,11 +179,14 @@ class ManHinhObby(QWidget):
         self.tai_lai_ban_do()
 
     def tai_lai_ban_do(self):
-        """Cập nhật giao diện thanh Glitch Cores và lưới 10 Nút Màn chơi."""
+        """Cập nhật giao diện thanh Glitch Cores, số lượt chơi Obby và lưới 10 Nút Màn chơi."""
         self.tien_do = doc_tien_do_obby()
         cores = self.tien_do.get("cores_da_lay", [])
         man_max = self.tien_do.get("man_cao_nhat", 1)
         self.lbl_core_progress.setText(f"Số Glitch Cores đã thu thập: {len(cores)} / 10 Cores | Checkpoint cao nhất mở khóa: Màn {man_max}")
+
+        luot_con_lai = lay_so_luot_choi_obby()
+        self.lbl_luot_obby.setText(f"Số lượt chơi Obby khả dụng: {luot_con_lai} lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
 
         self.cap_nhat_luoi_man_choi()
 
@@ -214,7 +224,21 @@ class ManHinhObby(QWidget):
         self.bat_dau_man_obby()
 
     def bat_dau_man_obby(self):
-        """Bắt đầu màn chơi Obby hiện tại với cơ chế 6 Cục Parkour (6 Câu hỏi)."""
+        """Bắt đầu màn chơi Obby hiện tại với cơ chế 6 Cục Parkour (6 Câu hỏi) - Chỉ trừ lượt khi trả lời câu hỏi."""
+        if lay_so_luot_choi_obby() <= 0:
+            QMessageBox.warning(
+                self,
+                "HẾT LƯỢT CHƠI OBBY",
+                "Em đã dùng hết lượt chơi Đấu trường Obby!\n\n"
+                "Hãy qua mục 'Luyện tập Roblox' hoặc 'Nội dung học tập' và hoàn thành 1 bài luyện tập để nhận ngay +1 LƯỢT CHƠI OBBY nhé!"
+            )
+            self.lbl_luot_obby.setText("Số lượt chơi Obby khả dụng: 0 lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
+            return
+
+        self.da_tinh_luot_obby_man_nay = False
+        luot_con_lai = lay_so_luot_choi_obby()
+        self.lbl_luot_obby.setText(f"Số lượt chơi Obby khả dụng: {luot_con_lai} lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
+
         self.obby_step = 0
         info = lay_thong_tin_man_obby(self.man_hien_tai)
         self.lbl_level_title.setText(f"{info['ten_man'].upper()} - {info['ten_world'].upper()}")
@@ -238,6 +262,14 @@ class ManHinhObby(QWidget):
         self.thoi_gian_con_lai = info["thoi_gian_lim"]
         self.timer.start(1000)
 
+    def tru_luot_choi_obby_neu_can(self):
+        """Trừ lượt chơi Obby khi học sinh chọn đáp án cho Cục Parkour đầu tiên."""
+        if not getattr(self, 'da_tinh_luot_obby_man_nay', False):
+            if su_dung_luot_choi_obby():
+                self.da_tinh_luot_obby_man_nay = True
+                luot_con_lai = lay_so_luot_choi_obby()
+                self.lbl_luot_obby.setText(f"Số lượt chơi Obby khả dụng: {luot_con_lai} lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
+
     def hien_thi_cau_hoi_cuc_parkour(self):
         if not hasattr(self, 'danh_sach_6_cau_hoi') or self.obby_step >= len(self.danh_sach_6_cau_hoi):
             return
@@ -257,6 +289,8 @@ class ManHinhObby(QWidget):
 
     def luu_dap_an_va_nhay(self, text):
         self.dap_an_user = text
+        if text and str(text).strip():
+            self.tru_luot_choi_obby_neu_can()
         self.tong_ket_man_obby()
 
     def kich_hoat_giong_noi_ai(self):
@@ -293,7 +327,17 @@ class ManHinhObby(QWidget):
             self.lbl_timer_obby.setText(f"Thời gian vượt màn còn lại: {m:02d}:{s:02d}")
         else:
             self.timer.stop()
-            QMessageBox.warning(self, "Hết thời gian Obby", f"Hết thời gian vượt {lay_thong_tin_man_obby(self.man_hien_tai)['ten_man']}! Bạn ngã khỏi Cục Parkour {self.obby_step + 1} và quay lại Checkpoint trước.")
+            man_checkpoint = tinh_man_checkpoint_gan_nhat(self.man_hien_tai)
+            QMessageBox.warning(
+                self,
+                "HẾT THỜI GIAN VƯỢT MÀN",
+                f"Hết thời gian vượt Màn {self.man_hien_tai}!\n"
+                f"Quy tắc game: Cứ 5 màn có 1 điểm Checkpoint.\n"
+                f"Bạn sẽ xuất phát lại từ Điểm Checkpoint gần nhất (Màn {man_checkpoint})."
+            )
+            self.man_hien_tai = man_checkpoint
+            self.obby_mang = 3
+            self.cap_nhat_luoi_man_choi()
             self.bat_dau_man_obby()
 
     def tong_ket_man_obby(self):
@@ -336,10 +380,10 @@ class ManHinhObby(QWidget):
                 elif info["is_checkpoint"]:
                     QMessageBox.information(
                         self,
-                        "CHẠM CHECKPOINT THÀNH CÔNG",
-                        f"XUẤT SẮC! Bạn đã nhảy qua đủ 6 Cục Parkour và vượt qua {info['ten_man'].upper()} ({info['ten_world'].upper()})!\n"
-                        f"Thu thập thành công GLITCH CORE #{info['so_man'] // 10}!\n"
-                        f"Đã lưu Checkpoint! Thưởng +{info['thuong_xp']} Roblox XP!"
+                        "CHẠM CHECKPOINT 5 MÀN THÀNH CÔNG",
+                        f"XUẤT SẮC! Bạn đã vượt qua {info['ten_man'].upper()} ({info['ten_world'].upper()})!\n"
+                        f"Đã kích hoạt ĐIỂM CHECKPOINT 5 MÀN (Màn {self.man_hien_tai + 1})!\n"
+                        f"Thưởng +{info['thuong_xp']} Roblox XP!"
                     )
                     self.man_hien_tai += 1
                     self.bat_dau_man_obby()
@@ -362,10 +406,14 @@ class ManHinhObby(QWidget):
                 )
             else:
                 self.timer.stop()
+                man_checkpoint = tinh_man_checkpoint_gan_nhat(self.man_hien_tai)
                 QMessageBox.warning(
                     self,
-                    "BẠN ĐÃ HẾT 3 MẠNG CHƠI",
-                    f"Bạn đã hết 3 mạng chơi trong lượt này! Bạn ngã khỏi Màn Obby {info['ten_man']}.\n"
-                    f"Quay lại Cục 1 để bắt đầu lại lượt chơi mới."
+                    "BẠN ĐÃ HẾT MẠNG CHƠI",
+                    f"Bạn đã hết mạng chơi tại Màn {info['ten_man']}!\n"
+                    f"Theo quy tắc Checkpoint (5 màn có 1 điểm Checkpoint), bạn sẽ xuất phát lại từ Màn {man_checkpoint}."
                 )
+                self.man_hien_tai = man_checkpoint
+                self.obby_mang = 3
+                self.cap_nhat_luoi_man_choi()
                 self.bat_dau_man_obby()

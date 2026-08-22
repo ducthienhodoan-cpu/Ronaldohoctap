@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
     QComboBox, QCheckBox
 )
 
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from du_lieu.ngan_hang_cau_hoi import lay_cau_hoi_luyen_tap
 from du_lieu.kho_noi_dung_hoc import (
     lay_danh_sach_lop, lay_danh_sach_mon_hoc, lay_chu_de_theo_lop_va_mon
@@ -16,6 +16,7 @@ from du_lieu.kho_noi_dung_hoc import (
 from xu_ly_kiem_tra.dong_co_javascript import chay_javascript_sinh_de
 from xu_ly_kiem_tra.bo_cham_diem import cham_bai_lam
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
+from xu_ly_tro_choi.quan_ly_luot_choi import them_luot_choi_obby, lay_so_luot_choi_obby
 from giao_dien.dap_an_tuong_tac import TheDapAnGroup, KhungGhepCap, KhungSapXep
 from giao_dien.hop_thoai_tao_de import HopThoaiTaoDeDialog
 from giao_dien.hop_thoai_chung_nhan import HopThoaiChungNhan
@@ -24,6 +25,8 @@ from giao_dien.hop_thoai_minigame_giua_gio import HopThoaiMinigameGiuaGioDialog
 
 class ManHinhLuyenTap(QWidget):
     """Màn hình thực hành luyện tập hỗ trợ chọn Môn học, 5 Chủ đề, TẠO SỐ CÂU HỎI và CHỌN THỜI GIAN LUYỆN TẬP với TẤT CẢ VĂN BẢN LÀ CHỮ TRẮNG SÁNG."""
+
+    yeu_cau_chuyen_obby = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -364,12 +367,15 @@ class ManHinhLuyenTap(QWidget):
         ket_qua = cham_bai_lam(self.danh_sach_cau_hoi, self.cau_tra_loi_user)
         xp_nhan, coin_nhan = cong_phan_thuong(ket_qua["diem_so"], ket_qua["so_cau_dung"])
 
+        # Cong 1 luot choi Obby khi hoan thanh 1 bai luyen tap
+        luot_moi = them_luot_choi_obby(1)
+
         msg = f"""
 KẾT QUẢ LUYỆN TẬP:
 - Điểm số: {ket_qua['diem_so']} / 10 ({ket_qua['phan_tram']}%)
 - Số câu đúng: {ket_qua['so_cau_dung']} / {ket_qua['tong_cau']}
 - Xếp loại: {ket_qua['xep_loai']}
-- Phần thưởng đạt được: +{xp_nhan} XP và +{coin_nhan} Coin!
+- Phần thưởng đạt được: +{xp_nhan} XP, +{coin_nhan} Coin và +1 LƯỢT CHƠI OBBY!
 
 Gợi ý: Lời giải chi tiết của từng câu hỏi đã được tự động hiển thị bên dưới.
         """
@@ -386,6 +392,19 @@ Gợi ý: Lời giải chi tiết của từng câu hỏi đã được tự đ�
         )
         dlg_cert.exec()
 
-        # Mở minigame thư giãn giữa giờ sau bài luyện tập
-        self.mo_minigame_giua_gio()
+        # Hoi nguoi choi co muon sang man hinh Obby choi ngay khong
+        reply = QMessageBox.question(
+            self,
+            "THƯỞNG LƯỢT CHƠI OBBY",
+            f"CHÚC MỪNG! Em đã làm xong 1 bài luyện tập và nhận được +1 LƯỢT CHƠI OBBY!\n"
+            f"Số lượt chơi Obby khả dụng hiện tại: {luot_moi} lượt.\n\n"
+            f"Em có muốn sang Đấu Trường Obby để chơi ngay không?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.Yes
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            self.yeu_cau_chuyen_obby.emit()
+        else:
+            self.mo_minigame_giua_gio()
 

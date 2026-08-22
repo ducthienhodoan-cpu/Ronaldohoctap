@@ -21,7 +21,6 @@ from xu_ly_tro_choi.quan_ly_tro_choi import (
     luu_ghi_chu_hoc_tap, lay_ghi_chu_hoc_tap
 )
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
-from giao_dien.man_hinh_gap_thu import ManHinhGapThu
 
 class ManHinhTroChoi(QWidget):
     """Màn hình Trung tâm Trò chơi Minigame và Ứng dụng Học tập với BỐ CỤC CUỘN TỰ ĐỘNG KHÔNG BỊ CHE CHỮ KHÔNG BỊ CHE NÚT."""
@@ -129,25 +128,16 @@ class ManHinhTroChoi(QWidget):
         btn_g3 = QPushButton("Siêu Gõ Phím (Đoạn văn 3 Phút)")
         btn_g3.setProperty("class", "btn-secondary")
         btn_g3.setStyleSheet("color: #FFFFFF; font-weight: bold;")
-        btn_g3.clicked.connect(lambda: self.stack_game.setCurrentIndex(2))
-
-        btn_g4 = QPushButton("Gắp Thú May Mắn (Ngẫu nhiên)")
-        btn_g4.setProperty("class", "btn-primary")
-        btn_g4.setStyleSheet("background: linear-gradient(135deg, #EC4899, #A855F7); color: #FFFFFF; font-weight: bold;")
-        btn_g4.clicked.connect(lambda: self.stack_game.setCurrentIndex(3))
-
         nav_game_layout.addWidget(btn_g1)
         nav_game_layout.addWidget(btn_g2)
         nav_game_layout.addWidget(btn_g3)
-        nav_game_layout.addWidget(btn_g4)
         layout_games.addLayout(nav_game_layout)
 
-        # StackedWidget các trò chơi bọc trong QScrollArea để không bị che nút che chữ
+        # StackedWidget các trò chơi Minigame
         self.stack_game = QStackedWidget()
-        self.stack_game.addWidget(self.wrap_in_scroll(self.create_math_racer_widget()))
-        self.stack_game.addWidget(self.wrap_in_scroll(self.create_memory_match_widget()))
-        self.stack_game.addWidget(self.wrap_in_scroll(self.create_super_typing_widget()))
-        self.stack_game.addWidget(self.wrap_in_scroll(ManHinhGapThu()))
+        self.stack_game.addWidget(self.create_math_racer_widget())
+        self.stack_game.addWidget(self.create_memory_match_widget())
+        self.stack_game.addWidget(self.create_super_typing_widget())
         self.stack_game.currentChanged.connect(self.on_stack_game_changed)
 
         layout_games.addWidget(self.stack_game)
@@ -181,11 +171,11 @@ class ManHinhTroChoi(QWidget):
         nav_app_layout.addWidget(btn_a3)
         layout_apps.addLayout(nav_app_layout)
 
-        # StackedWidget các ứng dụng bọc trong QScrollArea
+        # StackedWidget các ứng dụng tiện ích
         self.stack_app = QStackedWidget()
-        self.stack_app.addWidget(self.wrap_in_scroll(self.create_calculator_widget()))
-        self.stack_app.addWidget(self.wrap_in_scroll(self.create_pomodoro_widget()))
-        self.stack_app.addWidget(self.wrap_in_scroll(self.create_notes_widget()))
+        self.stack_app.addWidget(self.create_calculator_widget())
+        self.stack_app.addWidget(self.create_pomodoro_widget())
+        self.stack_app.addWidget(self.create_notes_widget())
 
         layout_apps.addWidget(self.stack_app)
         self.tab_widget.addTab(tab_apps, "Ứng dụng Tiện ích Học tập")

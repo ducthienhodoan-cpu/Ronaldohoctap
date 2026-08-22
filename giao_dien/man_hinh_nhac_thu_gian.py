@@ -4,7 +4,7 @@
 
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-    QPushButton, QFrame, QSlider
+    QPushButton, QFrame, QSlider, QMessageBox
 )
 from PyQt6.QtCore import QUrl, Qt
 from PyQt6.QtGui import QDesktopServices
@@ -12,6 +12,7 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 
 from xu_ly_am_thanh.quan_ly_am_thanh import QuanLyAmThanh
 from xu_ly_bao_ve.ngan_sao_chep import tao_trang_web_chong_copy, thiet_lap_ngan_copy_web_view
+from xu_ly_mang.kiem_tra_ket_noi import kiem_tra_ket_noi_internet
 
 class ManHinhNhacThuGian(QWidget):
     """Màn hình phát Âm Nhạc Tích Cực Buổi Sáng - Thư Giãn, Năng Lượng, May Mắn & Hạnh Phúc."""
@@ -83,19 +84,7 @@ class ManHinhNhacThuGian(QWidget):
         # Ngăn menu chuột phải (Context Menu) trên QWebEngineView
         thiet_lap_ngan_copy_web_view(self.web_view)
 
-        iframe_code = """<iframe 
-            width="100%" height="400"
-            src="https://www.youtube.com/embed/0GnA8VYOfko?autoplay=1&list=RD0GnA8VYOfko" 
-            title="KITSCHKRIEG feat. BLUMENGARTEN & SHIRIN DAVID - GUT GENUG" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            referrerpolicy="strict-origin-when-cross-origin" 
-            allowfullscreen>
-        </iframe>"""
-        
-        # Tạo HTML với đầy đủ tính năng chống copy chữ (CSS user-select:none, JS copy/cut/selectstart listener)
-        embed_html = tao_trang_web_chong_copy(iframe_code)
-        self.web_view.setHtml(embed_html, QUrl("https://www.youtube.com"))
+        self.cap_nhat_noi_dung_web_view()
         card_layout.addWidget(self.web_view)
 
         # Thanh nút bổ trợ
@@ -119,6 +108,36 @@ class ManHinhNhacThuGian(QWidget):
         card_layout.addLayout(btn_layout)
         main_layout.addWidget(card_widget)
 
+    def cap_nhat_noi_dung_web_view(self):
+        """Cập nhật giao diện trình phát YouTube khi trực tuyến hoặc màn hình Offline khi không có mạng."""
+        if kiem_tra_ket_noi_internet():
+            iframe_code = """<iframe 
+                width="100%" height="400"
+                src="https://www.youtube.com/embed/0GnA8VYOfko?autoplay=1&list=RD0GnA8VYOfko" 
+                title="KITSCHKRIEG feat. BLUMENGARTEN & SHIRIN DAVID - GUT GENUG" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>"""
+            embed_html = tao_trang_web_chong_copy(iframe_code)
+            self.web_view.setHtml(embed_html, QUrl("https://www.youtube.com"))
+        else:
+            offline_html = """
+            <div style="background-color: #1a1a2e; color: #ffffff; height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: sans-serif; border-radius: 12px; text-align: center; padding: 20px;">
+                <h2 style="color: #ff9100; margin-bottom: 10px;">CHẾ ĐỘ NGOẠI TUYẾN (OFFLINE MODE)</h2>
+                <p style="font-size: 16px; max-width: 600px; line-height: 1.6; color: #e0e0e0;">
+                    Hiện tại thiết bị đang không có kết nối Internet để phát YouTube online.<br>
+                    Ứng dụng đã tự động bật <b>Nhạc nền Thư giãn hệ thống (Local Audio)</b> ở bảng phía trên để giúp em tập trung học tập!
+                </p>
+                <p style="font-size: 14px; color: #00e676; margin-top: 15px; font-weight: bold;">
+                    Tất cả bài tập, câu hỏi thi thử và minigame vẫn hoạt động 100% bình thường ngoại tuyến.
+                </p>
+            </div>
+            """
+            embed_html = tao_trang_web_chong_copy(offline_html)
+            self.web_view.setHtml(embed_html, QUrl("about:blank"))
+
     def xu_ly_bat_tat_nhac_nen(self):
         """Bat hoac tat nhac nen va cap nhat giao dien."""
         QuanLyAmThanh.get_instance().bat_tat_nhac_nen()
@@ -141,9 +160,13 @@ class ManHinhNhacThuGian(QWidget):
 
     def mo_tren_trinh_duyet(self):
         """Mở link bài nhạc trực tiếp trên trình duyệt ngoài."""
+        if not kiem_tra_ket_noi_internet():
+            QMessageBox.warning(self, "Ngoại tuyến", "Hiện tại thiết bị đang không có kết nối Internet.")
+            return
         url = QUrl("https://www.youtube.com/watch?v=0GnA8VYOfko")
         QDesktopServices.openUrl(url)
 
     def tai_lai_nhac(self):
         """Tải lại khung trình phát nhạc."""
-        self.web_view.reload()
+        self.cap_nhat_noi_dung_web_view()
+

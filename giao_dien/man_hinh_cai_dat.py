@@ -16,6 +16,7 @@ from xu_ly_hoc_tap.he_thong_thuong import lay_thong_tin_thuong
 from xu_ly_hoc_tap.quan_ly_tien_do import lay_du_lieu_tien_do
 from xu_ly_am_thanh.quan_ly_am_thanh import QuanLyAmThanh
 from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
+from xu_ly_tro_choi.quan_ly_reset import reset_toan_bo_du_lieu
 
 
 class ManHinhCaiDat(QWidget):
@@ -30,7 +31,12 @@ class ManHinhCaiDat(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        layout_chinh = QVBoxLayout(self)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("QScrollArea { border: none; background-color: transparent; }")
+
+        container = QWidget()
+        layout_chinh = QVBoxLayout(container)
         layout_chinh.setContentsMargins(20, 20, 20, 20)
         layout_chinh.setSpacing(20)
 
@@ -222,7 +228,36 @@ class ManHinhCaiDat(QWidget):
 
         layout_chinh.addWidget(card_target)
 
+        # 5. Card Reset Toàn Bộ Dữ Liệu Game
+        card_reset = QFrame()
+        card_reset.setProperty("class", "card-widget")
+        layout_reset = QVBoxLayout(card_reset)
+        layout_reset.setContentsMargins(20, 20, 20, 20)
+        layout_reset.setSpacing(14)
+
+        lbl_tieu_de_reset = QLabel("KHÔI PHỤC & RESET TOÀN BỘ DỮ LIỆU GAME")
+        lbl_tieu_de_reset.setStyleSheet("font-size: 18px; font-weight: bold; color: #FFFFFF;")
+        layout_reset.addWidget(lbl_tieu_de_reset)
+
+        lbl_desc_reset = QLabel("Đặt lại tiến độ Obby, lượt chơi World Cup, Champions League và dữ liệu bài tập về ban đầu:")
+        lbl_desc_reset.setStyleSheet("font-size: 15px; color: #FFFFFF;")
+        layout_reset.addWidget(lbl_desc_reset)
+
+        btn_reset = QPushButton("Reset Toàn Bộ Dữ Liệu Game")
+        btn_reset.setProperty("class", "btn-secondary")
+        btn_reset.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px; background-color: #EF4444;")
+        btn_reset.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_reset.clicked.connect(self.thuc_hien_reset_du_lieu)
+        layout_reset.addWidget(btn_reset)
+
+        layout_chinh.addWidget(card_reset)
         layout_chinh.addStretch()
+
+        scroll.setWidget(container)
+
+        main_vbox = QVBoxLayout(self)
+        main_vbox.setContentsMargins(0, 0, 0, 0)
+        main_vbox.addWidget(scroll)
 
 
         # Nạp dữ liệu ban đầu
@@ -295,3 +330,16 @@ class ManHinhCaiDat(QWidget):
         else:
             self.lbl_thong_bao.setStyleSheet("color: #FFFFFF; font-weight: bold;")
             self.lbl_thong_bao.setText("Lỗi khi lưu tên mới. Vui lòng thử lại!")
+
+    def thuc_hien_reset_du_lieu(self):
+        """Xử lý nút bấm Reset Toàn Bộ Dữ Liệu Game."""
+        reply = QMessageBox.question(
+            self,
+            "Xác nhận Reset Dữ liệu",
+            "Em có chắc chắn muốn Reset toàn bộ dữ liệu game và lượt chơi về ban đầu không?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        if reply == QMessageBox.StandardButton.Yes:
+            reset_toan_bo_du_lieu()
+            self.tai_lai_thong_tin()
+            QMessageBox.information(self, "Reset thành công", "Đã Reset toàn bộ dữ liệu game và lượt chơi về trạng thái ban đầu thành công!")
