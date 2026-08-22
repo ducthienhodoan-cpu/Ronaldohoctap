@@ -1,5 +1,5 @@
 // File: public/xu_ly_3d/gap_thu_3d_moi.js
-// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong voi he thong Tu dong Cong 3 Ve Thong va 1 Ve Vang moi ngay
+// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong ho tro Ve Thong & Ve Vang va Chuc nang Quay Vong Quay Co Qua
 
 let clawScene3D, clawCamera3D;
 let clawRenderer3D_Main = null;
@@ -14,6 +14,7 @@ let clawPosZ = 0;
 let countdownTimer20s = 20;
 let timerIntervalId = null;
 let willSlipThisTurn = false;
+let isUsingGoldenTicket = false;
 
 function lay_ve_gap_hien_tai() {
     const todayStr = new Date().toISOString().split('T')[0];
@@ -33,9 +34,15 @@ function lay_ve_gap_hien_tai() {
     return parseInt(v || '3', 10);
 }
 
+function lay_ve_vang_hien_tai() {
+    lay_ve_gap_hien_tai();
+    let vv = localStorage.getItem('ve_vang');
+    return parseInt(vv || '1', 10);
+}
+
 function cap_nhat_hien_thi_ve_gap() {
     const v = lay_ve_gap_hien_tai();
-    const vv = localStorage.getItem('ve_vang') || '1';
+    const vv = lay_ve_vang_hien_tai();
     const elemMain = document.getElementById('lblVeGapVal');
     const elemModal = document.getElementById('lblModalVeGapVal');
     const strText = `Vé Gắp: ${v} | Vé Vàng: ${vv}`;
@@ -161,33 +168,41 @@ function moveJoystickClaw3D(dir) {
     }
 }
 
-function bat_dau_gap_thu_web_moi() {
+function bat_dau_gap_thu_web_moi(suDungVeVang = false) {
     if (clawIsOperating) return;
 
-    // Kiem tra Ve gap
-    let veHienTai = lay_ve_gap_hien_tai();
-    if (veHienTai <= 0) {
-        alert("Bạn đã hết Vé Gắp! Hãy hoàn thành 1 bài học hoặc trả lời đúng 10 câu liên tiếp để nhận thêm Vé Gắp nhé!");
-        const resDiv = document.getElementById('clawResult');
-        const resModalDiv = document.getElementById('modalClawResult');
-        const msgHetVe = "BẠN ĐÃ HẾT VÉ GẮP! Hãy học bài để nhận thêm vé nhé!";
-        if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgHetVe; }
-        if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgHetVe; }
-        return;
+    isUsingGoldenTicket = suDungVeVang;
+
+    if (suDungVeVang) {
+        let veVang = lay_ve_vang_hien_tai();
+        if (veVang <= 0) {
+            alert("Bạn không có đủ VÉ VÀNG (Golden Ticket)! Hãy điểm danh ngày mới hoặc làm điểm 10 bài học để nhận Vé Vàng nhé!");
+            return;
+        }
+        veVang -= 1;
+        localStorage.setItem('ve_vang', veVang.toString());
+        willSlipThisTurn = Math.random() * 100 < 10; // Chế độ Vé Vàng chỉ có 10% rớt
+    } else {
+        let veHienTai = lay_ve_gap_hien_tai();
+        if (veHienTai <= 0) {
+            alert("Bạn đã hết Vé Gắp! Hãy hoàn thành 1 bài học hoặc trả lời đúng 10 câu liên tiếp để nhận thêm Vé Gắp nhé!");
+            const resDiv = document.getElementById('clawResult');
+            const resModalDiv = document.getElementById('modalClawResult');
+            const msgHetVe = "BẠN ĐÃ HẾT VÉ GẮP! Hãy học bài để nhận thêm vé nhé!";
+            if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgHetVe; }
+            if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgHetVe; }
+            return;
+        }
+        veHienTai -= 1;
+        localStorage.setItem('ve_gap', veHienTai.toString());
+        willSlipThisTurn = Math.random() * 100 < 60; // Chế độ Vé Thường có 60% rớt
     }
 
-    // Tru 1 ve gap
-    veHienTai -= 1;
-    localStorage.setItem('ve_gap', veHienTai.toString());
     cap_nhat_hien_thi_ve_gap();
-
-    // Roll 60% ti le rot thu giua chung
-    willSlipThisTurn = Math.random() * 100 < 60;
 
     clawIsOperating = true;
     khoi_tao_gap_thu_3d_moi();
 
-    // Dem nguoc 20s
     countdownTimer20s = 20;
     const timerElem = document.getElementById('clawTimerText');
     const modalTimerElem = document.getElementById('modalClawTimerText');
@@ -196,9 +211,9 @@ function bat_dau_gap_thu_web_moi() {
 
     const resDiv = document.getElementById('clawResult');
     const resModalDiv = document.getElementById('modalClawResult');
-    const statusMsg = 'Tay gắp đang từ từ hạ xuống kẹp thú bông...';
-    if (resDiv) { resDiv.style.color = '#F59E0B'; resDiv.innerText = statusMsg; }
-    if (resModalDiv) { resModalDiv.style.color = '#F59E0B'; resModalDiv.innerText = statusMsg; }
+    const statusMsg = suDungVeVang ? 'VÉ VÀNG KÍCH HOẠT: Tay gắp cường hóa 90% thành công!' : 'Tay gắp đang từ từ hạ xuống kẹp thú bông...';
+    if (resDiv) { resDiv.style.color = suDungVeVang ? '#F59E0B' : '#00FFCC'; resDiv.innerText = statusMsg; }
+    if (resModalDiv) { resModalDiv.style.color = suDungVeVang ? '#F59E0B' : '#00FFCC'; resModalDiv.innerText = statusMsg; }
 
     if (timerIntervalId) clearInterval(timerIntervalId);
     timerIntervalId = setInterval(() => {
@@ -282,10 +297,13 @@ function animateGapThu3DMoi() {
                 if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgRot; }
                 if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgRot; }
             } else {
-                const msg = `CHÚC MỪNG! ĐÃ GẮP THÀNH CÔNG THÚ BÔNG VÀO KHAY THƯỞNG! Nhận +150 Roblox XP!`;
+                const xpNhan = isUsingGoldenTicket ? 500 : 150;
+                const msg = isUsingGoldenTicket ? 
+                    `CHÚC MỪNG VÉ VÀNG! ĐÃ GẮP THÀNH CÔNG THÚ BÔNG BÍ MẬT! Nhận +500 Roblox XP!` :
+                    `CHÚC MỪNG! ĐÃ GẮP THÀNH CÔNG THÚ BÔNG VÀO KHAY THƯỞNG! Nhận +150 Roblox XP!`;
                 if (resDiv) { resDiv.style.color = '#10B981'; resDiv.innerText = msg; }
                 if (resModalDiv) { resModalDiv.style.color = '#10B981'; resModalDiv.innerText = msg; }
-                if (typeof updateXPDisplay === 'function') updateXPDisplay(150);
+                if (typeof updateXPDisplay === 'function') updateXPDisplay(xpNhan);
             }
         }
     } else {

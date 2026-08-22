@@ -793,7 +793,10 @@
                             <button class="btn-secondary" style="font-size: 11px; padding: 6px;" onclick="moveJoystickClaw3D('right')">Phải</button>
                         </div>
 
-                        <button class="btn-primary" style="font-size: 15px; font-weight: 900; padding: 12px 20px; width: 100%; margin-top: 8px; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi()">GẮP THÚ NGAY</button>
+                        <div style="display: flex; gap: 6px; margin-top: 8px;">
+                            <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi(false)">GẮP THƯỜNG (1 VÉ)</button>
+                            <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web_moi(true)">GẮP VÀNG (1 VÉ VÀNG)</button>
+                        </div>
                         <div id="clawResult" style="margin-top: 10px; font-weight: 900; color: #10B981; font-size: 13.5px;"></div>
                     </div>
                     <div class="game-stadium-card">
@@ -1972,7 +1975,10 @@
                 body: JSON.stringify({ type: 'wheel' })
             });
             const d = await res.json();
-            document.getElementById('wheelResult').innerText = `Chúc mừng bạn trúng: ${d.reward.ten}!`;
+            const rewardObj = d.reward || { ten: "Cộng 50 XP Kinh Nghiệm", xp: 50 };
+            document.getElementById('wheelResult').innerText = `CHÚC MỪNG: ${rewardObj.ten}!`;
+            if (typeof updateXPDisplay === 'function') updateXPDisplay(rewardObj.xp || 50);
+            alert(`CHÚC MỪNG BẠN ĐÃ QUAY TRÚNG PHẦN THƯỞNG: ${rewardObj.ten}!\nPhần thưởng đã tự động được cộng vào tài khoản học tập của bạn!`);
         }
 
         async function shootPenalty(dir) {
@@ -2310,7 +2316,7 @@
 
         async function spinModalWheel() {
             try { playClickSfx(); } catch(e) {}
-            let r = { xp: 50 };
+            let r = { ten: "Cộng 50 XP Kinh Nghiệm", xp: 50 };
             try {
                 const res = await fetch('/api/games', {
                     method: 'POST',
@@ -2322,7 +2328,9 @@
             } catch(err) {
                 console.warn("Spin fallback:", err);
             }
-            document.getElementById('modalWheelResult').innerText = `CHÚC MỪNG: Bạn quay trúng phần thưởng +${r.xp || 50} Roblox XP!`;
+            document.getElementById('modalWheelResult').innerText = `CHÚC MỪNG: Bạn quay trúng ${r.ten || '+50 Roblox XP'}!`;
+            if (typeof updateXPDisplay === 'function') updateXPDisplay(r.xp || 50);
+            alert(`CHÚC MỪNG BẠN ĐÃ QUAY TRÚNG PHẦN THƯỞNG: ${r.ten || '+50 Roblox XP'}!\nPhần thưởng đã tự động được cộng vào tài khoản học tập của bạn!`);
         }
 
         async function shootModalPenalty(direction) {
@@ -3147,7 +3155,10 @@
                     <button class="btn-secondary" style="font-size: 11px; padding: 6px;" onclick="moveJoystickClaw3D('right')">Phải</button>
                 </div>
 
-                <button class="btn-primary" style="font-size: 16px; font-weight: 900; padding: 14px 24px; width: 100%; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi()">GẮP THÚ NGAY</button>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <button class="btn-primary" style="font-size: 13px; font-weight: 900; padding: 12px; flex: 1; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi(false)">GẮP THƯỜNG (1 VÉ)</button>
+                    <button class="btn-primary" style="font-size: 13px; font-weight: 900; padding: 12px; flex: 1; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web_moi(true)">GẮP VÀNG (1 VÉ VÀNG)</button>
+                </div>
                 <div id="modalClawResult" style="margin-top: 12px; font-weight: 900; color: #10B981; font-size: 15px;"></div>
             </div>
 
