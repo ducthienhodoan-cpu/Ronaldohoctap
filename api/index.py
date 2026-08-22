@@ -33,6 +33,7 @@ from xu_ly_tro_choi.quan_ly_champions_league import lay_danh_sach_clb_champions_
 from xu_ly_tro_choi.quan_ly_dua_xe import khoi_tao_duong_dua_xe, sinh_vat_the_duong_dua
 from xu_ly_tro_choi.minigame_giua_gio import tao_danh_sach_the_lat_tri_nho, quay_vong_quay_may_man, xu_ly_sut_phat_penalty
 from xu_ly_tro_choi.quan_ly_gap_thu_moi import thuc_hien_luot_gap_moi, lay_du_lieu_gap_thu
+from xu_ly_tro_choi.quan_ly_vong_quay import thuc_hien_luot_quay_moi, lay_du_lieu_vong_quay
 from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
 # Thong ke module ready
 
@@ -186,6 +187,10 @@ def games_engine():
             may_id = req.get('may_id', 'cute')
             ve_vang = req.get('ve_vang', False)
             ok, res, data = thuc_hien_luot_gap_moi(may_id=may_id, su_dung_ve_vang=ve_vang)
+            return jsonify({"status": "success", "success": ok, "result": res, "data": data})
+        elif game_type == 'lucky_wheel':
+            loai = req.get('loai_quay', 'thuong')
+            ok, res, data = thuc_hien_luot_quay_moi(loai_quay=loai)
             return jsonify({"status": "success", "success": ok, "result": res, "data": data})
 
     return jsonify({
