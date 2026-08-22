@@ -50,6 +50,14 @@ function cap_nhat_hien_thi_ve_gap() {
     if (elemModal) elemModal.innerText = strText;
 }
 
+function nap_5_ve_gap_mien_phi() {
+    let currentV = parseInt(localStorage.getItem('ve_gap') || '5', 10);
+    currentV += 5;
+    localStorage.setItem('ve_gap', currentV.toString());
+    cap_nhat_hien_thi_ve_gap();
+    try { playClickSfx(); } catch(e) {}
+}
+
 function khoi_tao_gap_thu_3d_moi() {
     if (typeof THREE === 'undefined') return;
 

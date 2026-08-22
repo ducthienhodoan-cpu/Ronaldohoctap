@@ -50,6 +50,10 @@ class ManHinhGapThuMoi(QWidget):
         self.lbl_ve_vang = QLabel("Vé Vàng: 1 Vé")
         self.lbl_ve_vang.setStyleSheet("font-size: 14px; font-weight: bold; color: #FFCC00;")
 
+        btn_nap_ve = QPushButton("+5 VÉ MIỄN PHÍ")
+        btn_nap_ve.setStyleSheet("background-color: #10B981; color: #FFFFFF; font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 8px;")
+        btn_nap_ve.clicked.connect(self.nap_5_ve_mien_phi)
+
         self.lbl_combo = QLabel("Combo: 0x")
         self.lbl_combo.setStyleSheet("font-size: 14px; font-weight: bold; color: #FF66CC;")
 
@@ -57,6 +61,7 @@ class ManHinhGapThuMoi(QWidget):
         self.lbl_timer.setStyleSheet("font-size: 14px; font-weight: bold; color: #00A2FF;")
 
         top_layout.addWidget(self.lbl_ve_gap)
+        top_layout.addWidget(btn_nap_ve)
         top_layout.addWidget(self.lbl_ve_vang)
         top_layout.addWidget(self.lbl_combo)
         top_layout.addStretch()
@@ -151,20 +156,28 @@ class ManHinhGapThuMoi(QWidget):
         self.btn_gap.clicked.connect(self.bat_dau_gap)
         game_layout.addWidget(self.btn_gap)
 
-        # Bảng chú thích Hướng dẫn Điều kiện Kiếm Vé
+        # Bảng chú thích Hướng dẫn Điều kiện Kiếm Vé Vàng (Làm nhiệm vụ)
         lbl_huong_dan = QLabel(
-            "HƯỚNG DẪN ĐIỀU KIỆN KIẾM VÉ GẮP:\n"
-            "Vé Gắp Thường: Điểm danh mỗi ngày (+3 Vé) | Hoàn thành 1 bài học (+1 Vé) | Đúng 10 câu liên tiếp (+1 Vé) | Nhiệm vụ ngày (+2 Vé)\n"
-            "Vé Vàng (Golden Ticket): Điểm danh mỗi ngày (+1 Vé) | Đạt điểm 10 kiểm tra (+1 Vé) | Chuỗi Streak 7 ngày (+1 Vé)"
+            "ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ):\n"
+            "Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:\n"
+            "- Hoàn thành xuất sắc nhiệm vụ ngày (+1 Vé Vàng)\n"
+            "- Đạt điểm 10 / Xuất sắc bài kiểm tra (+1 Vé Vàng)\n"
+            "- Đạt chuỗi Streak học tập liên tục 7 ngày (+1 Vé Vàng)"
         )
         lbl_huong_dan.setWordWrap(True)
         lbl_huong_dan.setStyleSheet(
-            "background-color: #0F172A; color: #00FFCC; font-size: 13px; font-weight: bold; "
-            "border: 2px solid #06B6D4; border-radius: 12px; padding: 10px; margin-top: 10px;"
+            "background-color: #0F172A; color: #F59E0B; font-size: 13px; font-weight: bold; "
+            "border: 2px solid #F59E0B; border-radius: 12px; padding: 10px; margin-top: 10px;"
         )
         game_layout.addWidget(lbl_huong_dan)
 
         main_layout.addWidget(game_frame)
+
+    def nap_5_ve_mien_phi(self):
+        data = lay_du_lieu_gap_thu()
+        data["ve_gap"] = data.get("ve_gap", 0) + 5
+        luu_du_lieu_gap_thu(data)
+        self.cap_nhat_giao_dien_tai_san()
 
     def doi_may_gap(self, index):
         self.may_duoc_chon = self.cbo_may_gap.currentData()

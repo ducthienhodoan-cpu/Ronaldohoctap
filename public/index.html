@@ -818,8 +818,9 @@
                     </div>
                     <div class="game-stadium-card" style="position: relative; z-index: 20; pointer-events: auto;">
                         <h4>Máy Gắp Thú 3D Siêu Cấp</h4>
-                        <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 13px; margin-bottom: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 13px; margin-bottom: 6px;">
                             <span id="lblVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 Vé</span>
+                            <button style="font-size: 10px; padding: 4px 8px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ MIỄN PHÍ</button>
                             <span id="clawTimerText" style="color: #F59E0B;">Thời gian: 20s</span>
                         </div>
                         <canvas id="canvasClaw" width="260" height="180" style="margin: 6px 0; border-radius: 16px; border: 2px solid #EC4899;"></canvas><br>
@@ -840,21 +841,14 @@
                         </div>
                         <div id="clawResult" style="margin-top: 10px; font-weight: 900; color: #10B981; font-size: 13.5px;"></div>
 
-                        <!-- Bảng Chú Thích Điều Kiện Kiếm Vé -->
-                        <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #06B6D4; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
-                            <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">HƯỚNG DẪN ĐIỀU KIỆN KIẾM VÉ GẮP</div>
-                            <div style="color: #00FFCC; font-weight: bold; margin-bottom: 4px;">Vé Gắp Thường:</div>
-                            <ul style="margin: 0; padding-left: 18px; color: #CBD5E1;">
-                                <li>Điểm danh ngày mới: <b style="color: #10B981;">+3 Vé Gắp</b></li>
-                                <li>Hoàn thành 1 bài học (Lớp 1-12): <b style="color: #10B981;">+1 Vé Gắp</b></li>
-                                <li>Trả lời đúng 10 câu liên tiếp: <b style="color: #10B981;">+1 Vé Gắp</b></li>
-                                <li>Hoàn thành Nhiệm vụ ngày: <b style="color: #10B981;">+2 Vé Gắp</b></li>
-                            </ul>
-                            <div style="color: #F59E0B; font-weight: bold; margin: 6px 0 4px 0;">Vé Vàng (Golden Ticket):</div>
-                            <ul style="margin: 0; padding-left: 18px; color: #CBD5E1;">
-                                <li>Điểm danh ngày mới: <b style="color: #F59E0B;">+1 Vé Vàng</b></li>
-                                <li>Đạt điểm 10 bài kiểm tra: <b style="color: #F59E0B;">+1 Vé Vàng</b></li>
-                                <li>Đạt chuỗi Streak 7 ngày: <b style="color: #F59E0B;">+1 Vé Vàng</b></li>
+                        <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Vàng -->
+                        <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #F59E0B; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
+                            <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ)</div>
+                            <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:</div>
+                            <ul style="margin: 0; padding-left: 18px; color: #F59E0B; font-weight: bold;">
+                                <li>Hoàn thành xuất sắc nhiệm vụ ngày: +1 Vé Vàng</li>
+                                <li>Đạt điểm 10 / Xuất sắc bài kiểm tra: +1 Vé Vàng</li>
+                                <li>Đạt chuỗi Streak học tập liên tục 7 ngày: +1 Vé Vàng</li>
                             </ul>
                         </div>
                     </div>
@@ -3198,8 +3192,9 @@
             </div>
 
             <div id="tabModalGapThu" style="display: none; text-align: center;">
-                <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 13px; max-width: 280px; margin: 0 auto 6px auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 13px; max-width: 280px; margin: 0 auto 6px auto;">
                     <span id="lblModalVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 Vé</span>
+                    <button style="font-size: 10px; padding: 4px 8px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ MIỄN PHÍ</button>
                     <span id="modalClawTimerText" style="color: #F59E0B;">Thời gian: 20s</span>
                 </div>
                 <canvas id="canvasModalClaw" width="280" height="190" style="margin: 6px auto; display: block; border-radius: 16px; border: 2px solid #EC4899;"></canvas>
@@ -3220,21 +3215,14 @@
                 </div>
                 <div id="modalClawResult" style="margin-top: 12px; font-weight: 900; color: #10B981; font-size: 15px;"></div>
 
-                <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Modal -->
-                <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #06B6D4; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
-                    <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">HƯỚNG DẪN ĐIỀU KIỆN KIẾM VÉ GẮP</div>
-                    <div style="color: #00FFCC; font-weight: bold; margin-bottom: 4px;">Vé Gắp Thường:</div>
-                    <ul style="margin: 0; padding-left: 18px; color: #CBD5E1;">
-                        <li>Điểm danh ngày mới: <b style="color: #10B981;">+3 Vé Gắp</b></li>
-                        <li>Hoàn thành 1 bài học (Lớp 1-12): <b style="color: #10B981;">+1 Vé Gắp</b></li>
-                        <li>Trả lời đúng 10 câu liên tiếp: <b style="color: #10B981;">+1 Vé Gắp</b></li>
-                        <li>Hoàn thành Nhiệm vụ ngày: <b style="color: #10B981;">+2 Vé Gắp</b></li>
-                    </ul>
-                    <div style="color: #F59E0B; font-weight: bold; margin: 6px 0 4px 0;">Vé Vàng (Golden Ticket):</div>
-                    <ul style="margin: 0; padding-left: 18px; color: #CBD5E1;">
-                        <li>Điểm danh ngày mới: <b style="color: #F59E0B;">+1 Vé Vàng</b></li>
-                        <li>Đạt điểm 10 bài kiểm tra: <b style="color: #F59E0B;">+1 Vé Vàng</b></li>
-                        <li>Đạt chuỗi Streak 7 ngày: <b style="color: #F59E0B;">+1 Vé Vàng</b></li>
+                <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Vàng Modal -->
+                <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #F59E0B; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
+                    <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ)</div>
+                    <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:</div>
+                    <ul style="margin: 0; padding-left: 18px; color: #F59E0B; font-weight: bold;">
+                        <li>Hoàn thành xuất sắc nhiệm vụ ngày: +1 Vé Vàng</li>
+                        <li>Đạt điểm 10 / Xuất sắc bài kiểm tra: +1 Vé Vàng</li>
+                        <li>Đạt chuỗi Streak học tập liên tục 7 ngày: +1 Vé Vàng</li>
                     </ul>
                 </div>
             </div>
