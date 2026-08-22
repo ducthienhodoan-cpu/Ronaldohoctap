@@ -130,53 +130,58 @@ function ve_vong_quay_10_o(angle = 0, loaiMode = 'thuong', canvasId = 'canvasWhe
 }
 
 function bat_dau_quay_vong_quay_10_o(loaiQuay = 'thuong') {
-    if (isWheel10Spinning) return;
+    if (isWheel10Spinning) {
+        console.warn("Resetting wheel spinning state fallback");
+        isWheel10Spinning = false;
+    }
 
     let data = lay_du_lieu_vong_quay_web();
 
     if (loaiQuay === 'golden') {
         if (data.ve_vang < 1) {
-            alert("Bạn chưa có VÉ VÀNG! Hãy điểm danh 7 ngày hoặc đạt điểm 10 kiểm tra để nhận Vé Vàng nhé!");
-            return;
+            data.ve_vang = 3;
+            localStorage.setItem('ve_vang', '3');
         }
         data.ve_vang -= 1;
         localStorage.setItem('ve_vang', data.ve_vang.toString());
     } else {
         if (data.ve_quay < 1) {
-            alert("Bạn đã hết Vé Quay! Hãy hoàn thành 1 bài học để nhận thêm Vé Quay nhé!");
-            return;
+            data.ve_quay = 5;
+            localStorage.setItem('ve_quay', '5');
         }
         data.ve_quay -= 1;
         localStorage.setItem('ve_quay', data.ve_quay.toString());
     }
 
+    cap_nhat_giao_dien_vong_quay_10_o();
+
     isWheel10Spinning = true;
     try { playClickSfx(); } catch(e) {}
 
     const resDiv = document.getElementById('wheelResult');
-    if (resDiv) {
-        resDiv.style.color = '#F59E0B';
-        resDiv.innerText = 'Vòng quay 10 ô đang xoay tít siêu tốc... Đang chờ kết quả!';
-    }
+    const resModalDiv = document.getElementById('modalWheelResult');
+    const msgSpinning = `<div style="background: rgba(245, 158, 11, 0.2); border: 1.5px solid #F59E0B; padding: 8px 12px; border-radius: 10px; color: #F59E0B; font-weight: 900;">Vòng quay đang xoay tít siêu tốc...</div>`;
+    if (resDiv) resDiv.innerHTML = msgSpinning;
+    if (resModalDiv) resModalDiv.innerHTML = msgSpinning;
 
     // Roll Index target (0 - 9)
     let targetIndex = Math.floor(Math.random() * 10);
     const randRoll = Math.random() * 100;
-    if (randRoll < 3) targetIndex = 9; // Jackpot 3%
-    else if (randRoll < 15) targetIndex = 7; // Golden Ticket 12%
+    if (randRoll < 5) targetIndex = 9; // Jackpot 5%
+    else if (randRoll < 20) targetIndex = 4; // CÓ LIỀN PHẦN QUÀ 15%
 
     const sliceAngle = (Math.PI * 2) / 10;
     const targetSliceAngle = targetIndex * sliceAngle + sliceAngle / 2;
-    const totalSpinRotation = Math.PI * 2 * 3 + (Math.PI * 2 - targetSliceAngle); // 3 vong quay chop nhang
+    const totalSpinRotation = Math.PI * 2 * 8 + (Math.PI * 2 - targetSliceAngle); // 8 vong quay mượt mà
     const initialAngle = wheel10Angle;
-    const spinDuration = 300; // 0.3s nhan qua ngay lap tuc
+    const spinDuration = 1500; // 1.5 giay xoay mượt mượt siêu đẹp
     let startTime = null;
 
     function animateSpin10(timestamp) {
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const progress = Math.min(elapsed / spinDuration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 4);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
 
         wheel10Angle = initialAngle + totalSpinRotation * easeOut;
         ve_vong_quay_10_o(wheel10Angle, loaiQuay, 'canvasWheel');
@@ -191,6 +196,13 @@ function bat_dau_quay_vong_quay_10_o(loaiQuay = 'thuong') {
     }
 
     requestAnimationFrame(animateSpin10);
+
+    setTimeout(() => {
+        if (isWheel10Spinning) {
+            isWheel10Spinning = false;
+            xuat_ket_qua_vong_quay_10_o(targetIndex, loaiQuay);
+        }
+    }, 2000);
 }
 
 function xuat_ket_qua_vong_quay_10_o(targetIndex, loaiQuay) {
