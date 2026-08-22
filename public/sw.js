@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v11.0 (Dong co Xoay tit 3s va Trao qua Vong Quay May Man)
+// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v12.0 (Dieu chinh thoi gian quay Vong Quay May Man 5s)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v11.0';
+const CACHE_NAME = 'sieu-club-hoc-tap-v12.0';
 const ASSETS_TO_CACHE = [
     './',
     './index.html'
