@@ -9,7 +9,7 @@ const SLICES_THUONG = [
     { label: "250 Xu", color: "#10B981" },
     { label: "+1 Vé Gắp", color: "#F59E0B" },
     { label: "+100 XP", color: "#3B82F6" },
-    { label: "Mystery Box", color: "#A855F7" },
+    { label: "CÓ LIỀN PHẦN QUÀ", color: "#A855F7" },
     { label: "10 Kim Cương", color: "#EC4899" },
     { label: "Thú Ngẫu Nhiên", color: "#14B8A6" },
     { label: "Golden Ticket", color: "#EAB308" },
@@ -226,16 +226,13 @@ function xuat_ket_qua_vong_quay_10_o(targetIndex, loaiQuay) {
 
     const resDiv = document.getElementById('wheelResult');
     const resModalDiv = document.getElementById('modalWheelResult');
-    const strMsg = `CHÚC MỪNG BẠN QUAY TRÚNG: ${reward.label}!`;
+    const strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}! (CỘNG NGAY VÀO TÀI KHOẢN)`;
 
-    if (resDiv) { resDiv.style.color = '#10B981'; resDiv.innerText = strMsg; }
-    if (resModalDiv) { resModalDiv.style.color = '#10B981'; resModalDiv.innerText = strMsg; }
-
-    if (targetIndex === 9) {
-        // HIEU UNG JACKPOT THẦN THOẠI
-        alert("🎉 🎉 🎉 JACKPOT THẦN THOẠI! 🎉 🎉 🎉\n\nChúc mừng bạn đã quay trúng ô rương JACKPOT quý giá nhất! Nhận ngay Mascot Thần Thoại + 1000 Coins!");
-    } else {
-        alert(`CHÚC MỪNG BẠN ĐÃ QUAY TRÚNG: ${reward.label}!\nPhần thưởng đã tự động được cộng vào tài khoản của bạn!`);
+    if (resDiv) {
+        resDiv.innerHTML = `<div style="background: linear-gradient(135deg, #10B981, #06B6D4); padding: 10px 14px; border-radius: 12px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px;">${strMsg}</div>`;
+    }
+    if (resModalDiv) {
+        resModalDiv.innerHTML = `<div style="background: linear-gradient(135deg, #10B981, #06B6D4); padding: 10px 14px; border-radius: 12px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px;">${strMsg}</div>`;
     }
 }
 
