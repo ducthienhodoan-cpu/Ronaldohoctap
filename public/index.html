@@ -817,28 +817,28 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="game-stadium-card">
+                    <div class="game-stadium-card" style="position: relative; z-index: 20; pointer-events: auto;">
                         <h4>Sút Phạt Penalty 5 Góc</h4>
-                        <div style="margin: 16px 0;">
+                        <div style="margin: 16px 0; position: relative; z-index: 30;">
                             <!-- Goal Frame Net -->
                             <div style="width: 100%; height: 130px; border: 4px solid #FFFFFF; background: linear-gradient(180deg, rgba(6, 182, 212, 0.15), rgba(15, 23, 42, 0.8)); position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);">
                                 <!-- Goalkeeper -->
                                 <div id="gkPos" style="position: absolute; top: 40px; left: calc(50% - 24px); width: 48px; height: 50px; background: #F59E0B; border: 2px solid #FFFFFF; border-radius: 12px; color: #000; font-weight: 900; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all 0.4s ease; z-index: 5;">GK</div>
                                 
                                 <!-- 5 Corner Targets inside Goal Net -->
-                                <button style="position: absolute; top: 8px; left: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootPenalty('Góc Cao Trái')">Cao Trái</button>
-                                <button style="position: absolute; bottom: 8px; left: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootPenalty('Góc Thấp Trái')">Thấp Trái</button>
-                                <button style="position: absolute; bottom: 8px; left: calc(50% - 35px); font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootPenalty('Chính Giữa')">Chính Giữa</button>
-                                <button style="position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootPenalty('Góc Cao Phải')">Cao Phải</button>
-                                <button style="position: absolute; bottom: 8px; right: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px;" class="btn-primary" onclick="shootPenalty('Góc Thấp Phải')">Thấp Phải</button>
+                                <button style="position: absolute; top: 8px; left: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px; z-index: 10; cursor: pointer;" class="btn-primary" onclick="shootPenalty('Góc Cao Trái')">Cao Trái</button>
+                                <button style="position: absolute; bottom: 8px; left: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px; z-index: 10; cursor: pointer;" class="btn-primary" onclick="shootPenalty('Góc Thấp Trái')">Thấp Trái</button>
+                                <button style="position: absolute; bottom: 8px; left: calc(50% - 35px); font-size: 11px; padding: 6px 10px; border-radius: 10px; z-index: 10; cursor: pointer;" class="btn-primary" onclick="shootPenalty('Chính Giữa')">Chính Giữa</button>
+                                <button style="position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px; z-index: 10; cursor: pointer;" class="btn-primary" onclick="shootPenalty('Góc Cao Phải')">Cao Phải</button>
+                                <button style="position: absolute; bottom: 8px; right: 8px; font-size: 11px; padding: 6px 10px; border-radius: 10px; z-index: 10; cursor: pointer;" class="btn-primary" onclick="shootPenalty('Góc Thấp Phải')">Thấp Phải</button>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
-                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="shootPenalty('Góc Cao Trái')">Góc Cao Trái</button>
-                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="shootPenalty('Góc Thấp Trái')">Góc Thấp Trái</button>
-                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="shootPenalty('Chính Giữa')">Chính Giữa</button>
-                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="shootPenalty('Góc Cao Phải')">Góc Cao Phải</button>
-                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="shootPenalty('Góc Thấp Phải')">Góc Thấp Phải</button>
+                        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 30;">
+                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; cursor: pointer;" onclick="shootPenalty('Góc Cao Trái')">Góc Cao Trái</button>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; cursor: pointer;" onclick="shootPenalty('Góc Thấp Trái')">Góc Thấp Trái</button>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; cursor: pointer;" onclick="shootPenalty('Chính Giữa')">Chính Giữa</button>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; cursor: pointer;" onclick="shootPenalty('Góc Cao Phải')">Góc Cao Phải</button>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 8px 12px; cursor: pointer;" onclick="shootPenalty('Góc Thấp Phải')">Góc Thấp Phải</button>
                         </div>
                         <div id="penaltyResult" style="margin-top: 14px; font-weight: 900; color: #10B981; font-size: 15.5px;"></div>
                     </div>
@@ -2006,7 +2006,7 @@
         }
 
         async function shootPenalty(dir) {
-            playClickSfx();
+            try { playClickSfx(); } catch(e) {}
             const gk = document.getElementById('gkPos');
             const cornerPositions = {
                 'Góc Cao Trái': 'translateX(-70px) translateY(-25px)',
@@ -2016,14 +2016,26 @@
                 'Góc Thấp Phải': 'translateX(70px) translateY(20px)'
             };
 
-            const res = await fetch('/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'penalty', direction: dir })
-            });
-            const d = await res.json();
-            const resultData = d.result || {};
-            const gkDir = resultData.huong_thu_mon || 'Chính Giữa';
+            const allDirs = ['Góc Cao Trái', 'Góc Thấp Trái', 'Chính Giữa', 'Góc Cao Phải', 'Góc Thấp Phải'];
+            let gkDir = allDirs[Math.floor(Math.random() * allDirs.length)];
+            let isVao = (dir !== gkDir);
+            let msg = isVao ? `VÀOOOO! Cú sút tuyệt vời vào ${dir}! Nhận +100 XP!` : `THỦ MÔN CẢN PHÁ THÀNH CÔNG góc ${dir}!`;
+
+            try {
+                const res = await fetch('/api/games', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'penalty', direction: dir })
+                });
+                const d = await res.json();
+                if (d.result) {
+                    if (d.result.huong_thu_mon) gkDir = d.result.huong_thu_mon;
+                    if (typeof d.result.vao !== 'undefined') isVao = d.result.vao;
+                    if (d.result.thong_bao) msg = d.result.thong_bao;
+                }
+            } catch(err) {
+                console.warn("Penalty fallback:", err);
+            }
 
             if (gk && cornerPositions[gkDir]) {
                 gk.style.transform = cornerPositions[gkDir];
@@ -2031,12 +2043,15 @@
 
             const resBox = document.getElementById('penaltyResult');
             if (resBox) {
-                if (resultData.vao) {
+                if (isVao) {
                     resBox.style.color = '#10B981';
-                    resBox.innerHTML = `<span style="color: #10B981; font-weight: 900;">${resultData.thong_bao}</span>`;
+                    resBox.innerText = `VÀOOOO! ${msg}`;
+                    if (typeof updateXPDisplay === 'function') updateXPDisplay(100);
+                    alert(`VÀOOOOOO! Bạn đã sút phạt tuyệt đỉnh thành công vào ${dir}!\nThưởng +100 Roblox XP!`);
                 } else {
                     resBox.style.color = '#EF4444';
-                    resBox.innerHTML = `<span style="color: #EF4444; font-weight: 900;">THỦ MÔN CẢN PHÁ THÀNH CÔNG! ${resultData.thong_bao}</span>`;
+                    resBox.innerText = `THỦ MÔN CẢN PHÁ! ${msg}`;
+                    alert(`THỦ MÔN CẢN PHÁ THÀNH CÔNG! Thủ môn đã đoán đúng góc ${gkDir}. Hãy thử lại ở lượt sút sau!`);
                 }
             }
         }
