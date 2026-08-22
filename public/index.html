@@ -2029,15 +2029,15 @@
             }
 
             let start = null;
-            const spinDuration = 5000; // Quay đúng 5 giây
-            const totalRotation = Math.PI * 2 * 10 + Math.random() * Math.PI * 2; // Xoay 10 vòng tít tắp
+            const spinDuration = 3500; // Xoay 3.5s tít tắp siêu tốc
+            const totalRotation = Math.PI * 2 * 30 + Math.random() * Math.PI * 2; // Xoay 30 vòng cực nhanh tít mù
             const initialAngle = wheelSpinAngle;
 
             function animateSpin(timestamp) {
                 if (!start) start = timestamp;
                 const elapsed = timestamp - start;
                 const progress = Math.min(elapsed / spinDuration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const easeOut = 1 - Math.pow(1 - progress, 4); // Giảm tốc cực mượt siêu nhanh
                 
                 wheelSpinAngle = initialAngle + totalRotation * easeOut;
                 drawWheelCanvas(wheelSpinAngle, canvasId);
