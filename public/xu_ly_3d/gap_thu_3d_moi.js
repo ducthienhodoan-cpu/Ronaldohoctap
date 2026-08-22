@@ -1,5 +1,5 @@
 // File: public/xu_ly_3d/gap_thu_3d_moi.js
-// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong voi he thong Kiem tra Ve Gap, Dem nguoc 20s va Tieu chuan 60% rot thu
+// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong voi he thong Tu dong Cong 3 Ve Thong va 1 Ve Vang moi ngay
 
 let clawScene3D, clawCamera3D;
 let clawRenderer3D_Main = null;
@@ -16,20 +16,31 @@ let timerIntervalId = null;
 let willSlipThisTurn = false;
 
 function lay_ve_gap_hien_tai() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const lastDate = localStorage.getItem('ngay_nhan_ve_hang_ngay');
     let v = localStorage.getItem('ve_gap');
-    if (v === null) {
-        v = '5';
-        localStorage.setItem('ve_gap', '5');
+    let vv = localStorage.getItem('ve_vang');
+
+    if (lastDate !== todayStr) {
+        let currentV = parseInt(v || '0', 10);
+        let currentVV = parseInt(vv || '0', 10);
+        v = Math.max(3, currentV + 3).toString();
+        vv = Math.max(1, currentVV + 1).toString();
+        localStorage.setItem('ve_gap', v);
+        localStorage.setItem('ve_vang', vv);
+        localStorage.setItem('ngay_nhan_ve_hang_ngay', todayStr);
     }
-    return parseInt(v, 10);
+    return parseInt(v || '3', 10);
 }
 
 function cap_nhat_hien_thi_ve_gap() {
     const v = lay_ve_gap_hien_tai();
+    const vv = localStorage.getItem('ve_vang') || '1';
     const elemMain = document.getElementById('lblVeGapVal');
     const elemModal = document.getElementById('lblModalVeGapVal');
-    if (elemMain) elemMain.innerText = `Vé Gắp: ${v} Vé`;
-    if (elemModal) elemModal.innerText = `Vé Gắp: ${v} Vé`;
+    const strText = `Vé Gắp: ${v} | Vé Vàng: ${vv}`;
+    if (elemMain) elemMain.innerText = strText;
+    if (elemModal) elemModal.innerText = strText;
 }
 
 function khoi_tao_gap_thu_3d_moi() {
@@ -218,7 +229,6 @@ function animateGapThu3DMoi() {
         if (clawArm3D && clawArm3D.position.y < 1.2) {
             clawArm3D.position.y += 0.04;
 
-            // Neu turn nay rot thu (60%), den y = 0.2 tuot thu
             if (willSlipThisTurn && clawArm3D.position.y >= 0.2) {
                 clawState = 'slipping';
             } else if (clawPlush3D) {
@@ -228,7 +238,6 @@ function animateGapThu3DMoi() {
             clawState = 'moving_to_chute';
         }
     } else if (clawState === 'slipping') {
-        // Thu bong tuot khoi mong va roi xuong day machine (y = -1.3)
         if (clawPlush3D && clawPlush3D.position.y > -1.3) {
             clawPlush3D.position.y -= 0.09;
         }
@@ -296,7 +305,6 @@ function animateGapThu3DMoi() {
     }
 }
 
-// Lang nghe phim mui ten dieu khien Joystick
 window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveJoystickClaw3D('left');
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveJoystickClaw3D('right');

@@ -82,9 +82,12 @@ DANH_SACH_VAT_PHAM = {
 
 def lay_du_lieu_gap_thu():
     """Tải thông tin cấu hình tài sản vé gắp và bộ sưu tập."""
+    import datetime
+    today_str = datetime.date.today().isoformat()
+
     if not os.path.exists(DUONG_DAN_GAP_THU):
         data_default = {
-            "ve_gap": 5,
+            "ve_gap": 3,
             "ve_vang": 1,
             "level": 1,
             "combo_streak": 0,
@@ -98,6 +101,7 @@ def lay_du_lieu_gap_thu():
                 "football": [],
                 "galaxy": []
             },
+            "ngay_nhan_ve": today_str,
             "nhiem_vu_ngay": {
                 "hoan_thanh_bai_hoc": False,
                 "dung_10_cau_lien_tiep": False,
@@ -107,13 +111,23 @@ def lay_du_lieu_gap_thu():
         luu_du_lieu_gap_thu(data_default)
         return data_default
     try:
+        import datetime
+        today_str = datetime.date.today().isoformat()
         with open(DUONG_DAN_GAP_THU, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            # Kiem tra diem danh ngay moi -> Cong 3 Ve Thường + 1 Ve Vang
+            if data.get("ngay_nhan_ve") != today_str:
+                data["ve_gap"] = max(3, data.get("ve_gap", 0) + 3)
+                data["ve_vang"] = max(1, data.get("ve_vang", 0) + 1)
+                data["ngay_nhan_ve"] = today_str
+                luu_du_lieu_gap_thu(data)
+            return data
     except Exception:
         return {
-            "ve_gap": 5, "ve_vang": 1, "level": 1, "combo_streak": 0, "super_claw": False,
+            "ve_gap": 3, "ve_vang": 1, "level": 1, "combo_streak": 0, "super_claw": False,
             "may_hien_tai": "cute", "may_da_mo_khoa": ["cute"],
             "bo_suu_tap": {"animal": [], "dinosaur": [], "robot": [], "football": [], "galaxy": []},
+            "ngay_nhan_ve": "",
             "nhiem_vu_ngay": {"hoan_thanh_bai_hoc": False, "dung_10_cau_lien_tiep": False, "nhiem_vu_ngay_xong": False}
         }
 
