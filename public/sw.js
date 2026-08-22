@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v7.0 (Chuc nang Reset Ung Dung Dat Lai Ban Dau)
+// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v8.0 (Sua loi phan hoi click cho Bo 4 Minigames)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v7.0';
+const CACHE_NAME = 'sieu-club-hoc-tap-v8.0';
 const ASSETS_TO_CACHE = [
     './',
     './index.html'

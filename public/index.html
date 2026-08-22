@@ -768,14 +768,14 @@
         <div id="pane-minigames" class="section-pane">
             <div class="card">
                 <h3 style="color: #06B6D4; margin-bottom: 28px; font-size: 25px; font-weight: 900;">BỘ 4 MINIGAMES THƯ GIÃN GIỮA GIỜ TÍCH LŨY XP</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
-                    <div class="game-stadium-card">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; position: relative; z-index: 20;">
+                    <div class="game-stadium-card" style="position: relative; z-index: 20; pointer-events: auto;">
                         <h4>Vòng Quay May Mắn</h4>
                         <canvas id="canvasWheel" width="180" height="180" style="margin: 16px 0; border-radius: 50%;"></canvas><br>
-                        <button class="btn-primary" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
+                        <button class="btn-primary" style="position: relative; z-index: 30; cursor: pointer;" onclick="spinWheelCanvas()">Quay Thưởng Ngay</button>
                         <div id="wheelResult" style="margin-top: 16px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
                     </div>
-                    <div class="game-stadium-card">
+                    <div class="game-stadium-card" style="position: relative; z-index: 20; pointer-events: auto;">
                         <h4>Máy Gắp Thú 3D Siêu Cấp</h4>
                         <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 13px; margin-bottom: 6px;">
                             <span id="lblVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 Vé</span>
@@ -784,18 +784,18 @@
                         <canvas id="canvasClaw" width="260" height="180" style="margin: 6px 0; border-radius: 16px; border: 2px solid #EC4899;"></canvas><br>
                         
                         <!-- Cần Joystick 4 Hướng D-Pad -->
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 180px; margin: 8px auto;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 180px; margin: 8px auto; position: relative; z-index: 30;">
                             <div></div>
-                            <button class="btn-secondary" style="font-size: 11px; padding: 6px;" onclick="moveJoystickClaw3D('up')">Tiến</button>
+                            <button class="btn-secondary" style="font-size: 11px; padding: 6px; cursor: pointer;" onclick="moveJoystickClaw3D('up')">Tiến</button>
                             <div></div>
-                            <button class="btn-secondary" style="font-size: 11px; padding: 6px;" onclick="moveJoystickClaw3D('left')">Trái</button>
-                            <button class="btn-secondary" style="font-size: 11px; padding: 6px;" onclick="moveJoystickClaw3D('down')">Lùi</button>
-                            <button class="btn-secondary" style="font-size: 11px; padding: 6px;" onclick="moveJoystickClaw3D('right')">Phải</button>
+                            <button class="btn-secondary" style="font-size: 11px; padding: 6px; cursor: pointer;" onclick="moveJoystickClaw3D('left')">Trái</button>
+                            <button class="btn-secondary" style="font-size: 11px; padding: 6px; cursor: pointer;" onclick="moveJoystickClaw3D('down')">Lùi</button>
+                            <button class="btn-secondary" style="font-size: 11px; padding: 6px; cursor: pointer;" onclick="moveJoystickClaw3D('right')">Phải</button>
                         </div>
 
-                        <div style="display: flex; gap: 6px; margin-top: 8px;">
-                            <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi(false)">GẮP THƯỜNG (1 VÉ)</button>
-                            <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web_moi(true)">GẮP VÀNG (1 VÉ VÀNG)</button>
+                        <div style="display: flex; gap: 6px; margin-top: 8px; position: relative; z-index: 30;">
+                            <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; cursor: pointer; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi(false)">GẮP THƯỜNG (1 VÉ)</button>
+                            <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; cursor: pointer; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web_moi(true)">GẮP VÀNG (1 VÉ VÀNG)</button>
                         </div>
                         <div id="clawResult" style="margin-top: 10px; font-weight: 900; color: #10B981; font-size: 13.5px;"></div>
                     </div>
@@ -1169,7 +1169,12 @@
                 if (secId === 'luyen') { try { if (typeof loadPracticeQuiz === 'function') loadPracticeQuiz(); } catch(e) {} }
                 if (secId === 'hoc') { try { if (typeof loadStudyContent === 'function') loadStudyContent(); } catch(e) {} }
                 if (secId === 'formula') { try { if (typeof loadFormulas === 'function') loadFormulas(); } catch(e) {} }
-                if (secId === 'minigames') { try { if (typeof drawWheelCanvas === 'function') drawWheelCanvas(); } catch(e) {} }
+                if (secId === 'minigames') { 
+                    try { 
+                        if (typeof drawWheelCanvas === 'function') drawWheelCanvas(); 
+                        if (typeof khoi_tao_gap_thu_3d_moi === 'function') setTimeout(khoi_tao_gap_thu_3d_moi, 50); 
+                    } catch(e) {} 
+                }
                 if (secId === 'worldcup') { try { if (typeof renderWcTeams === 'function') renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); } catch(e) {} }
                 if (secId === 'c1') { try { if (typeof renderC1Clubs === 'function') renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); } catch(e) {} }
                 if (secId === 'plan') { try { if (typeof loadPlan === 'function') loadPlan(); } catch(e) {} }
