@@ -175,6 +175,26 @@ def thuc_hien_luot_gap_moi(may_id="cute", su_dung_ve_vang=False):
         if user_level >= mobj["level_yeu_cau"] and mid not in data["may_da_mo_khoa"]:
             data["may_da_mo_khoa"].append(mid)
 
+    # Tính tỉ lệ rớt thú: 60% rớt thú giữa chừng (Trừ khi Super Claw hoặc Vé Vàng)
+    ti_le_rot = 60 if not (su_dung_ve_vang or may_id == "golden" or data.get("super_claw")) else 10
+    if random.random() * 100 < ti_le_rot:
+        data["combo_streak"] = 0
+        data["super_claw"] = False
+        luu_du_lieu_gap_thu(data)
+        return True, {
+            "rot_thu": True,
+            "tier": "none",
+            "nhan_rarity": "[TRƯỢT RỚT]",
+            "item": "Không có",
+            "xp": 0,
+            "coin": 0,
+            "combo": 0,
+            "super_claw": False,
+            "thong_bao": "Rất tiếc! Tay gắp bị trượt rớt thú giữa chừng (Tỉ lệ rớt 60%). Hãy thử lại lượt sau!",
+            "ve_gap": data["ve_gap"],
+            "ve_vang": data["ve_vang"]
+        }, data
+
     # Roll tỉ lệ Rarity
     if su_dung_ve_vang or may_id == "golden":
         # Tỉ lệ Máy Vàng: Hiếm 40%, Siêu Hiếm 35%, Huyền Thoại 20%, Bí Mật 5%

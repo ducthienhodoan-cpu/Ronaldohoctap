@@ -1,18 +1,19 @@
 // File: public/xu_ly_3d/gap_thu_3d_moi.js
-// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong voi he thong Kiem tra Ve Gap va Dem nguoc 20s
+// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong voi he thong Kiem tra Ve Gap, Dem nguoc 20s va Tieu chuan 60% rot thu
 
 let clawScene3D, clawCamera3D;
 let clawRenderer3D_Main = null;
 let clawRenderer3D_Modal = null;
 let clawArm3D, clawPlush3D, prizeChuteMesh;
 let clawIsOperating = false;
-let clawState = 'idle'; // 'idle', 'positioning', 'lowering', 'grabbing', 'lifting', 'moving_to_chute', 'dropping', 'returning'
+let clawState = 'idle'; // 'idle', 'positioning', 'lowering', 'grabbing', 'lifting', 'slipping', 'moving_to_chute', 'dropping', 'returning'
 let clawTargetTier = 'thuong';
 let dropY = 0.7;
 let clawPosX = 0;
 let clawPosZ = 0;
 let countdownTimer20s = 20;
 let timerIntervalId = null;
+let willSlipThisTurn = false;
 
 function lay_ve_gap_hien_tai() {
     let v = localStorage.getItem('ve_gap');
@@ -135,7 +136,7 @@ function khoi_tao_gap_thu_3d_moi() {
 }
 
 function moveJoystickClaw3D(dir) {
-    if (clawState !== 'positioning' && clawIsOperating) return;
+    if (clawIsOperating) return;
 
     const speed = 0.15;
     if (dir === 'left' && clawPosX > -1.2) clawPosX -= speed;
@@ -169,6 +170,9 @@ function bat_dau_gap_thu_web_moi() {
     localStorage.setItem('ve_gap', veHienTai.toString());
     cap_nhat_hien_thi_ve_gap();
 
+    // Roll 60% ti le rot thu giua chung
+    willSlipThisTurn = Math.random() * 100 < 60;
+
     clawIsOperating = true;
     khoi_tao_gap_thu_3d_moi();
 
@@ -181,7 +185,7 @@ function bat_dau_gap_thu_web_moi() {
 
     const resDiv = document.getElementById('clawResult');
     const resModalDiv = document.getElementById('modalClawResult');
-    const statusMsg = 'Dùng cần Joystick chỉnh tay gắp... Đang hạ xuống gắp thú!';
+    const statusMsg = 'Tay gắp đang từ từ hạ xuống kẹp thú bông...';
     if (resDiv) { resDiv.style.color = '#F59E0B'; resDiv.innerText = statusMsg; }
     if (resModalDiv) { resModalDiv.style.color = '#F59E0B'; resModalDiv.innerText = statusMsg; }
 
@@ -213,11 +217,25 @@ function animateGapThu3DMoi() {
     } else if (clawState === 'lifting') {
         if (clawArm3D && clawArm3D.position.y < 1.2) {
             clawArm3D.position.y += 0.04;
-            if (clawPlush3D) {
+
+            // Neu turn nay rot thu (60%), den y = 0.2 tuot thu
+            if (willSlipThisTurn && clawArm3D.position.y >= 0.2) {
+                clawState = 'slipping';
+            } else if (clawPlush3D) {
                 clawPlush3D.position.set(clawArm3D.position.x, clawArm3D.position.y - 0.45, clawArm3D.position.z);
             }
         } else {
             clawState = 'moving_to_chute';
+        }
+    } else if (clawState === 'slipping') {
+        // Thu bong tuot khoi mong va roi xuong day machine (y = -1.3)
+        if (clawPlush3D && clawPlush3D.position.y > -1.3) {
+            clawPlush3D.position.y -= 0.09;
+        }
+        if (clawArm3D && clawArm3D.position.y < 1.2) {
+            clawArm3D.position.y += 0.04;
+        } else {
+            clawState = 'returning';
         }
     } else if (clawState === 'moving_to_chute') {
         if (clawArm3D && clawArm3D.position.x > -1.2) {
@@ -247,12 +265,19 @@ function animateGapThu3DMoi() {
 
             if (timerIntervalId) clearInterval(timerIntervalId);
             
-            const msg = `CHÚC MỪNG! ĐÃ GẮP THÀNH CÔNG THÚ BÔNG VÀO KHAY THƯỞNG! Nhận +150 Roblox XP!`;
             const resDiv = document.getElementById('clawResult');
             const resModalDiv = document.getElementById('modalClawResult');
-            if (resDiv) { resDiv.style.color = '#10B981'; resDiv.innerText = msg; }
-            if (resModalDiv) { resModalDiv.style.color = '#10B981'; resModalDiv.innerText = msg; }
-            if (typeof updateXPDisplay === 'function') updateXPDisplay(150);
+
+            if (willSlipThisTurn) {
+                const msgRot = "Rất tiếc! Tay gắp bị trượt rớt thú giữa chừng (Tỉ lệ rớt 60%). Hãy thử lại lượt sau!";
+                if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgRot; }
+                if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgRot; }
+            } else {
+                const msg = `CHÚC MỪNG! ĐÃ GẮP THÀNH CÔNG THÚ BÔNG VÀO KHAY THƯỞNG! Nhận +150 Roblox XP!`;
+                if (resDiv) { resDiv.style.color = '#10B981'; resDiv.innerText = msg; }
+                if (resModalDiv) { resModalDiv.style.color = '#10B981'; resModalDiv.innerText = msg; }
+                if (typeof updateXPDisplay === 'function') updateXPDisplay(150);
+            }
         }
     } else {
         if (clawArm3D) {
