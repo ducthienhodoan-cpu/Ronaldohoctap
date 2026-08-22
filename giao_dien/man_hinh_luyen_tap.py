@@ -56,6 +56,15 @@ class ManHinhLuyenTap(QWidget):
         title_label.setStyleSheet("font-size: 22px; font-weight: bold; color: #FFFFFF;")
         main_layout.addWidget(title_label)
 
+        # Banner Ngân hàng 10.000 Câu hỏi SQLite Database
+        self.lbl_banner_db = QLabel("CƠ SỞ DỮ LIỆU: 10.000+ CÂU HỎI ĐA DẠNG (LỚP 1 - 12 & IELTS) | SQLITE DATABASE CHUẨN BỘ GIÁO DỤC")
+        self.lbl_banner_db.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lbl_banner_db.setStyleSheet(
+            "background-color: rgba(6, 182, 212, 0.18); border: 2px solid #06B6D4; "
+            "border-radius: 12px; padding: 8px 16px; color: #00FFCC; font-weight: 900; font-size: 14px;"
+        )
+        main_layout.addWidget(self.lbl_banner_db)
+
         # Thanh chọn Lớp, Chọn Môn, 5 Chủ đề, TẠO SỐ CÂU và THỜI GIAN LUYỆN TẬP chữ trắng
         filter_frame = QFrame()
         filter_frame.setProperty("class", "card-widget")

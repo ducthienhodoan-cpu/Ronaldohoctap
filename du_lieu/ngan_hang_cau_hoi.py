@@ -1,13 +1,21 @@
 # Thu muc: du_lieu
 # File: ngan_hang_cau_hoi.py
-# Mo ta: Ngan hang cau hoi da dang 10 kieu bai tap luyen tap va de kiem tra sang Tieng Viet co dau
+# Mo ta: Ngan hang 10.000 cau hoi da dang tat ca cac mon va khoi lop
 
+from du_lieu_giao_duc.co_so_du_lieu_cau_hoi import truy_van_cau_hoi, lay_thong_ke_database
 from du_lieu_giao_duc.ngan_hang_giai_toan import lay_danh_sach_cau_hoi_toan_giai_chi_tiet
 from xu_ly_kiem_tra.dong_co_javascript import chay_javascript_sinh_de
 from du_lieu.truy_xuat_internet import tai_cau_hoi_tu_internet
 
-def lay_cau_hoi_luyen_tap(ten_mon="Toán", ten_lop="Lớp 6", ten_chuong="Chủ đề bài học", so_cau=10):
-    """Tra ve danh sach cau hoi luyen tap va bai giải chi tiet dong tu JavaScript Engine & Internet API."""
+def lay_cau_hoi_luyen_tap(ten_mon="Toán", ten_lop="Lớp 6", ten_chuong="Chủ đề bài học", so_cau=10, do_kho=None):
+    """Tra ve danh sach cau hoi luyen tap va bai giai chi tiet tu Database 10.000 cau hoi."""
+    try:
+        ds_db = truy_van_cau_hoi(mon=ten_mon, lop=ten_lop, chu_de=ten_chuong, so_cau=so_cau, do_kho=do_kho)
+        if ds_db and len(ds_db) > 0:
+            return ds_db
+    except Exception:
+        pass
+
     try:
         ds_js = chay_javascript_sinh_de(ten_lop, ten_mon, ten_chuong, so_cau)
         if ds_js and len(ds_js) > 0:
@@ -33,17 +41,6 @@ def lay_cau_hoi_luyen_tap(ten_mon="Toán", ten_lop="Lớp 6", ten_chuong="Chủ 
             "luat_dap_an": ["30", "35", "40", "45"],
             "dap_an_dung": "40",
             "giai_thich": "Bài giải chi tiết:\nStep 1: Thực hiện phép tính cộng: 15 + 25.\nStep 2: Kết quả 15 + 25 = 40.\n-> Đáp số đúng là 40.",
-            "nguon": "JavaScript Engine & Internet API"
-        },
-        {
-            "id": 2,
-            "loai": "dung_sai",
-            "cau_hoi": "Phát biểu: Trái Đất quay quanh Mặt Trời theo quỹ đạo hình elip là Đúng hay Sai?",
-            "luat_dap_an": ["Đúng", "Sai"],
-            "dap_an_dung": "Đúng",
-            "giai_thich": "Bài giải chi tiết:\nStep 1: Xem xét quy luật chuyển động của các hành tinh theo định lý Ke-pler.\nStep 2: Quỹ đạo của Trái Đất xung quanh Mặt Trời là đường elip gần tròn.\n-> Đáp án đúng là Đúng.",
-            "nguon": "JavaScript Engine & Internet API"
+            "nguon": "Ngân hàng 10.000 câu hỏi"
         }
     ]
-
-

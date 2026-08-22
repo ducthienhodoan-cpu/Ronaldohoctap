@@ -34,6 +34,7 @@ from xu_ly_tro_choi.quan_ly_dua_xe import khoi_tao_duong_dua_xe, sinh_vat_the_du
 from xu_ly_tro_choi.minigame_giua_gio import tao_danh_sach_the_lat_tri_nho, quay_vong_quay_may_man, xu_ly_sut_phat_penalty
 from xu_ly_tro_choi.quan_ly_gap_thu_moi import thuc_hien_luot_gap_moi, lay_du_lieu_gap_thu
 from xu_ly_tro_choi.quan_ly_vong_quay import thuc_hien_luot_quay_moi, lay_du_lieu_vong_quay
+from du_lieu_giao_duc.co_so_du_lieu_cau_hoi import lay_thong_ke_database, truy_van_cau_hoi
 from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
 # Thong ke module ready
 
@@ -96,6 +97,15 @@ def get_questions():
         "so_cau": so_cau,
         "total": len(data),
         "questions": data
+    })
+
+@app.route('/api/database-stats', methods=['GET'])
+def get_database_stats():
+    """Tra ve thong ke tong quan 10.000 cau hoi trong database."""
+    stats = lay_thong_ke_database()
+    return jsonify({
+        "status": "success",
+        "stats": stats
     })
 
 # Function 3: Automated Grading, Mistake Auto-Logger & Certificates
