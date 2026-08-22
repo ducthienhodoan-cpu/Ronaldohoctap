@@ -904,6 +904,7 @@
                     </select>
                 </div>
                 <button class="btn-primary" onclick="saveSettings()">Lưu Cấu Hình Mục Tiêu</button>
+                <button class="btn-primary" style="background: linear-gradient(135deg, #EF4444, #991B1B); margin-left: 12px;" onclick="resetAppGlobal()">RESET ỨNG DỤNG (ĐẶT LẠI BAN ĐẦU)</button>
                 <div id="settingsMsg" style="margin-top: 18px; font-weight: 900; color: #10B981; font-size: 17px;"></div>
             </div>
         </div>
@@ -3089,6 +3090,19 @@
                     return;
                 }
             }
+        }
+
+        async function resetAppGlobal() {
+            if (!confirm("Bạn có chắc chắn muốn reset đặt lại toàn bộ ứng dụng về trạng thái ban đầu?")) return;
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                localStorage.setItem('ve_gap', '3');
+                localStorage.setItem('ve_vang', '1');
+                await fetch('/api/reset', { method: 'POST' });
+            } catch(e) {}
+            alert("Đã reset thành công toàn bộ ứng dụng về trạng thái ban đầu!");
+            window.location.reload();
         }
 
         window.onload = () => {

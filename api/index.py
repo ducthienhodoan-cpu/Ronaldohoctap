@@ -201,6 +201,28 @@ def games_engine():
         "racing": khoi_tao_duong_dua_xe()
     })
 
+@app.route('/api/reset', methods=['POST'])
+def handle_reset_app():
+    """Khôi phục toàn bộ dữ liệu ứng dụng về trạng thái ban đầu."""
+    data_default = {
+        "ve_gap": 3,
+        "ve_vang": 1,
+        "level": 1,
+        "combo_streak": 0,
+        "super_claw": False,
+        "may_hien_tai": "cute",
+        "may_da_mo_khoa": ["cute"],
+        "bo_suu_tap": {"animal": [], "dinosaur": [], "robot": [], "football": [], "galaxy": []},
+        "ngay_nhan_ve": "",
+        "nhiem_vu_ngay": {"hoan_thanh_bai_hoc": False, "dung_10_cau_lien_tiep": False, "nhiem_vu_ngay_xong": False}
+    }
+    try:
+        from xu_ly_tro_choi.quan_ly_gap_thu_moi import luu_du_lieu_gap_thu
+        luu_du_lieu_gap_thu(data_default)
+    except Exception:
+        pass
+    return jsonify({"status": "success", "message": "Đã khôi phục toàn bộ ứng dụng về trạng thái ban đầu!"})
+
 # Function 6: User Profile, Settings, Roblox XP & Analytics
 @app.route('/api/settings', methods=['GET', 'POST'])
 def handle_settings():

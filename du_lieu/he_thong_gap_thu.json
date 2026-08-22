@@ -1,26 +1,21 @@
 {
-    "ve_gap": 4,
+    "ve_gap": 3,
     "ve_vang": 1,
     "level": 1,
-    "combo_streak": 2,
+    "combo_streak": 0,
     "super_claw": false,
     "may_hien_tai": "cute",
     "may_da_mo_khoa": [
         "cute"
     ],
     "bo_suu_tap": {
-        "animal": [
-            "Gấu Bông",
-            "Mèo Con",
-            "Chó Con"
-        ],
-        "dinosaur": [
-            "T-Rex"
-        ],
+        "animal": [],
+        "dinosaur": [],
         "robot": [],
         "football": [],
         "galaxy": []
     },
+    "ngay_nhan_ve": "",
     "nhiem_vu_ngay": {
         "hoan_thanh_bai_hoc": false,
         "dung_10_cau_lien_tiep": false,
