@@ -17,27 +17,17 @@ let willSlipThisTurn = false;
 let isUsingGoldenTicket = false;
 
 function lay_ve_gap_hien_tai() {
-    const todayStr = new Date().toISOString().split('T')[0];
-    const lastDate = localStorage.getItem('ngay_nhan_ve_hang_ngay');
     let v = localStorage.getItem('ve_gap');
-    let vv = localStorage.getItem('ve_vang');
-
-    if (lastDate !== todayStr) {
-        let currentV = parseInt(v || '0', 10);
-        let currentVV = parseInt(vv || '0', 10);
-        v = Math.max(3, currentV + 3).toString();
-        vv = Math.max(1, currentVV + 1).toString();
-        localStorage.setItem('ve_gap', v);
-        localStorage.setItem('ve_vang', vv);
-        localStorage.setItem('ngay_nhan_ve_hang_ngay', todayStr);
+    if (!v) {
+        v = '5';
+        localStorage.setItem('ve_gap', '5');
     }
-    return parseInt(v || '3', 10);
+    return parseInt(v || '5', 10);
 }
 
 function lay_ve_vang_hien_tai() {
-    lay_ve_gap_hien_tai();
     let vv = localStorage.getItem('ve_vang');
-    return parseInt(vv || '1', 10);
+    return parseInt(vv || '0', 10);
 }
 
 function cap_nhat_hien_thi_ve_gap() {
@@ -184,7 +174,12 @@ function bat_dau_gap_thu_web_moi(suDungVeVang = false) {
     if (suDungVeVang) {
         let veVang = lay_ve_vang_hien_tai();
         if (veVang <= 0) {
-            alert("Bạn không có đủ VÉ VÀNG (Golden Ticket)! Hãy điểm danh ngày mới hoặc làm điểm 10 bài học để nhận Vé Vàng nhé!");
+            alert("BẠN CHƯA CÓ VÉ VÀNG! Hãy làm nhiệm vụ ngày, đạt điểm 10 bài kiểm tra hoặc đạt chuỗi Streak 7 ngày để nhận Vé Vàng nhé!");
+            const resDiv = document.getElementById('clawResult');
+            const resModalDiv = document.getElementById('modalClawResult');
+            const msgChuaCo = "BẠN CHƯA CÓ VÉ VÀNG! Làm nhiệm vụ ngày để nhận Vé Vàng!";
+            if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgChuaCo; }
+            if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgChuaCo; }
             return;
         }
         veVang -= 1;

@@ -45,15 +45,12 @@ const SLICES_GOLDEN = [
 
 function lay_du_lieu_vong_quay_web() {
     let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10);
-    let vv = parseInt(localStorage.getItem('ve_vang') || '3', 10);
+    let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10);
     let lm = parseInt(localStorage.getItem('lucky_meter') || '0', 10);
     let cq = parseInt(localStorage.getItem('chuoi_quay') || '0', 10);
 
-    if (isNaN(vq) || vq < 1) vq = 5;
-    if (isNaN(vv) || vv < 1) vv = 3;
-
-    localStorage.setItem('ve_quay', vq.toString());
-    localStorage.setItem('ve_vang', vv.toString());
+    if (isNaN(vq)) vq = 5;
+    if (isNaN(vv)) vv = 0;
 
     return { ve_quay: vq, ve_vang: vv, lucky_meter: lm, chuoi_quay: cq };
 }
@@ -66,7 +63,7 @@ function cap_nhat_giao_dien_vong_quay_10_o() {
     const elemLuckyMeter = document.getElementById('lblLuckyMeterPercent');
     const elemBar = document.getElementById('barLuckyMeterInner');
 
-    if (elemVeQuay) elemVeQuay.innerText = `Vé Quay: ${data.ve_quay}`;
+    if (elemVeQuay) elemVeQuay.innerText = `Vé Quay: ${data.ve_quay} | Vé Vàng: ${data.ve_vang}`;
     if (elemChuoi) elemChuoi.innerText = `Chuỗi Quay: ${data.chuoi_quay}`;
     if (elemLuckyMeter) elemLuckyMeter.innerText = `LUCKY METER: ${data.lucky_meter}%`;
     if (elemBar) elemBar.style.width = `${data.lucky_meter}%`;
@@ -139,15 +136,25 @@ function bat_dau_quay_vong_quay_10_o(loaiQuay = 'thuong') {
 
     if (loaiQuay === 'golden') {
         if (data.ve_vang < 1) {
-            data.ve_vang = 3;
-            localStorage.setItem('ve_vang', '3');
+            alert("BẠN CHƯA CÓ VÉ VÀNG! Hãy làm nhiệm vụ ngày, đạt điểm 10 bài kiểm tra hoặc đạt chuỗi Streak 7 ngày để nhận Vé Vàng nhé!");
+            const resDiv = document.getElementById('wheelResult');
+            const resModalDiv = document.getElementById('modalWheelResult');
+            const msgChuaCo = "BẠN CHƯA CÓ VÉ VÀNG! Làm nhiệm vụ ngày để nhận Vé Vàng!";
+            if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgChuaCo; }
+            if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgChuaCo; }
+            return;
         }
         data.ve_vang -= 1;
         localStorage.setItem('ve_vang', data.ve_vang.toString());
     } else {
         if (data.ve_quay < 1) {
-            data.ve_quay = 5;
-            localStorage.setItem('ve_quay', '5');
+            alert("Bạn đã hết Vé Quay! Nhấn nút [+5 VÉ MIỄN PHÍ] hoặc hoàn thành 1 bài học để nhận thêm vé nhé!");
+            const resDiv = document.getElementById('wheelResult');
+            const resModalDiv = document.getElementById('modalWheelResult');
+            const msgHetVe = "BẠN ĐÃ HẾT VÉ QUAY! Hãy bấm [+5 VÉ MIỄN PHÍ] để nhận thêm vé!";
+            if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgHetVe; }
+            if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgHetVe; }
+            return;
         }
         data.ve_quay -= 1;
         localStorage.setItem('ve_quay', data.ve_quay.toString());
