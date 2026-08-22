@@ -167,9 +167,9 @@ function bat_dau_quay_vong_quay_10_o(loaiQuay = 'thuong') {
 
     const sliceAngle = (Math.PI * 2) / 10;
     const targetSliceAngle = targetIndex * sliceAngle + sliceAngle / 2;
-    const totalSpinRotation = Math.PI * 2 * 30 + (Math.PI * 2 - targetSliceAngle); // 30 vong quay sieu toc
+    const totalSpinRotation = Math.PI * 2 * 12 + (Math.PI * 2 - targetSliceAngle); // 12 vong quay sieu nhanh
     const initialAngle = wheel10Angle;
-    const spinDuration = 5000; // Dung 5 giay cho ket qua phan qua theo yeu cau
+    const spinDuration = 1800; // Chi 1.8 giay nhan qua ngay lap tuc
     let startTime = null;
 
     function animateSpin10(timestamp) {
