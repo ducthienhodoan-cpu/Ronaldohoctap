@@ -151,6 +151,19 @@ class ManHinhGapThuMoi(QWidget):
         self.btn_gap.clicked.connect(self.bat_dau_gap)
         game_layout.addWidget(self.btn_gap)
 
+        # Bảng chú thích Hướng dẫn Điều kiện Kiếm Vé
+        lbl_huong_dan = QLabel(
+            "HƯỚNG DẪN ĐIỀU KIỆN KIẾM VÉ GẮP:\n"
+            "Vé Gắp Thường: Điểm danh mỗi ngày (+3 Vé) | Hoàn thành 1 bài học (+1 Vé) | Đúng 10 câu liên tiếp (+1 Vé) | Nhiệm vụ ngày (+2 Vé)\n"
+            "Vé Vàng (Golden Ticket): Điểm danh mỗi ngày (+1 Vé) | Đạt điểm 10 kiểm tra (+1 Vé) | Chuỗi Streak 7 ngày (+1 Vé)"
+        )
+        lbl_huong_dan.setWordWrap(True)
+        lbl_huong_dan.setStyleSheet(
+            "background-color: #0F172A; color: #00FFCC; font-size: 13px; font-weight: bold; "
+            "border: 2px solid #06B6D4; border-radius: 12px; padding: 10px; margin-top: 10px;"
+        )
+        game_layout.addWidget(lbl_huong_dan)
+
         main_layout.addWidget(game_frame)
 
     def doi_may_gap(self, index):
