@@ -567,8 +567,9 @@
                     </select>
                 </div>
 
-                <div class="nav-actions" style="margin-bottom: 22px;">
+                <div class="nav-actions" style="margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                     <span id="lblLuyenProgress" style="font-weight: 900; font-size: 18px; color: #06B6D4;">Câu 1 / 5</span>
+                    <span id="lblPracticeTimer" style="background-color: #020617; border: 2px solid #00A2FF; padding: 8px 20px; border-radius: 16px; font-weight: 900; color: #00FFCC; font-size: 16px;">Thời gian: 10:00</span>
                     <span style="background-color: #020617; border: 2px solid #10B981; padding: 8px 20px; border-radius: 16px; font-weight: 900; color: #10B981;">Thưởng: +10 XP / câu</span>
                 </div>
 
@@ -1178,6 +1179,51 @@
         let tourScoreUser = 0;
         let tourScoreOpponent = 0;
         let tourTypeCurrent = 'world_cup';
+        let currentActiveSection = 'chao';
+        let practiceTimerInterval = null;
+        let practiceSecondsLeft = 600;
+
+        function dung_tat_ca_tien_trinh_va_dong_ho_cu(newSecId) {
+            currentActiveSection = newSecId;
+
+            // 1. Dung dong ho dem nguoc IELTS
+            if (typeof ieltsTimerInterval !== 'undefined' && ieltsTimerInterval) {
+                clearInterval(ieltsTimerInterval);
+                ieltsTimerInterval = null;
+            }
+            // 2. Dung dong ho dem nguoc Bai Kiem Tra
+            if (typeof examTimerInterval !== 'undefined' && examTimerInterval) {
+                clearInterval(examTimerInterval);
+                examTimerInterval = null;
+            }
+            // 3. Dung dong ho dem nguoc Luyen Tap
+            if (typeof practiceTimerInterval !== 'undefined' && practiceTimerInterval) {
+                clearInterval(practiceTimerInterval);
+                practiceTimerInterval = null;
+            }
+            // 4. Dung timer va trang thai May Gap Thu
+            if (typeof timerIntervalId !== 'undefined' && timerIntervalId) {
+                clearInterval(timerIntervalId);
+                timerIntervalId = null;
+            }
+            if (typeof clawIsOperating !== 'undefined') {
+                clawIsOperating = false;
+            }
+            // 5. Dung vong lap dua xe 3D va canvas
+            if (typeof raceLoopInterval !== 'undefined' && raceLoopInterval) {
+                clearInterval(raceLoopInterval);
+                raceLoopInterval = null;
+            }
+            if (typeof isRace3DRunning !== 'undefined') {
+                isRace3DRunning = false;
+            }
+            // 6. Dung vong lap Obby neu roi khoi obby
+            if (newSecId !== 'obby' && typeof isObbyRunning !== 'undefined') {
+                isObbyRunning = false;
+            }
+            // 7. Dung am thanh doc tieng Anh / TTS
+            try { window.speechSynthesis.cancel(); } catch(e) {}
+        }
 
         function switchSection(secId, btnEl) {
             try {
@@ -1188,10 +1234,8 @@
 
                 try { playClickSfx(); } catch(e) {}
 
-                // Dung tro choi 3D dua xe neu nguoi dung chuyen sang sang muc khac
-                if (secId !== 'duaxe' && typeof isRace3DRunning !== 'undefined') {
-                    isRace3DRunning = false;
-                }
+                // Dung tat ca tien trinh, dong ho va thong bao cua tab cu
+                dung_tat_ca_tien_trinh_va_dong_ho_cu(secId);
 
                 const panes = document.querySelectorAll('.section-pane');
                 for (let i = 0; i < panes.length; i++) {
@@ -1539,13 +1583,21 @@
             ieltsSecondsLeft = 900;
             updateIeltsTimerDisplay();
             ieltsTimerInterval = setInterval(function() {
+                if (currentActiveSection !== 'ielts') {
+                    clearInterval(ieltsTimerInterval);
+                    ieltsTimerInterval = null;
+                    return;
+                }
                 if (ieltsSecondsLeft > 0) {
                     ieltsSecondsLeft--;
                     updateIeltsTimerDisplay();
                 } else {
                     clearInterval(ieltsTimerInterval);
-                    alert("Đã hết 15 phút làm bài thi IELTS! Hệ thống tự động nộp bài.");
-                    submitExam();
+                    ieltsTimerInterval = null;
+                    if (currentActiveSection === 'ielts') {
+                        alert("Đã hết 15 phút làm bài thi IELTS! Hệ thống tự động nộp bài.");
+                        submitExam();
+                    }
                 }
             }, 1000);
         }
@@ -1655,7 +1707,40 @@
                 practiceQuestions = getFallbackPracticeQuestions(lop, mon);
             }
             practiceIndex = 0;
+            startPracticeQuizTimer();
             renderPracticeQuestion();
+        }
+
+        function startPracticeQuizTimer() {
+            if (practiceTimerInterval) clearInterval(practiceTimerInterval);
+            practiceSecondsLeft = 600; // 10 phut
+            updatePracticeTimerDisplay();
+            practiceTimerInterval = setInterval(function() {
+                if (currentActiveSection !== 'luyen') {
+                    clearInterval(practiceTimerInterval);
+                    practiceTimerInterval = null;
+                    return;
+                }
+                if (practiceSecondsLeft > 0) {
+                    practiceSecondsLeft--;
+                    updatePracticeTimerDisplay();
+                } else {
+                    clearInterval(practiceTimerInterval);
+                    practiceTimerInterval = null;
+                    if (currentActiveSection === 'luyen') {
+                        alert("Đã hết 10 phút luyện tập chủ đề! Hãy chọn câu tiếp theo để tiếp tục rèn luyện!");
+                    }
+                }
+            }, 1000);
+        }
+
+        function updatePracticeTimerDisplay() {
+            const m = Math.floor(practiceSecondsLeft / 60);
+            const s = practiceSecondsLeft % 60;
+            const strM = m < 10 ? '0' + m : m;
+            const strS = s < 10 ? '0' + s : s;
+            const lbl = document.getElementById('lblPracticeTimer');
+            if (lbl) lbl.innerText = `Thời gian: ${strM}:${strS}`;
         }
 
         function renderPracticeQuestion() {
@@ -1746,13 +1831,21 @@
             if (examTimerInterval) clearInterval(examTimerInterval);
             updateExamTimerDisplay();
             examTimerInterval = setInterval(function() {
+                if (currentActiveSection !== 'kiemtra') {
+                    clearInterval(examTimerInterval);
+                    examTimerInterval = null;
+                    return;
+                }
                 if (examSecondsLeft > 0) {
                     examSecondsLeft--;
                     updateExamTimerDisplay();
                 } else {
                     clearInterval(examTimerInterval);
-                    alert("Đã hết thời gian làm bài kiểm tra! Hệ thống tự động nộp bài.");
-                    submitExamTest();
+                    examTimerInterval = null;
+                    if (currentActiveSection === 'kiemtra') {
+                        alert("Đã hết thời gian làm bài kiểm tra! Hệ thống tự động nộp bài.");
+                        submitExamTest();
+                    }
                 }
             }, 1000);
         }

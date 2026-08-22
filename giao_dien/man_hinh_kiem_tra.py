@@ -297,3 +297,10 @@ KẾT QUẢ KIỂM TRA:
         # Mở minigame thư giãn giữa giờ sau bài kiểm tra
         self.mo_minigame_giua_gio()
 
+    def hideEvent(self, event):
+        """Khi chuyen sang man hinh khac, dung dong ho dem nguoc de khong tu dong nop bai hay hien thong bao."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        super().hideEvent(event)
+
+

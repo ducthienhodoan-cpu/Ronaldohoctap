@@ -417,3 +417,10 @@ Gợi ý: Lời giải chi tiết của từng câu hỏi đã được tự đ�
         else:
             self.mo_minigame_giua_gio()
 
+    def hideEvent(self, event):
+        """Khi chuyen sang man hinh khac, dung dong ho dem nguoc de khong tu dong nop bai hay hien thong bao."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        super().hideEvent(event)
+
+

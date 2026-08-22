@@ -396,3 +396,10 @@ KẾT QUẢ TẬP THI IELTS ({self.phan_mon_hien_tai.upper()} - {band.upper()}):
 
         # Mở minigame thư giãn sau khi hoàn thành
         self.mo_minigame_giua_gio()
+
+    def hideEvent(self, event):
+        """Khi chuyen sang man hinh khac, dung dong ho dem nguoc de khong tu dong nop bai hay hien thong bao."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        super().hideEvent(event)
+
