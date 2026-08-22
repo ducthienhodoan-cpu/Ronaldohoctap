@@ -774,8 +774,9 @@
                         <h4>Vòng Quay May Mắn (10 Ô)</h4>
                         
                         <!-- Thanh Trang Thai Top Bar -->
-                        <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 12px; margin-bottom: 6px; color: #00FFCC;">
-                            <span id="lblVeQuayVal">Vé Quay: 3</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 12px; margin-bottom: 6px; color: #00FFCC;">
+                            <span id="lblVeQuayVal">Vé Quay: 5</span>
+                            <button style="font-size: 10px; padding: 4px 8px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="localStorage.setItem('ve_quay', (parseInt(localStorage.getItem('ve_quay')||'5',10)+5).toString()); cap_nhat_giao_dien_vong_quay_10_o();">+5 VÉ MIỄN PHÍ</button>
                             <span id="lblChuoiQuayVal" style="color: #F59E0B;">Chuỗi Quay: 0</span>
                         </div>
 
@@ -1212,7 +1213,11 @@
                 if (secId === 'formula') { try { if (typeof loadFormulas === 'function') loadFormulas(); } catch(e) {} }
                 if (secId === 'minigames') { 
                     try { 
-                        if (typeof drawWheelCanvas === 'function') drawWheelCanvas(); 
+                        if (typeof ve_vong_quay_10_o === 'function') {
+                            ve_vong_quay_10_o(0, 'thuong', 'canvasWheel');
+                            ve_vong_quay_10_o(0, 'thuong', 'canvasModalWheel');
+                            if (typeof cap_nhat_giao_dien_vong_quay_10_o === 'function') cap_nhat_giao_dien_vong_quay_10_o();
+                        }
                         if (typeof khoi_tao_gap_thu_3d_moi === 'function') setTimeout(khoi_tao_gap_thu_3d_moi, 50); 
                     } catch(e) {} 
                 }
@@ -1985,140 +1990,7 @@
             });
         }
 
-        let wheelSpinAngle = 0;
-        let isWheelSpinning = false;
-
-        function drawWheelCanvas(angle = 0, canvasId = 'canvasWheel') {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width || 180;
-            const h = canvas.height || 180;
-            const cx = w / 2;
-            const cy = h / 2;
-            const radius = Math.min(cx, cy) - 5;
-
-            const colors = ['#06B6D4', '#10B981', '#F59E0B', '#EF4444', '#A855F7', '#3B82F6'];
-            const labels = ['+50 XP', '+100 XP', '+150 XP', '+200 XP', '+1 Vé Gắp', '+1 Vé Vàng'];
-            
-            ctx.clearRect(0, 0, w, h);
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.rotate(angle);
-
-            for (let i = 0; i < 6; i++) {
-                const startAngle = i * Math.PI / 3;
-                const endAngle = (i + 1) * Math.PI / 3;
-
-                ctx.beginPath();
-                ctx.fillStyle = colors[i];
-                ctx.moveTo(0, 0);
-                ctx.arc(0, 0, radius, startAngle, endAngle);
-                ctx.fill();
-                ctx.lineWidth = 2.5;
-                ctx.strokeStyle = '#020617';
-                ctx.stroke();
-
-                ctx.save();
-                ctx.rotate(startAngle + Math.PI / 6);
-                ctx.fillStyle = '#FFFFFF';
-                ctx.font = '900 13px Outfit';
-                ctx.textAlign = 'right';
-                ctx.fillText(labels[i], radius - 12, 5);
-                ctx.restore();
-            }
-
-            ctx.beginPath();
-            ctx.arc(0, 0, 18, 0, Math.PI * 2);
-            ctx.fillStyle = '#020617';
-            ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#06B6D4';
-            ctx.stroke();
-
-            ctx.restore();
-        }
-
-        async function spinWheelCanvas(canvasId = 'canvasWheel', resId = 'wheelResult') {
-            if (isWheelSpinning) return;
-            isWheelSpinning = true;
-
-            try { playClickSfx(); } catch(e) {}
-
-            const resDiv = document.getElementById(resId);
-            if (resDiv) {
-                resDiv.style.color = '#F59E0B';
-                resDiv.innerText = 'Vòng quay đang xoay tít... Đang chờ kết quả!';
-            }
-
-            let start = null;
-            const spinDuration = 3500; // Xoay 3.5s tít tắp siêu tốc
-            const totalRotation = Math.PI * 2 * 30 + Math.random() * Math.PI * 2; // Xoay 30 vòng cực nhanh tít mù
-            const initialAngle = wheelSpinAngle;
-
-            function animateSpin(timestamp) {
-                if (!start) start = timestamp;
-                const elapsed = timestamp - start;
-                const progress = Math.min(elapsed / spinDuration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 4); // Giảm tốc cực mượt siêu nhanh
-                
-                wheelSpinAngle = initialAngle + totalRotation * easeOut;
-                drawWheelCanvas(wheelSpinAngle, canvasId);
-
-                if (progress < 1) {
-                    requestAnimationFrame(animateSpin);
-                } else {
-                    isWheelSpinning = false;
-                    trao_qua_vong_quay(resId);
-                }
-            }
-
-            requestAnimationFrame(animateSpin);
-        }
-
-        async function trao_qua_vong_quay(resId = 'wheelResult') {
-            const listRewards = [
-                { ten: "Cộng +50 Roblox XP", xp: 50, type: "xp" },
-                { ten: "Cộng +100 Roblox XP", xp: 100, type: "xp" },
-                { ten: "Cộng +150 Roblox XP", xp: 150, type: "xp" },
-                { ten: "Cộng +200 Roblox XP", xp: 200, type: "xp" },
-                { ten: "Thưởng +1 Vé Gắp Thường", xp: 50, type: "ve_gap" },
-                { ten: "Thưởng +1 VÉ VÀNG (Golden Ticket)", xp: 100, type: "ve_vang" }
-            ];
-
-            let rewardObj = listRewards[Math.floor(Math.random() * listRewards.length)];
-
-            try {
-                const res = await fetch('/api/games', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'wheel' })
-                });
-                const d = await res.json();
-                if (d.reward) rewardObj = d.reward;
-            } catch(e) {
-                console.warn("Spin fetch fallback:", e);
-            }
-
-            if (rewardObj.type === "ve_gap") {
-                let v = parseInt(localStorage.getItem('ve_gap') || '3', 10) + 1;
-                localStorage.setItem('ve_gap', v.toString());
-            } else if (rewardObj.type === "ve_vang") {
-                let vv = parseInt(localStorage.getItem('ve_vang') || '1', 10) + 1;
-                localStorage.setItem('ve_vang', vv.toString());
-            }
-
-            if (typeof cap_nhat_hien_thi_ve_gap === 'function') cap_nhat_hien_thi_ve_gap();
-            if (typeof updateXPDisplay === 'function') updateXPDisplay(rewardObj.xp || 50);
-
-            const resDiv = document.getElementById(resId);
-            if (resDiv) {
-                resDiv.style.color = '#10B981';
-                resDiv.innerText = `CHÚC MỪNG BẠN QUAY TRÚNG: ${rewardObj.ten || rewardObj.xp + ' XP'}!`;
-            }
-
-            alert(`CHÚC MỪNG BẠN ĐÃ QUAY TRÚNG PHẦN THƯỞNG: ${rewardObj.ten || rewardObj.xp + ' XP'}!\nPhần thưởng đã tự động được cộng trực tiếp vào tài khoản của bạn!`);
-        }
+        // Vong quay 10 o da duoc quan ly trong xu_ly_3d/vong_quay_3d_moi.js
 
         async function shootPenalty(dir) {
             try { playClickSfx(); } catch(e) {}

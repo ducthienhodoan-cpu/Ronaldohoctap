@@ -44,18 +44,16 @@ const SLICES_GOLDEN = [
 ];
 
 function lay_du_lieu_vong_quay_web() {
-    let vq = parseInt(localStorage.getItem('ve_quay') || '3', 10);
-    let vv = parseInt(localStorage.getItem('ve_vang') || '1', 10);
+    let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10);
+    let vv = parseInt(localStorage.getItem('ve_vang') || '3', 10);
     let lm = parseInt(localStorage.getItem('lucky_meter') || '0', 10);
     let cq = parseInt(localStorage.getItem('chuoi_quay') || '0', 10);
 
-    const todayStr = new Date().toISOString().split('T')[0];
-    const lastDate = localStorage.getItem('ngay_nhan_ve_quay');
-    if (lastDate !== todayStr) {
-        vq = Math.max(3, vq + 1);
-        localStorage.setItem('ve_quay', vq.toString());
-        localStorage.setItem('ngay_nhan_ve_quay', todayStr);
-    }
+    if (isNaN(vq) || vq < 1) vq = 5;
+    if (isNaN(vv) || vv < 1) vv = 3;
+
+    localStorage.setItem('ve_quay', vq.toString());
+    localStorage.setItem('ve_vang', vv.toString());
 
     return { ve_quay: vq, ve_vang: vv, lucky_meter: lm, chuoi_quay: cq };
 }
@@ -78,8 +76,8 @@ function ve_vong_quay_10_o(angle = 0, loaiMode = 'thuong', canvasId = 'canvasWhe
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const w = canvas.width || 240;
-    const h = canvas.height || 240;
+    const w = canvas.width || 220;
+    const h = canvas.height || 220;
     const cx = w / 2;
     const cy = h / 2;
     const radius = Math.min(cx, cy) - 6;
@@ -104,16 +102,18 @@ function ve_vong_quay_10_o(angle = 0, loaiMode = 'thuong', canvasId = 'canvasWhe
         ctx.moveTo(0, 0);
         ctx.arc(0, 0, radius, startAngle, endAngle);
         ctx.fill();
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.strokeStyle = '#020617';
         ctx.stroke();
 
         ctx.save();
         ctx.rotate(startAngle + sliceAngle / 2);
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = '900 11px Outfit';
+        ctx.font = '900 11.5px Outfit, sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText(slices[i].label, radius - 10, 4);
+        ctx.shadowColor = '#000000';
+        ctx.shadowBlur = 4;
+        ctx.fillText(slices[i].label, radius - 8, 4);
         ctx.restore();
     }
 
