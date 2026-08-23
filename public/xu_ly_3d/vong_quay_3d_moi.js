@@ -212,6 +212,49 @@ function bat_dau_quay_vong_quay_10_o(loaiQuay = 'thuong') {
     }, 2000);
 }
 
+function cong_xp_tai_khoan_web(amount) {
+    let curXp = parseInt(localStorage.getItem('user_xp') || '1250', 10);
+    curXp += amount;
+    localStorage.setItem('user_xp', curXp.toString());
+
+    let level = Math.floor(curXp / 250) + 1;
+    let streak = parseInt(localStorage.getItem('user_streak') || '1', 10);
+
+    const hdrLvl = document.getElementById('hdrUserLevel');
+    if (hdrLvl) {
+        hdrLvl.innerText = `Level ${level} | ${curXp} XP | ${streak} Streak`;
+    }
+
+    try {
+        if (typeof updateXPDisplay === 'function') updateXPDisplay(amount);
+    } catch(e) {}
+}
+
+function cong_xu_tai_khoan_web(amount) {
+    let curCoins = parseInt(localStorage.getItem('user_coins') || '500', 10);
+    curCoins += amount;
+    localStorage.setItem('user_coins', curCoins.toString());
+}
+
+function cong_kim_cuong_tai_khoan_web(amount) {
+    let curKc = parseInt(localStorage.getItem('user_diamonds') || '20', 10);
+    curKc += amount;
+    localStorage.setItem('user_diamonds', curKc.toString());
+}
+
+function them_vat_pham_kho_do(ten, loai) {
+    let khoDo = [];
+    try {
+        khoDo = JSON.parse(localStorage.getItem('user_inventory') || '[]');
+    } catch(e) { khoDo = []; }
+    khoDo.push({
+        ten: ten,
+        loai: loai,
+        thoi_gian: new Date().toLocaleString('vi-VN')
+    });
+    localStorage.setItem('user_inventory', JSON.stringify(khoDo));
+}
+
 function xuat_ket_qua_vong_quay_10_o(targetIndex, loaiQuay) {
     let data = lay_du_lieu_vong_quay_web();
 
@@ -231,48 +274,119 @@ function xuat_ket_qua_vong_quay_10_o(targetIndex, loaiQuay) {
     localStorage.setItem('lucky_meter', data.lucky_meter.toString());
     localStorage.setItem('chuoi_quay', data.chuoi_quay.toString());
 
-    // 1. Xu ly phan thuong Ve Gap
-    if (reward.label.includes("Vé Gắp")) {
+    let strMsg = '';
+    let msgBackground = 'linear-gradient(135deg, #10B981, #06B6D4)';
+
+    // 1. TRƯỜNG HỢP JACKPOT: VÀO VÍ VÉ (+1 VÉ VÀNG + 5 VÉ THƯỜNG) VÀ VÀO TÀI KHOẢN (+1000 XP)
+    if (reward.label.toUpperCase().includes("JACKPOT")) {
+        let soVeVang = 1;
+        let soVeThuong = 5;
+        let soXp = 1000;
+
+        if (reward.label.includes("SUPER")) {
+            soVeVang = 2;
+            soVeThuong = 10;
+            soXp = 2000;
+        } else if (reward.label.includes("HOÀNG GIA")) {
+            soVeVang = 3;
+            soVeThuong = 15;
+            soXp = 5000;
+        }
+
+        // Cập nhật vào VÍ VÉ
+        let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10) + soVeVang;
+        let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10) + soVeThuong;
+        let vg = parseInt(localStorage.getItem('ve_gap') || '5', 10) + soVeThuong;
+        localStorage.setItem('ve_vang', vv.toString());
+        localStorage.setItem('ve_quay', vq.toString());
+        localStorage.setItem('ve_gap', vg.toString());
+
+        // Cộng vào TÀI KHOẢN
+        cong_xp_tai_khoan_web(soXp);
+        them_vat_pham_kho_do(reward.label, "jackpot");
+
+        msgBackground = 'linear-gradient(135deg, #EF4444, #F59E0B)';
+        strMsg = `🎉 TRÚNG JACKPOT HUYỀN THOẠI! 🎉<br>• VÀO VÍ VÉ: +${soVeVang} Vé Vàng | +${soVeThuong} Vé Thường<br>• VÀO TÀI KHOẢN: +${soXp} XP Tích Lũy & Rương Jackpot!`;
+    }
+    // 2. CÁC PHẦN THƯỞNG VÉ -> CẬP NHẬT VÀO VÍ VÉ
+    else if (reward.label.includes("Vé Gắp")) {
         let soLuong = 1;
         if (reward.label.includes("3")) soLuong = 3;
         let v = parseInt(localStorage.getItem('ve_gap') || '5', 10) + soLuong;
         localStorage.setItem('ve_gap', v.toString());
+        strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ CẬP NHẬT +${soLuong} VÉ VÀO VÍ VÉ GẮP THÚ)`;
     }
-
-    // 2. Xu ly phan thuong Golden Ticket / Ve Vang
-    if (reward.label.includes("Golden Ticket") || reward.label.includes("Vé Vàng")) {
+    else if (reward.label.includes("Golden Ticket") || reward.label.includes("Vé Vàng")) {
         let soLuongVang = 1;
         if (reward.label.includes("2")) soLuongVang = 2;
         if (reward.label.includes("3")) soLuongVang = 3;
         let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10) + soLuongVang;
         localStorage.setItem('ve_vang', vv.toString());
+        strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ CẬP NHẬT +${soLuongVang} VÉ VÀNG VÀO VÍ VÉ)`;
     }
-
-    // 3. Xu ly phan thuong Ve Quay
-    if (reward.label.includes("Vé Quay")) {
+    else if (reward.label.includes("Vé Quay")) {
         let soLuongQuay = 1;
         if (reward.label.includes("3")) soLuongQuay = 3;
         let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10) + soLuongQuay;
         localStorage.setItem('ve_quay', vq.toString());
+        strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ CẬP NHẬT +${soLuongQuay} VÉ VÀO VÍ VÉ QUAY)`;
+    }
+    // 3. CÁC PHẦN THƯỞNG CÒN LẠI -> CỘNG TRỰC TIẾP VÀO TÀI KHOẢN
+    else {
+        if (reward.label.includes("Xu")) {
+            let soXu = 100;
+            if (reward.label.includes("250")) soXu = 250;
+            else if (reward.label.includes("500")) soXu = 500;
+            else if (reward.label.includes("1.000") || reward.label.includes("1000")) soXu = 1000;
+            cong_xu_tai_khoan_web(soXu);
+            strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ CỘNG +${soXu} XU VÀO TÀI KHOẢN)`;
+        }
+        else if (reward.label.includes("XP")) {
+            let soXp = 100;
+            if (reward.label.includes("300")) soXp = 300;
+            else if (reward.label.includes("500")) soXp = 500;
+            cong_xp_tai_khoan_web(soXp);
+            strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ CỘNG +${soXp} XP VÀO TÀI KHOẢN)`;
+        }
+        else if (reward.label.includes("Kim Cương")) {
+            let soKc = 10;
+            if (reward.label.includes("30")) soKc = 30;
+            else if (reward.label.includes("50")) soKc = 50;
+            else if (reward.label.includes("100")) soKc = 100;
+            cong_kim_cuong_tai_khoan_web(soKc);
+            strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ CỘNG +${soKc} KIM CƯƠNG VÀO TÀI KHOẢN)`;
+        }
+        else if (reward.label.includes("Skin")) {
+            them_vat_pham_kho_do(reward.label, "skin");
+            cong_xp_tai_khoan_web(200);
+            strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ THÊM SKIN VÀO KHO ĐỒ TÀI KHOẢN & +200 XP)`;
+        }
+        else if (reward.label.includes("Box") || reward.label.includes("Mystery")) {
+            them_vat_pham_kho_do(reward.label, "box");
+            cong_xp_tai_khoan_web(250);
+            strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ THÊM HỘP QUÀ VÀO KHO ĐỒ TÀI KHOẢN & +250 XP)`;
+        }
+        else {
+            them_vat_pham_kho_do(reward.label, "mascot");
+            cong_xp_tai_khoan_web(300);
+            strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}!<br>(ĐÃ THÊM LINH VẬT VÀO KHO ĐỒ TÀI KHOẢN & +300 XP)`;
+        }
     }
 
-    // 4. Dong bo cap nhat giao dien Vong Quay va May Gap Thu ngay lap tuc
+    // Đồng bộ cập nhật giao diện Ví Vé và Máy Gắp Thú ngay lập tức
     cap_nhat_giao_dien_vong_quay_10_o();
     if (typeof cap_nhat_hien_thi_ve_gap === 'function') {
         cap_nhat_hien_thi_ve_gap();
     }
 
-    if (typeof updateXPDisplay === 'function') updateXPDisplay(150);
-
     const resDiv = document.getElementById('wheelResult');
     const resModalDiv = document.getElementById('modalWheelResult');
-    const strMsg = `CHÚC MỪNG: TRÚNG ${reward.label.toUpperCase()}! (ĐÃ CẬP NHẬT VÀO VÍ VÉ)`;
 
     if (resDiv) {
-        resDiv.innerHTML = `<div style="background: linear-gradient(135deg, #10B981, #06B6D4); padding: 10px 14px; border-radius: 12px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px;">${strMsg}</div>`;
+        resDiv.innerHTML = `<div style="background: ${msgBackground}; padding: 12px 16px; border-radius: 14px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px; line-height: 1.5;">${strMsg}</div>`;
     }
     if (resModalDiv) {
-        resModalDiv.innerHTML = `<div style="background: linear-gradient(135deg, #10B981, #06B6D4); padding: 10px 14px; border-radius: 12px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px;">${strMsg}</div>`;
+        resModalDiv.innerHTML = `<div style="background: ${msgBackground}; padding: 12px 16px; border-radius: 14px; font-weight: 900; color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-top: 8px; line-height: 1.5;">${strMsg}</div>`;
     }
 }
 

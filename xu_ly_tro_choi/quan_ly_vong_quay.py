@@ -159,9 +159,17 @@ def thuc_hien_luot_quay_moi(loai_quay="thuong"):
 
     data["chuoi_quay"] = data.get("chuoi_quay", 0) + 1
 
-    # Cong phan thuong vao tai khoan
-    if o_trung["loai"] == "xp":
-        cong_phan_thuong(o_trung["gia_tri"])
+    # 1. TRUONG HOP JACKPOT: VAO VI VE (+1 VE VANG + 5 VE THUONG) VA CONG TAI KHOAN (+1000 XP)
+    if o_trung["loai"] == "jackpot":
+        data["ve_vang"] = data.get("ve_vang", 0) + 1
+        data["ve_quay"] = data.get("ve_quay", 0) + 5
+        from xu_ly_tro_choi.quan_ly_gap_thu_moi import lay_du_lieu_gap_thu, luu_du_lieu_gap_thu
+        d_gap = lay_du_lieu_gap_thu()
+        d_gap["ve_gap"] = d_gap.get("ve_gap", 0) + 5
+        luu_du_lieu_gap_thu(d_gap)
+        cong_phan_thuong(1000)
+
+    # 2. PHAN THUONG VE -> CAP NHAT VAO VI VE
     elif o_trung["loai"] == "ve_gap":
         from xu_ly_tro_choi.quan_ly_gap_thu_moi import lay_du_lieu_gap_thu, luu_du_lieu_gap_thu
         d_gap = lay_du_lieu_gap_thu()
@@ -169,8 +177,14 @@ def thuc_hien_luot_quay_moi(loai_quay="thuong"):
         luu_du_lieu_gap_thu(d_gap)
     elif o_trung["loai"] == "ve_vang":
         data["ve_vang"] = data.get("ve_vang", 0) + o_trung["gia_tri"]
+    elif o_trung["loai"] == "ve_quay":
+        data["ve_quay"] = data.get("ve_quay", 0) + o_trung["gia_tri"]
+
+    # 3. PHAN THUONG CON LAI -> CONG TRUC TIEP VAO TAI KHOAN
+    elif o_trung["loai"] in ["xp", "xu", "kim_cuong"]:
+        cong_phan_thuong(o_trung["gia_tri"])
     
-    # Luu vao kho do neu la skin/mascot/jackpot
+    # Luu vao kho do neu la skin/mascot/jackpot/mystery box
     if o_trung["loai"] in ["skin", "thu_bong", "jackpot", "mystery_box", "super_mystery_box", "secret"]:
         if "kho_do" not in data:
             data["kho_do"] = []

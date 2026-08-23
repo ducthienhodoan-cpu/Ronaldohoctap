@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v28.0 (Loai bo badge PLAYLIST 1/11 giup giao dien am thanh sieu toi gian va dep mat)
+// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v29.0 (Phan loai tra thuong chuan xac: Ve vao Vi Ve, Con lai cong vao Tai Khoan, va Jackpot tang ca Ve Vang, 5 Ve Thuong va 1000 XP)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v28.0';
+const CACHE_NAME = 'sieu-club-hoc-tap-v29.0';
 const ASSETS_TO_CACHE = [
     './',
     './index.html'
