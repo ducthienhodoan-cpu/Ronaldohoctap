@@ -79,15 +79,21 @@ function nhan_5_ve_vang_tuan_moi() {
 }
 
 function lay_du_lieu_vong_quay_web() {
-    kiem_tra_tang_5_ve_vang_tuan_moi();
-
-    let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10);
-    let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10);
+    let vq = parseInt(localStorage.getItem('ve_quay') !== null ? localStorage.getItem('ve_quay') : '5', 10);
+    let vv = parseInt(localStorage.getItem('ve_vang') !== null ? localStorage.getItem('ve_vang') : '5', 10);
     let lm = parseInt(localStorage.getItem('lucky_meter') || '0', 10);
     let cq = parseInt(localStorage.getItem('chuoi_quay') || '0', 10);
 
     if (isNaN(vq)) vq = 5;
-    if (isNaN(vv)) vv = 0;
+    if (isNaN(vv)) vv = 5;
+
+    // Luu gia tri mac dinh 5 ve vang khoi dau neu chua co
+    if (localStorage.getItem('ve_vang') === null) {
+        localStorage.setItem('ve_vang', '5');
+    }
+    if (localStorage.getItem('ve_quay') === null) {
+        localStorage.setItem('ve_quay', '5');
+    }
 
     return { ve_quay: vq, ve_vang: vv, lucky_meter: lm, chuoi_quay: cq };
 }
@@ -110,56 +116,64 @@ function ve_vong_quay_10_o(angle = 0, loaiMode = 'thuong', canvasId = 'canvasWhe
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const w = canvas.width || 220;
-    const h = canvas.height || 220;
-    const cx = w / 2;
-    const cy = h / 2;
-    const radius = Math.min(cx, cy) - 6;
+    const slices = (loaiMode === 'golden') ? SLICES_GOLDEN : ((loaiMode === 'super') ? SLICES_SUPER : SLICES_THUONG);
+    const numSlices = slices.length;
+    const sliceAngle = (Math.PI * 2) / numSlices;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const radius = Math.min(cx, cy) - 10;
 
-    let slices = SLICES_THUONG;
-    if (loaiMode === 'super') slices = SLICES_SUPER;
-    if (loaiMode === 'golden') slices = SLICES_GOLDEN;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.clearRect(0, 0, w, h);
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(angle);
 
-    const sliceAngle = (Math.PI * 2) / 10;
-
-    for (let i = 0; i < 10; i++) {
-        const startAngle = i * sliceAngle;
-        const endAngle = (i + 1) * sliceAngle;
-
+    for (let i = 0; i < numSlices; i++) {
         ctx.beginPath();
-        ctx.fillStyle = slices[i].color;
         ctx.moveTo(0, 0);
-        ctx.arc(0, 0, radius, startAngle, endAngle);
+        ctx.arc(0, 0, radius, i * sliceAngle, (i + 1) * sliceAngle);
+        ctx.fillStyle = slices[i].color;
         ctx.fill();
         ctx.lineWidth = 2.5;
-        ctx.strokeStyle = '#020617';
+        ctx.strokeStyle = '#FFFFFF';
         ctx.stroke();
 
         ctx.save();
-        ctx.rotate(startAngle + sliceAngle / 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '900 11.5px Outfit, sans-serif';
+        ctx.rotate(i * sliceAngle + sliceAngle / 2);
         ctx.textAlign = 'right';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 11px sans-serif';
         ctx.shadowColor = '#000000';
         ctx.shadowBlur = 4;
-        ctx.fillText(slices[i].label, radius - 8, 4);
+        ctx.fillText(slices[i].label, radius - 12, 4);
         ctx.restore();
     }
 
-    // Central Cap
+    // Tâm vòng quay
     ctx.beginPath();
-    ctx.arc(0, 0, 22, 0, Math.PI * 2);
-    ctx.fillStyle = '#020617';
+    ctx.arc(0, 0, 18, 0, Math.PI * 2);
+    ctx.fillStyle = (loaiMode === 'golden') ? '#F59E0B' : '#0F172A';
     ctx.fill();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = (loaiMode === 'golden') ? '#F59E0B' : '#06B6D4';
+    ctx.strokeStyle = (loaiMode === 'golden') ? '#FEF08A' : '#06B6D4';
     ctx.stroke();
 
+    ctx.restore();
+
+    // Mũi tên chỉ phần thưởng cố định ở trên đỉnh
+    ctx.save();
+    ctx.translate(cx, cy - radius + 2);
+    ctx.beginPath();
+    ctx.moveTo(-10, -12);
+    ctx.lineTo(10, -12);
+    ctx.lineTo(0, 8);
+    ctx.closePath();
+    ctx.fillStyle = '#EF4444';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.stroke();
     ctx.restore();
 }
 
@@ -173,10 +187,10 @@ function bat_dau_quay_vong_quay_10_o(loaiQuay = 'thuong') {
 
     if (loaiQuay === 'golden') {
         if (data.ve_vang < 1) {
-            alert("BẠN CHƯA CÓ VÉ VÀNG! Hãy làm nhiệm vụ ngày, đạt điểm 10 bài kiểm tra hoặc đạt chuỗi Streak 7 ngày để nhận Vé Vàng nhé!");
+            alert("BẠN ĐÃ DÙNG HẾT 5 VÉ VÀNG KHỞI ĐẦU!\n\nHãy làm các nhiệm vụ học tập để kiếm thêm Vé Vàng:\n1. Hoàn thành bài học SGK (+1 Vé Vàng)\n2. Đạt điểm 10 / Xuất sắc bài kiểm tra (+1 Vé Vàng)\n3. Đạt điểm cao Tập thi IELTS (+1 Vé Vàng)\n4. Đạt chuỗi Streak học tập 7 ngày (+1 Vé Vàng)");
             const resDiv = document.getElementById('wheelResult');
             const resModalDiv = document.getElementById('modalWheelResult');
-            const msgChuaCo = "BẠN CHƯA CÓ VÉ VÀNG! Làm nhiệm vụ ngày để nhận Vé Vàng!";
+            const msgChuaCo = "HẾT VÉ VÀNG! Hãy làm nhiệm vụ học tập để nhận thêm Vé Vàng!";
             if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgChuaCo; }
             if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgChuaCo; }
             return;

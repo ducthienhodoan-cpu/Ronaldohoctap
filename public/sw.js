@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v38.0 (Hoan thien toan dien tat ca logic va tinh nang 100%)
+// Mo ta: Service Worker TURBO toc do sieu toc v39.0 (Khoi dau 5 Ve Vang, het ve lam nhiem vu nhan them)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v38.0-logic-perfection-verified';
+const CACHE_NAME = 'sieu-club-hoc-tap-v39.0-initial-5-golden-tickets-mission-system';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

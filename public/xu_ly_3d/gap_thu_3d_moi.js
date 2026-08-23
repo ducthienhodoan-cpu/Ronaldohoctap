@@ -26,11 +26,12 @@ function lay_ve_gap_hien_tai() {
 }
 
 function lay_ve_vang_hien_tai() {
-    if (typeof kiem_tra_tang_5_ve_vang_tuan_moi === 'function') {
-        kiem_tra_tang_5_ve_vang_tuan_moi();
-    }
     let vv = localStorage.getItem('ve_vang');
-    return parseInt(vv || '0', 10);
+    if (vv === null) {
+        vv = '5';
+        localStorage.setItem('ve_vang', '5');
+    }
+    return parseInt(vv || '5', 10);
 }
 
 function cap_nhat_hien_thi_ve_gap() {

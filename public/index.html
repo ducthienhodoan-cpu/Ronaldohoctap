@@ -1297,10 +1297,18 @@
             let streak = parseInt(localStorage.getItem('user_streak') || '1', 10);
             streak += 1;
             localStorage.setItem('user_streak', streak.toString());
+
+            // Thuong +1 Ve Vang cho nhiem vu hoan thanh bai hoc
+            let vv = parseInt(localStorage.getItem('ve_vang') !== null ? localStorage.getItem('ve_vang') : '5', 10) + 1;
+            localStorage.setItem('ve_vang', vv.toString());
+
             const lop = document.getElementById('selLopHoc') ? document.getElementById('selLopHoc').value : 'Lớp 6';
             const mon = document.getElementById('selMonHoc') ? document.getElementById('selMonHoc').value : 'Toán';
-            alert(`CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH BÀI HỌC!\n- Môn: ${mon} (${lop})\n- Nhận thưởng: +30 Roblox XP!\n- Chuỗi ngày học Streak: ${streak} ngày liên tiếp!`);
+            alert(`CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH BÀI HỌC!\n- Môn: ${mon} (${lop})\n- Nhận thưởng: +30 Roblox XP!\n- THƯỞNG NHIỆM VỤ: +1 VÉ VÀNG VÀO VÍ VÉ (Tổng hiện có: ${vv} Vé Vàng)!\n- Chuỗi ngày học Streak: ${streak} ngày liên tiếp!`);
+            
             if (typeof loadStats === 'function') loadStats();
+            if (typeof cap_nhat_giao_dien_vong_quay_10_o === 'function') cap_nhat_giao_dien_vong_quay_10_o();
+            if (typeof cap_nhat_hien_thi_ve_gap === 'function') cap_nhat_hien_thi_ve_gap();
         }
 
         const musicPlaylist = [
@@ -2249,10 +2257,19 @@
             const percent = Math.round((correctCount / total) * 100);
             const xpReward = correctCount * 20;
 
+            let extraGoldMsg = "";
+            if (percent >= 80) {
+                let vv = parseInt(localStorage.getItem('ve_vang') !== null ? localStorage.getItem('ve_vang') : '5', 10) + 1;
+                localStorage.setItem('ve_vang', vv.toString());
+                extraGoldMsg = `\n- THƯỞNG NHIỆM VỤ IELTS: +1 VÉ VÀNG VÀO VÍ VÉ (Tổng hiện có: ${vv} Vé Vàng)!`;
+                if (typeof cap_nhat_giao_dien_vong_quay_10_o === 'function') cap_nhat_giao_dien_vong_quay_10_o();
+                if (typeof cap_nhat_hien_thi_ve_gap === 'function') cap_nhat_hien_thi_ve_gap();
+            }
+
             updateXPDisplay(xpReward);
             if (typeof loadStats === 'function') loadStats();
 
-            alert(`KẾT QUẢ TẬP THI IELTS:\n\nĐiểm số: ${correctCount} / ${total} (${percent}%)\nSố câu đúng: ${correctCount} / ${total}\nXếp loại: ${percent >= 80 ? 'Xuất Sắc (Band 7.5+)' : percent >= 60 ? 'Đạt Yêu Cầu (Band 6.0)' : 'Cần Cố Gắng'}\nPhần thưởng: +${xpReward} Roblox XP!`);
+            alert(`KẾT QUẢ TẬP THI IELTS:\n\nĐiểm số: ${correctCount} / ${total} (${percent}%)\nSố câu đúng: ${correctCount} / ${total}\nXếp loại: ${percent >= 80 ? 'Xuất Sắc (Band 7.5+)' : percent >= 60 ? 'Đạt Yêu Cầu (Band 6.0)' : 'Cần Cố Gắng'}\nPhần thưởng: +${xpReward} Roblox XP!${extraGoldMsg}`);
         }
 
         async function loadPracticeQuiz() {
@@ -2502,8 +2519,18 @@
             }
             document.getElementById('examCertContainer').innerHTML = certHtml;
             if (r.xp_reward) updateXPDisplay(r.xp_reward);
+            
+            let extraGoldMsg = "";
+            if (r.score >= 8.0) {
+                let vv = parseInt(localStorage.getItem('ve_vang') !== null ? localStorage.getItem('ve_vang') : '5', 10) + 1;
+                localStorage.setItem('ve_vang', vv.toString());
+                extraGoldMsg = `\n- THƯỞNG NHIỆM VỤ ĐIỂM GIỎI: +1 VÉ VÀNG VÀO VÍ VÉ (Tổng hiện có: ${vv} Vé Vàng)!`;
+                if (typeof cap_nhat_giao_dien_vong_quay_10_o === 'function') cap_nhat_giao_dien_vong_quay_10_o();
+                if (typeof cap_nhat_hien_thi_ve_gap === 'function') cap_nhat_hien_thi_ve_gap();
+            }
+
             if (typeof loadStats === 'function') loadStats();
-            alert(`KẾT QUẢ BÀI KIỂM TRA:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nXếp loại: ${r.rating}\nNhận thưởng: +${r.xp_reward} XP!`);
+            alert(`KẾT QUẢ BÀI KIỂM TRA:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nXếp loại: ${r.rating}\nNhận thưởng: +${r.xp_reward} XP!${extraGoldMsg}`);
         }
 
         let selectedWcTeam = 'Việt Nam';

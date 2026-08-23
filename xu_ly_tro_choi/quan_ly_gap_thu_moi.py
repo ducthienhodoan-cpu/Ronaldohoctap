@@ -87,8 +87,8 @@ def lay_du_lieu_gap_thu():
 
     if not os.path.exists(DUONG_DAN_GAP_THU):
         data_default = {
-            "ve_gap": 3,
-            "ve_vang": 1,
+            "ve_gap": 5,
+            "ve_vang": 5,
             "level": 1,
             "combo_streak": 0,
             "super_claw": False,
@@ -117,14 +117,14 @@ def lay_du_lieu_gap_thu():
             data = json.load(f)
             # Kiem tra diem danh ngay moi -> Cong 3 Ve Thường + 1 Ve Vang
             if data.get("ngay_nhan_ve") != today_str:
-                data["ve_gap"] = max(3, data.get("ve_gap", 0) + 3)
-                data["ve_vang"] = max(1, data.get("ve_vang", 0) + 1)
+                data["ve_gap"] = max(5, data.get("ve_gap", 0) + 3)
+                data["ve_vang"] = max(5, data.get("ve_vang", 0) + 1)
                 data["ngay_nhan_ve"] = today_str
                 luu_du_lieu_gap_thu(data)
             return data
     except Exception:
         return {
-            "ve_gap": 3, "ve_vang": 1, "level": 1, "combo_streak": 0, "super_claw": False,
+            "ve_gap": 5, "ve_vang": 5, "level": 1, "combo_streak": 0, "super_claw": False,
             "may_hien_tai": "cute", "may_da_mo_khoa": ["cute"],
             "bo_suu_tap": {"animal": [], "dinosaur": [], "robot": [], "football": [], "galaxy": []},
             "ngay_nhan_ve": "",

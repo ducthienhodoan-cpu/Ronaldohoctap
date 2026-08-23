@@ -220,8 +220,8 @@ def games_engine():
 def handle_reset_app():
     """Khôi phục toàn bộ dữ liệu ứng dụng về trạng thái ban đầu."""
     data_default = {
-        "ve_gap": 3,
-        "ve_vang": 1,
+        "ve_gap": 5,
+        "ve_vang": 5,
         "level": 1,
         "combo_streak": 0,
         "super_claw": False,
