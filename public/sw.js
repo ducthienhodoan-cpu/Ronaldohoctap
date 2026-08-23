@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v36.0 (Khac phuc triet de loi am luong 0% va don dep iframe trung lap)
+// Mo ta: Service Worker TURBO toc do sieu toc v37.0 (Hoan thien am thanh YouTube 0% - 100% qua postMessage)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v36.0-zero-volume-fix-absolute';
+const CACHE_NAME = 'sieu-club-hoc-tap-v37.0-yt-postmessage-perfect';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

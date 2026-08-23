@@ -1257,15 +1257,28 @@
             try {
                 const bg = document.getElementById('bgMusic');
                 if (bg) { bg.pause(); bg.currentTime = 0; }
+        function sendYtCommand(func, args) {
+            const iframe = document.getElementById('ytIframePlayer');
+            if (iframe && iframe.contentWindow) {
+                try {
+                    iframe.contentWindow.postMessage(JSON.stringify({
+                        event: 'command',
+                        func: func,
+                        args: args || []
+                    }), '*');
+                } catch(e) {}
+            }
+        }
+
+        function startBgMusic() {
+            try {
+                const bg = document.getElementById('bgMusic');
+                if (bg) { bg.pause(); bg.currentTime = 0; }
             } catch(e) {}
 
             const savedVol = localStorage.getItem('user_music_volume');
             const curVol = savedVol !== null ? parseInt(savedVol, 10) : 30;
-            if (curVol > 0) {
-                updateTrackDisplay();
-            } else {
-                setVolume(0);
-            }
+            setVolume(curVol);
         }
 
         const musicPlaylist = [
@@ -1294,24 +1307,23 @@
             const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
             
             if (iframe) {
-                if (curVol === 0) {
-                    // Khi am luong 0%, dung phat video va xoa nguon phat
-                    iframe.src = "";
-                    return;
+                const playlistIds = musicPlaylist.map(t => t.id).join(',');
+                const targetSrc = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&enablejsapi=1`;
+                if (!iframe.src || iframe.src === '' || iframe.src === 'about:blank' || !iframe.src.includes(track.id)) {
+                    iframe.src = targetSrc;
                 }
                 
-                const playlistIds = musicPlaylist.map(t => t.id).join(',');
-                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1`;
-                
-                iframe.onload = () => {
-                    setTimeout(() => {
-                        if (iframe && iframe.contentWindow) {
-                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
-                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [curVol] }), '*');
-                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
-                        }
-                    }, 500);
-                };
+                setTimeout(() => {
+                    if (curVol === 0) {
+                        sendYtCommand('mute');
+                        sendYtCommand('setVolume', [0]);
+                        sendYtCommand('pauseVideo');
+                    } else {
+                        sendYtCommand('unMute');
+                        sendYtCommand('setVolume', [curVol]);
+                        sendYtCommand('playVideo');
+                    }
+                }, 400);
             }
         }
 
@@ -1334,21 +1346,17 @@
             const btn = document.getElementById('btnToggleMusic');
             if (!playerBox) return;
 
-            if (isMusicPlaying) {
+            if (playerBox.style.display === 'block') {
                 playerBox.style.display = 'none';
-                isMusicPlaying = false;
                 if (btn) btn.innerText = 'Mở Khung Nhạc';
             } else {
                 playerBox.style.display = 'block';
-                isMusicPlaying = true;
                 if (btn) btn.innerText = 'Ẩn Khung Nhạc';
-                // Neu chua phat thi khoi chay
                 const curVol = parseInt(localStorage.getItem('user_music_volume') || '30', 10);
                 if (curVol > 0) {
-                    const iframe = document.getElementById('ytIframePlayer');
-                    if (iframe && (!iframe.src || iframe.src === '')) {
-                        updateTrackDisplay();
-                    }
+                    sendYtCommand('unMute');
+                    sendYtCommand('setVolume', [curVol]);
+                    sendYtCommand('playVideo');
                 }
             }
         }
@@ -1403,34 +1411,44 @@
                 }
             }
 
+            if (iframe && (!iframe.src || iframe.src === '' || iframe.src === 'about:blank')) {
+                const track = musicPlaylist[currentTrackIdx];
+                const playlistIds = musicPlaylist.map(t => t.id).join(',');
+                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&enablejsapi=1`;
+            }
+
             if (val === 0) {
-                // 0%: DỪNG PHÁT VÀ TẮT TIẾNG HOÀN TOÀN
-                if (iframe) {
-                    iframe.src = "";
-                }
+                // 0%: DỪNG VÀ TẮT TIẾNG TUYỆT ĐỐI
+                sendYtCommand('mute');
+                sendYtCommand('setVolume', [0]);
+                sendYtCommand('pauseVideo');
                 try {
                     const bg = document.getElementById('bgMusic');
                     if (bg) { bg.pause(); bg.currentTime = 0; }
                 } catch(e) {}
             } else {
                 // > 0%: TIẾP TỤC PHÁT NHẠC
-                if (iframe) {
-                    if (!iframe.src || iframe.src === "" || iframe.src === "about:blank") {
-                        const track = musicPlaylist[currentTrackIdx];
-                        const playlistIds = musicPlaylist.map(t => t.id).join(',');
-                        iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1`;
-                    } else {
-                        try {
-                            if (iframe.contentWindow) {
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [val] }), '*');
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
-                            }
-                        } catch(e) {}
-                    }
-                }
+                sendYtCommand('unMute');
+                sendYtCommand('setVolume', [val]);
+                sendYtCommand('playVideo');
             }
         }
+
+        // Tự động mở âm thanh mượt mà khi người dùng tương tác lần đầu
+        function unlockAudioPlayback() {
+            const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : '30', 10);
+            if (curVol > 0) {
+                sendYtCommand('unMute');
+                sendYtCommand('setVolume', [curVol]);
+                sendYtCommand('playVideo');
+            } else {
+                sendYtCommand('mute');
+                sendYtCommand('setVolume', [0]);
+                sendYtCommand('pauseVideo');
+            }
+        }
+        window.addEventListener('click', unlockAudioPlayback, { once: true });
+        window.addEventListener('touchstart', unlockAudioPlayback, { once: true });
 
         let currentIeltsSkill = 'tu_vung';
         let ieltsQuestions = [];
@@ -3895,7 +3913,7 @@
             <span style="font-weight: 900; font-size: 12.5px; color: #F59E0B; pointer-events: none;">KÉO DI CHUYỂN | PLAYLIST YOUTUBE</span>
             <button onclick="toggleBgMusic()" style="background: #EF4444; color: #FFFFFF; border: none; border-radius: 50%; width: 26px; height: 26px; font-size: 13px; font-weight: 900; display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0; margin: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5); flex-shrink: 0;">X</button>
         </div>
-        <iframe id="ytIframePlayer" width="100%" height="195" src="" title="YouTube Music Playlist Vong Lap" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 14px; border: 1.5px solid #06B6D4;"></iframe>
+        <iframe id="ytIframePlayer" width="100%" height="195" src="https://www.youtube.com/embed/8F2s8ivKXNY?playlist=8F2s8ivKXNY,0GnA8VYOfko,pRpeEdMmmQ0,7-7knsP2n5w,IwzkfMmNMpM,fcnDmrtj6Sk,611WYDonzTU,ovj8Gb_cVgY,vrY1THC_NQE,V1508wboZXk,ueNY30Cs8Lk&loop=1&enablejsapi=1" title="YouTube Music Playlist Vong Lap" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 14px; border: 1.5px solid #06B6D4;"></iframe>
     </div>
 
     <!-- Ronaldo Corner Mascot Widget -->
