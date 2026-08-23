@@ -839,10 +839,13 @@
                         <h4>Vòng Quay May Mắn (10 Ô)</h4>
                         
                         <!-- Thanh Trang Thai Top Bar -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 12px; margin-bottom: 6px; color: #00FFCC;">
-                            <span id="lblVeQuayVal">Vé Quay: 5</span>
-                            <button style="font-size: 10px; padding: 4px 8px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="localStorage.setItem('ve_quay', (parseInt(localStorage.getItem('ve_quay')||'5',10)+5).toString()); cap_nhat_giao_dien_vong_quay_10_o();">+5 VÉ MIỄN PHÍ</button>
-                            <span id="lblChuoiQuayVal" style="color: #F59E0B;">Chuỗi Quay: 0</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 12px; margin-bottom: 6px; color: #00FFCC; flex-wrap: wrap; gap: 4px;">
+                            <span id="lblVeQuayVal">Vé Quay: 5 | Vé Vàng: 5</span>
+                            <div style="display: flex; gap: 4px;">
+                                <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="localStorage.setItem('ve_quay', (parseInt(localStorage.getItem('ve_quay')||'5',10)+5).toString()); cap_nhat_giao_dien_vong_quay_10_o();">+5 VÉ THƯỜNG</button>
+                                <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFF; font-weight: 900; cursor: pointer;" onclick="nhan_5_ve_vang_tuan_moi()">+5 VÉ VÀNG/TUẦN</button>
+                            </div>
+                            <span id="lblChuoiQuayVal" style="color: #F59E0B;">Chuỗi: 0</span>
                         </div>
 
                         <!-- Thanh Lucky Meter Progress Bar -->
@@ -867,8 +870,9 @@
                         <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Vàng -->
                         <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #F59E0B; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
                             <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ)</div>
-                            <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:</div>
+                            <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, có thể kiếm được qua các hoạt động:</div>
                             <ul style="margin: 0; padding-left: 18px; color: #F59E0B; font-weight: bold;">
+                                <li>Quà tặng tuần mới: +5 Vé Vàng miễn phí mỗi tuần</li>
                                 <li>Hoàn thành xuất sắc nhiệm vụ ngày: +1 Vé Vàng</li>
                                 <li>Đạt điểm 10 / Xuất sắc bài kiểm tra: +1 Vé Vàng</li>
                                 <li>Đạt chuỗi Streak học tập liên tục 7 ngày: +1 Vé Vàng</li>
@@ -877,10 +881,13 @@
                     </div>
                     <div class="game-stadium-card" style="position: relative; z-index: 20; pointer-events: auto;">
                         <h4>Máy Gắp Thú 3D Siêu Cấp</h4>
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 13px; margin-bottom: 6px;">
-                            <span id="lblVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 Vé</span>
-                            <button style="font-size: 10px; padding: 4px 8px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ MIỄN PHÍ</button>
-                            <span id="clawTimerText" style="color: #F59E0B;">Thời gian: 20s</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 13px; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;">
+                            <span id="lblVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 | Vé Vàng: 5</span>
+                            <div style="display: flex; gap: 4px;">
+                                <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ THƯỜNG</button>
+                                <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFF; font-weight: 900; cursor: pointer;" onclick="nhan_5_ve_vang_tuan_moi()">+5 VÉ VÀNG/TUẦN</button>
+                            </div>
+                            <span id="clawTimerText" style="color: #F59E0B;">20s</span>
                         </div>
                         <canvas id="canvasClaw" width="260" height="180" style="margin: 6px 0; border-radius: 16px; border: 2px solid #EC4899;"></canvas><br>
                         
@@ -903,8 +910,9 @@
                         <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Vàng -->
                         <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #F59E0B; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
                             <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ)</div>
-                            <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:</div>
+                            <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, có thể kiếm được qua các hoạt động:</div>
                             <ul style="margin: 0; padding-left: 18px; color: #F59E0B; font-weight: bold;">
+                                <li>Quà tặng tuần mới: +5 Vé Vàng miễn phí mỗi tuần</li>
                                 <li>Hoàn thành xuất sắc nhiệm vụ ngày: +1 Vé Vàng</li>
                                 <li>Đạt điểm 10 / Xuất sắc bài kiểm tra: +1 Vé Vàng</li>
                                 <li>Đạt chuỗi Streak học tập liên tục 7 ngày: +1 Vé Vàng</li>
@@ -3344,8 +3352,9 @@
                 <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Vàng Modal -->
                 <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #F59E0B; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
                     <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ)</div>
-                    <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:</div>
+                    <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, có thể kiếm được qua các hoạt động:</div>
                     <ul style="margin: 0; padding-left: 18px; color: #F59E0B; font-weight: bold;">
+                        <li>Quà tặng tuần mới: +5 Vé Vàng miễn phí mỗi tuần</li>
                         <li>Hoàn thành xuất sắc nhiệm vụ ngày: +1 Vé Vàng</li>
                         <li>Đạt điểm 10 / Xuất sắc bài kiểm tra: +1 Vé Vàng</li>
                         <li>Đạt chuỗi Streak học tập liên tục 7 ngày: +1 Vé Vàng</li>
@@ -3372,10 +3381,13 @@
             </div>
 
             <div id="tabModalGapThu" style="display: none; text-align: center;">
-                <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 13px; max-width: 280px; margin: 0 auto 6px auto;">
-                    <span id="lblModalVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 Vé</span>
-                    <button style="font-size: 10px; padding: 4px 8px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ MIỄN PHÍ</button>
-                    <span id="modalClawTimerText" style="color: #F59E0B;">Thời gian: 20s</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 13px; max-width: 320px; margin: 0 auto 6px auto; flex-wrap: wrap; gap: 4px;">
+                    <span id="lblModalVeGapVal" style="color: #00FFCC;">Vé Gắp: 5 | Vé Vàng: 5</span>
+                    <div style="display: flex; gap: 4px;">
+                        <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ THƯỜNG</button>
+                        <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFF; font-weight: 900; cursor: pointer;" onclick="nhan_5_ve_vang_tuan_moi()">+5 VÉ VÀNG</button>
+                    </div>
+                    <span id="modalClawTimerText" style="color: #F59E0B;">20s</span>
                 </div>
                 <canvas id="canvasModalClaw" width="280" height="190" style="margin: 6px auto; display: block; border-radius: 16px; border: 2px solid #EC4899;"></canvas>
                 
@@ -3398,8 +3410,9 @@
                 <!-- Bảng Chú Thích Điều Kiện Kiếm Vé Vàng Modal -->
                 <div style="margin-top: 14px; background: rgba(15, 23, 42, 0.95); border: 2px solid #F59E0B; border-radius: 14px; padding: 12px; text-align: left; font-size: 12.5px; line-height: 1.6;">
                     <div style="font-weight: 900; color: #F59E0B; font-size: 13.5px; margin-bottom: 6px; text-align: center;">ĐIỀU KIỆN KIẾM VÉ VÀNG (LÀM NHIỆM VỤ)</div>
-                    <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, chỉ có thể kiếm được khi hoàn thành các nhiệm vụ học tập:</div>
+                    <div style="color: #CBD5E1; margin-bottom: 4px;">Vé Vàng là vật phẩm quý giá, có thể kiếm được qua các hoạt động:</div>
                     <ul style="margin: 0; padding-left: 18px; color: #F59E0B; font-weight: bold;">
+                        <li>Quà tặng tuần mới: +5 Vé Vàng miễn phí mỗi tuần</li>
                         <li>Hoàn thành xuất sắc nhiệm vụ ngày: +1 Vé Vàng</li>
                         <li>Đạt điểm 10 / Xuất sắc bài kiểm tra: +1 Vé Vàng</li>
                         <li>Đạt chuỗi Streak học tập liên tục 7 ngày: +1 Vé Vàng</li>

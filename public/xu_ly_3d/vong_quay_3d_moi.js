@@ -43,7 +43,44 @@ const SLICES_GOLDEN = [
     { label: "JACKPOT HOÀNG GIA", color: "#EF4444" }
 ];
 
+function lay_tuan_hien_tai_web() {
+    const now = new Date();
+    const onejan = new Date(now.getFullYear(), 0, 1);
+    const week = Math.ceil((((now - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    return `${now.getFullYear()}-W${week}`;
+}
+
+function kiem_tra_tang_5_ve_vang_tuan_moi() {
+    const currentWeek = lay_tuan_hien_tai_web();
+    const lastWeek = localStorage.getItem('tuan_nhan_ve_vang');
+    if (lastWeek !== currentWeek) {
+        let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10) + 5;
+        localStorage.setItem('ve_vang', vv.toString());
+        localStorage.setItem('tuan_nhan_ve_vang', currentWeek);
+        console.log("Đã tự động cộng +5 Vé Vàng tuần mới cho học sinh!");
+        return true;
+    }
+    return false;
+}
+
+function nhan_5_ve_vang_tuan_moi() {
+    const currentWeek = lay_tuan_hien_tai_web();
+    const lastWeek = localStorage.getItem('tuan_nhan_ve_vang');
+    if (lastWeek !== currentWeek) {
+        let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10) + 5;
+        localStorage.setItem('ve_vang', vv.toString());
+        localStorage.setItem('tuan_nhan_ve_vang', currentWeek);
+        cap_nhat_giao_dien_vong_quay_10_o();
+        if (typeof cap_nhat_hien_thi_ve_gap === 'function') cap_nhat_hien_thi_ve_gap();
+        alert("CHÚC MỪNG! Bạn đã nhận thành công +5 VÉ VÀNG MIỄN PHÍ của tuần này!");
+    } else {
+        alert("Bạn đã nhận 5 Vé Vàng miễn phí của tuần này rồi! Hãy chờ sang tuần mới hoặc hoàn thành nhiệm vụ ngày để nhận thêm Vé Vàng nhé!");
+    }
+}
+
 function lay_du_lieu_vong_quay_web() {
+    kiem_tra_tang_5_ve_vang_tuan_moi();
+
     let vq = parseInt(localStorage.getItem('ve_quay') || '5', 10);
     let vv = parseInt(localStorage.getItem('ve_vang') || '0', 10);
     let lm = parseInt(localStorage.getItem('lucky_meter') || '0', 10);

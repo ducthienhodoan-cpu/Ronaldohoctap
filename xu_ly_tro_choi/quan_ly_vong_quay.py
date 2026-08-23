@@ -51,16 +51,22 @@ DANH_SACH_10_O_GOLDEN_SPIN = [
     {"index": 9, "ten": "JACKPOT HOÀNG GIA", "loai": "jackpot", "gia_tri": 1, "rarity": "huyen_thoai"}
 ]
 
+def lay_tuan_hien_tai():
+    today = datetime.date.today()
+    return f"{today.year}-W{today.isocalendar()[1]}"
+
 def lay_du_lieu_vong_quay():
-    """Tải dữ liệu số dư vé quay, Lucky Meter và kho đồ."""
+    """Tải dữ liệu số dư vé quay, Lucky Meter và kho đồ kèm quà tặng 5 vé vàng mỗi tuần."""
     today_str = datetime.date.today().isoformat()
+    current_week = lay_tuan_hien_tai()
     if not os.path.exists(DUONG_DAN_VONG_QUAY):
         data_default = {
-            "ve_quay": 3,
-            "ve_vang": 1,
+            "ve_quay": 5,
+            "ve_vang": 5,
             "chuoi_quay": 0,
             "lucky_meter_percent": 0,
             "ngay_nhan_ve": today_str,
+            "tuan_nhan_ve_vang": current_week,
             "kho_do": []
         }
         luu_du_lieu_vong_quay(data_default)
@@ -68,15 +74,15 @@ def lay_du_lieu_vong_quay():
     try:
         with open(DUONG_DAN_VONG_QUAY, "r", encoding="utf-8") as f:
             data = json.load(f)
-            # Diem danh ngay moi -> tang +1 ve quay mien phi
-            if data.get("ngay_nhan_ve") != today_str:
-                data["ve_quay"] = max(3, data.get("ve_quay", 0) + 1)
-                data["ngay_nhan_ve"] = today_str
+            # Quà tặng tuần mới: +5 Vé Vàng miễn phí mỗi tuần
+            if data.get("tuan_nhan_ve_vang") != current_week:
+                data["ve_vang"] = data.get("ve_vang", 0) + 5
+                data["tuan_nhan_ve_vang"] = current_week
                 luu_du_lieu_vong_quay(data)
             return data
     except Exception:
         return {
-            "ve_quay": 3, "ve_vang": 1, "chuoi_quay": 0,
+            "ve_quay": 5, "ve_vang": 5, "chuoi_quay": 0,
             "lucky_meter_percent": 0, "ngay_nhan_ve": "", "kho_do": []
         }
 
