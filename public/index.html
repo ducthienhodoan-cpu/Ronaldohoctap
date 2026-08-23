@@ -1642,24 +1642,37 @@
             return baseList.slice(0, numQ);
         }
 
+        window.turboQuestionCache = window.turboQuestionCache || {};
+
         async function loadIeltsQuestions() {
             const bandEl = document.getElementById('selBandIelts');
             const band = bandEl ? bandEl.value : 'Band 6.0';
-            try {
-                const res = await fetch(`/api/questions?skill=${currentIeltsSkill}&band=${encodeURIComponent(band)}`);
-                const data = await res.json();
-                if (data.questions && data.questions.length > 0) {
-                    ieltsQuestions = data.questions;
-                } else {
-                    ieltsQuestions = getFallbackIeltsQuestions(currentIeltsSkill, band);
-                }
-            } catch (err) {
+            const cacheKey = `ielts_${currentIeltsSkill}_${band}`;
+
+            // 1. Instant 0ms render tu turbo cache hoac fallback
+            if (window.turboQuestionCache[cacheKey]) {
+                ieltsQuestions = window.turboQuestionCache[cacheKey];
+            } else {
                 ieltsQuestions = getFallbackIeltsQuestions(currentIeltsSkill, band);
             }
             ieltsIndex = 0;
             userAnswers = {};
             startIeltsTimer();
             renderIeltsQuestion();
+
+            // 2. Fetch du lieu SQLite 10.000 cau hoi bat dong bo sieu toc
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1200);
+                const res = await fetch(`/api/questions?skill=${currentIeltsSkill}&band=${encodeURIComponent(band)}`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                const data = await res.json();
+                if (data.questions && data.questions.length > 0) {
+                    window.turboQuestionCache[cacheKey] = data.questions;
+                    ieltsQuestions = data.questions;
+                    renderIeltsQuestion();
+                }
+            } catch (err) {}
         }
 
         function startIeltsTimer() {
@@ -1778,21 +1791,31 @@
             const monEl = document.getElementById('selLuyenMon');
             const lop = lopEl ? lopEl.value : 'Lớp 6';
             const mon = monEl ? monEl.value : 'Toán';
+            const cacheKey = `practice_${lop}_${mon}`;
 
-            try {
-                const res = await fetch(`/api/questions?skill=luyen_tap&lop=${encodeURIComponent(lop)}&mon=${encodeURIComponent(mon)}&so_cau=50`);
-                const d = await res.json();
-                if (d.questions && d.questions.length > 0) {
-                    practiceQuestions = d.questions;
-                } else {
-                    practiceQuestions = getFallbackPracticeQuestions(lop, mon);
-                }
-            } catch(e) {
+            // 1. Hien thi tuc thi 0ms tu bo nho dem cache hoac fallback
+            if (window.turboQuestionCache[cacheKey]) {
+                practiceQuestions = window.turboQuestionCache[cacheKey];
+            } else {
                 practiceQuestions = getFallbackPracticeQuestions(lop, mon);
             }
             practiceIndex = 0;
             startPracticeQuizTimer();
             renderPracticeQuestion();
+
+            // 2. Fetch du lieu SQLite 10.000 cau hoi sieu toc khong chan UI
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1200);
+                const res = await fetch(`/api/questions?skill=luyen_tap&lop=${encodeURIComponent(lop)}&mon=${encodeURIComponent(mon)}&so_cau=50`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                const d = await res.json();
+                if (d.questions && d.questions.length > 0) {
+                    window.turboQuestionCache[cacheKey] = d.questions;
+                    practiceQuestions = d.questions;
+                    renderPracticeQuestion();
+                }
+            } catch(e) {}
         }
 
         function startPracticeQuizTimer() {
@@ -1886,16 +1909,12 @@
         async function startExamTest() {
             const loaiEl = document.getElementById('selLoaiKiemTra');
             const loai = loaiEl ? loaiEl.value : '45phut';
+            const cacheKey = `exam_${loai}`;
 
-            try {
-                const res = await fetch('/api/questions?skill=ielts_tong_hop');
-                const d = await res.json();
-                if (d.questions && d.questions.length > 0) {
-                    examQuestions = d.questions;
-                } else {
-                    examQuestions = getFallbackExamQuestions(loai);
-                }
-            } catch(e) {
+            // 1. Khoi chay tuc thi 0ms tu cache hoac fallback
+            if (window.turboQuestionCache[cacheKey]) {
+                examQuestions = window.turboQuestionCache[cacheKey];
+            } else {
                 examQuestions = getFallbackExamQuestions(loai);
             }
             examIndex = 0;
@@ -1909,6 +1928,20 @@
             const box = document.getElementById('examTestBox');
             if (box) box.style.display = 'block';
             renderExamQuestion();
+
+            // 2. Fetch du lieu kiem tra tong hop sieu toc qua mang
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1200);
+                const res = await fetch('/api/questions?skill=ielts_tong_hop', { signal: controller.signal });
+                clearTimeout(timeoutId);
+                const d = await res.json();
+                if (d.questions && d.questions.length > 0) {
+                    window.turboQuestionCache[cacheKey] = d.questions;
+                    examQuestions = d.questions;
+                    renderExamQuestion();
+                }
+            } catch(e) {}
         }
 
         function startExamTimer() {

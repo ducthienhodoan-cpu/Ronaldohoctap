@@ -10,11 +10,15 @@ from du_lieu_giao_duc.sinh_10000_cau_hoi import sinh_toan_bo_10000_cau_hoi
 DUONG_DAN_DB = os.path.join("du_lieu", "ngan_hang_10000_cau_hoi.db")
 
 def ket_noi_db():
-    """Ket noi hoac tao moi file co so du lieu SQLite."""
+    """Ket noi hoac tao moi file co so du lieu SQLite voi toc do doc ghi turbo sieu toc."""
     thu_muc = os.path.dirname(DUONG_DAN_DB)
     if not os.path.exists(thu_muc):
         os.makedirs(thu_muc)
-    conn = sqlite3.connect(DUONG_DAN_DB)
+    conn = sqlite3.connect(DUONG_DAN_DB, timeout=10.0, check_same_thread=False)
+    conn.execute("PRAGMA journal_mode = WAL;")
+    conn.execute("PRAGMA synchronous = NORMAL;")
+    conn.execute("PRAGMA cache_size = 10000;")
+    conn.execute("PRAGMA temp_store = MEMORY;")
     conn.row_factory = sqlite3.Row
     return conn
 

@@ -289,5 +289,13 @@ def notebook_engine():
         "study_plan": plan
     })
 
+# Turbo Cache Headers cho phan hoi Edge CDN va Browser
+@app.after_request
+def add_turbo_cache_headers(response):
+    if request.method == 'GET':
+        response.headers['Cache-Control'] = 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True)
