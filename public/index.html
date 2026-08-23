@@ -1337,11 +1337,12 @@
             const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
             
             if (iframe) {
-                const playlistIds = musicPlaylist.map(t => t.id).join(',');
-                const targetSrc = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&enablejsapi=1`;
-                if (!iframe.src || iframe.src === '' || iframe.src === 'about:blank' || !iframe.src.includes(track.id)) {
-                    iframe.src = targetSrc;
-                }
+                // 1. Cập nhật URL nhúng chính xác sang bài hát mới
+                const targetSrc = `https://www.youtube.com/embed/${track.id}?autoplay=1&enablejsapi=1`;
+                iframe.src = targetSrc;
+
+                // 2. Gửi lệnh YouTube API chuyển bài ngay lập tức
+                sendYtCommand('loadVideoById', [track.id]);
                 
                 setTimeout(() => {
                     if (curVol === 0) {
@@ -1353,7 +1354,7 @@
                         sendYtCommand('setVolume', [curVol]);
                         sendYtCommand('playVideo');
                     }
-                }, 400);
+                }, 300);
             }
         }
 
@@ -1443,8 +1444,7 @@
 
             if (iframe && (!iframe.src || iframe.src === '' || iframe.src === 'about:blank')) {
                 const track = musicPlaylist[currentTrackIdx];
-                const playlistIds = musicPlaylist.map(t => t.id).join(',');
-                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&enablejsapi=1`;
+                iframe.src = `https://www.youtube.com/embed/${track.id}?autoplay=1&enablejsapi=1`;
             }
 
             if (val === 0) {

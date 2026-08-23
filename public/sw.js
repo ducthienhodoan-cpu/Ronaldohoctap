@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v39.0 (Khoi dau 5 Ve Vang, het ve lam nhiem vu nhan them)
+// Mo ta: Service Worker TURBO toc do sieu toc v40.0 (Sua loi chuyen bai hat tuc thi 0ms)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v39.0-initial-5-golden-tickets-mission-system';
+const CACHE_NAME = 'sieu-club-hoc-tap-v40.0-instant-track-switching-fixed';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
