@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v33.0 (Giao dien nen san van dong bong da sang trong 3D & 2D)
+// Mo ta: Service Worker TURBO toc do sieu toc v34.0 (Tat va dung han phat nhac khi am luong ve 0%)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v33.0-pitch';
+const CACHE_NAME = 'sieu-club-hoc-tap-v34.0-zero-volume-fix';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

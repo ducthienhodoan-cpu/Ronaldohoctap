@@ -636,6 +636,11 @@
             </div>
         </div>
 
+        <!-- Khung nhúng YouTube Playlist Player (Có thể mở / ẩn) -->
+        <div id="ytPlaylistContainer" style="display: none; margin-bottom: 20px; background: rgba(15, 23, 42, 0.95); border: 2px solid #06B6D4; border-radius: 18px; padding: 14px; text-align: center; box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);">
+            <iframe id="ytIframePlayer" width="100%" height="220" src="" title="YouTube music player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.5);"></iframe>
+        </div>
+
         <!-- Navigation Tabs (16 Full Sections) -->
         <div class="nav-tabs">
             <button class="tab-btn active" data-sec="menu" onclick="switchSection('menu', this)">Menu Bắt Đầu</button>
@@ -1233,11 +1238,18 @@
         }
 
         function startBgMusic() {
-            // Ngan khong cho am thanh audio cu phat trung voi YouTube Playlist
             try {
                 const bg = document.getElementById('bgMusic');
                 if (bg) { bg.pause(); bg.currentTime = 0; }
             } catch(e) {}
+
+            const savedVol = localStorage.getItem('user_music_volume');
+            const curVol = savedVol !== null ? parseInt(savedVol, 10) : 30;
+            if (curVol > 0) {
+                updateTrackDisplay();
+            } else {
+                setVolume(0);
+            }
         }
 
         const musicPlaylist = [
@@ -1263,23 +1275,24 @@
                 lbl.innerText = `Bài ${currentTrackIdx + 1}/${musicPlaylist.length}: ${track.title}`;
             }
             const iframe = document.getElementById('ytIframePlayer');
+            const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
+            
             if (iframe) {
+                if (curVol === 0) {
+                    // Khi am luong 0%, dung phat video va xoa nguon phat
+                    iframe.src = "";
+                    return;
+                }
+                
                 const playlistIds = musicPlaylist.map(t => t.id).join(',');
-                const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
-                const isMuted = (curVol === 0);
-                const muteParam = isMuted ? '&mute=1' : '';
-                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1${muteParam}`;
+                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1`;
                 
                 iframe.onload = () => {
                     setTimeout(() => {
                         if (iframe && iframe.contentWindow) {
-                            if (isMuted) {
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
-                            } else {
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
-                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [curVol] }), '*');
-                            }
+                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
+                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [curVol] }), '*');
+                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
                         }
                     }, 500);
                 };
@@ -1313,6 +1326,14 @@
                 playerBox.style.display = 'block';
                 isMusicPlaying = true;
                 if (btn) btn.innerText = 'Ẩn Khung Nhạc';
+                // Neu chua phat thi khoi chay
+                const curVol = parseInt(localStorage.getItem('user_music_volume') || '30', 10);
+                if (curVol > 0) {
+                    const iframe = document.getElementById('ytIframePlayer');
+                    if (iframe && (!iframe.src || iframe.src === '')) {
+                        updateTrackDisplay();
+                    }
+                }
             }
         }
 
@@ -1341,7 +1362,7 @@
 
             if (volEl) {
                 if (val === 0) {
-                    volEl.innerText = '0%';
+                    volEl.innerText = '0% (ĐÃ TẮT TIẾNG)';
                     volEl.style.color = '#EF4444';
                     volEl.style.textShadow = '0 0 8px rgba(239, 68, 68, 0.8)';
                 } else if (val === 100) {
@@ -1366,28 +1387,34 @@
                 }
             }
 
-            if (iframe && iframe.contentWindow) {
-                if (val === 0) {
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
-                } else {
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [val] }), '*');
+            if (val === 0) {
+                // 0%: DỪNG PHÁT VÀ TẮT TIẾNG HOÀN TOÀN
+                if (iframe) {
+                    iframe.src = "";
+                }
+                try {
+                    const bg = document.getElementById('bgMusic');
+                    if (bg) { bg.pause(); bg.currentTime = 0; }
+                } catch(e) {}
+            } else {
+                // > 0%: TIẾP TỤC PHÁT NHẠC
+                if (iframe) {
+                    if (!iframe.src || iframe.src === "" || iframe.src === "about:blank") {
+                        const track = musicPlaylist[currentTrackIdx];
+                        const playlistIds = musicPlaylist.map(t => t.id).join(',');
+                        iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1`;
+                    } else {
+                        try {
+                            if (iframe.contentWindow) {
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [val] }), '*');
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
+                            }
+                        } catch(e) {}
+                    }
                 }
             }
         }
-
-        // Tự động kiểm tra và khóa âm lượng 0% liên tục để không phát tiếng khi chuyển bài mới
-        setInterval(() => {
-            const curVol = parseInt(localStorage.getItem('user_music_volume') || '30', 10);
-            if (curVol === 0) {
-                const iframe = document.getElementById('ytIframePlayer');
-                if (iframe && iframe.contentWindow) {
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
-                }
-            }
-        }, 1500);
 
         let currentIeltsSkill = 'tu_vung';
         let ieltsQuestions = [];
