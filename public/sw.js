@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v26.0 (Tu dong cap nhat so du ve quay, ve gap, ve vang ngay khi trung thuong)
+// Mo ta: Service Worker ho tro truy cap va luu cache ngoai tuyen (Offline PWA) cho Sieu Club Hoc Tap v27.0 (Co gon thanh am thanh thanh dang thanh truot slider keo de dieu chinh am thanh)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v26.0';
+const CACHE_NAME = 'sieu-club-hoc-tap-v27.0';
 const ASSETS_TO_CACHE = [
     './',
     './index.html'
