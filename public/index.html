@@ -1253,10 +1253,6 @@
             } catch(e) {}
         }
 
-        function startBgMusic() {
-            try {
-                const bg = document.getElementById('bgMusic');
-                if (bg) { bg.pause(); bg.currentTime = 0; }
         function sendYtCommand(func, args) {
             const iframe = document.getElementById('ytIframePlayer');
             if (iframe && iframe.contentWindow) {
@@ -1279,6 +1275,32 @@
             const savedVol = localStorage.getItem('user_music_volume');
             const curVol = savedVol !== null ? parseInt(savedVol, 10) : 30;
             setVolume(curVol);
+        }
+
+        function updateXPDisplay(xpGained) {
+            try {
+                let currentXP = parseInt(localStorage.getItem('user_xp') || '1250', 10);
+                currentXP += (parseInt(xpGained, 10) || 0);
+                localStorage.setItem('user_xp', currentXP.toString());
+                let level = Math.floor(currentXP / 250) + 1;
+                let streak = parseInt(localStorage.getItem('user_streak') || '1', 10);
+                const hdr = document.getElementById('hdrUserLevel');
+                if (hdr) {
+                    hdr.innerText = `Level ${level} | ${currentXP} XP | ${streak} Streak`;
+                }
+            } catch(e) {}
+        }
+
+        function completeLesson() {
+            try { playClickSfx(); } catch(e) {}
+            updateXPDisplay(30);
+            let streak = parseInt(localStorage.getItem('user_streak') || '1', 10);
+            streak += 1;
+            localStorage.setItem('user_streak', streak.toString());
+            const lop = document.getElementById('selLopHoc') ? document.getElementById('selLopHoc').value : 'Lớp 6';
+            const mon = document.getElementById('selMonHoc') ? document.getElementById('selMonHoc').value : 'Toán';
+            alert(`CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH BÀI HỌC!\n- Môn: ${mon} (${lop})\n- Nhận thưởng: +30 Roblox XP!\n- Chuỗi ngày học Streak: ${streak} ngày liên tiếp!`);
+            if (typeof loadStats === 'function') loadStats();
         }
 
         const musicPlaylist = [
@@ -2227,6 +2249,9 @@
             const percent = Math.round((correctCount / total) * 100);
             const xpReward = correctCount * 20;
 
+            updateXPDisplay(xpReward);
+            if (typeof loadStats === 'function') loadStats();
+
             alert(`KẾT QUẢ TẬP THI IELTS:\n\nĐiểm số: ${correctCount} / ${total} (${percent}%)\nSố câu đúng: ${correctCount} / ${total}\nXếp loại: ${percent >= 80 ? 'Xuất Sắc (Band 7.5+)' : percent >= 60 ? 'Đạt Yêu Cầu (Band 6.0)' : 'Cần Cố Gắng'}\nPhần thưởng: +${xpReward} Roblox XP!`);
         }
 
@@ -2476,6 +2501,8 @@
                 `;
             }
             document.getElementById('examCertContainer').innerHTML = certHtml;
+            if (r.xp_reward) updateXPDisplay(r.xp_reward);
+            if (typeof loadStats === 'function') loadStats();
             alert(`KẾT QUẢ BÀI KIỂM TRA:\nĐiểm số: ${r.score} / 10 (${r.percentage}%)\nXếp loại: ${r.rating}\nNhận thưởng: +${r.xp_reward} XP!`);
         }
 
