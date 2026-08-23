@@ -851,8 +851,18 @@
                     </select>
                     <label>Lớp:</label>
                     <select id="selAiLop">
-                        <option value="Lớp 6" selected>Lớp 6</option><option value="Lớp 7">Lớp 7</option><option value="Lớp 8">Lớp 8</option><option value="Lớp 9">Lớp 9</option>
-                        <option value="Lớp 10">Lớp 10</option><option value="Lớp 11">Lớp 11</option><option value="Lớp 12">Lớp 12</option>
+                        <option value="Lớp 1">Lớp 1 (Tiểu học)</option>
+                        <option value="Lớp 2">Lớp 2 (Tiểu học)</option>
+                        <option value="Lớp 3">Lớp 3 (Tiểu học)</option>
+                        <option value="Lớp 4">Lớp 4 (Tiểu học)</option>
+                        <option value="Lớp 5">Lớp 5 (Tiểu học)</option>
+                        <option value="Lớp 6" selected>Lớp 6</option>
+                        <option value="Lớp 7">Lớp 7</option>
+                        <option value="Lớp 8">Lớp 8</option>
+                        <option value="Lớp 9">Lớp 9</option>
+                        <option value="Lớp 10">Lớp 10</option>
+                        <option value="Lớp 11">Lớp 11</option>
+                        <option value="Lớp 12">Lớp 12</option>
                     </select>
                     <label>Môn:</label>
                     <select id="selAiMon">
@@ -1082,7 +1092,18 @@
                 <div class="form-group">
                     <label>Chọn Lớp:</label>
                     <select id="selFormulaLop" onchange="loadFormulas()">
-                        <option value="Lớp 6" selected>Lớp 6</option><option value="Lớp 7">Lớp 7</option><option value="Lớp 8">Lớp 8</option><option value="Lớp 9">Lớp 9</option>
+                        <option value="Lớp 1">Lớp 1 (Tiểu học)</option>
+                        <option value="Lớp 2">Lớp 2 (Tiểu học)</option>
+                        <option value="Lớp 3">Lớp 3 (Tiểu học)</option>
+                        <option value="Lớp 4">Lớp 4 (Tiểu học)</option>
+                        <option value="Lớp 5">Lớp 5 (Tiểu học)</option>
+                        <option value="Lớp 6" selected>Lớp 6</option>
+                        <option value="Lớp 7">Lớp 7</option>
+                        <option value="Lớp 8">Lớp 8</option>
+                        <option value="Lớp 9">Lớp 9</option>
+                        <option value="Lớp 10">Lớp 10</option>
+                        <option value="Lớp 11">Lớp 11</option>
+                        <option value="Lớp 12">Lớp 12</option>
                     </select>
                     <label>Môn Công Thức:</label>
                     <select id="selMonFormula" onchange="loadFormulas()">
@@ -1556,7 +1577,63 @@
             const display = document.getElementById('studyContentDisplay');
             if (!display) return;
 
-            const databaseBaiHoc = {
+            const databaseBaiHocTieuHoc = {
+                "Lớp 1": {
+                    "Toán": [
+                        { t: "Bài 1: Các số từ 1 đến 10 và Phép cộng", c: "Học đếm, nhận biết mặt số, so sánh nhiều hơn - ít hơn và thực hiện phép cộng đơn giản trong phạm vi 10." },
+                        { t: "Bài 2: Phép trừ trong phạm vi 10", c: "Bớt một số phần tử khỏi tập hợp ban đầu. Ví dụ: Có 5 quả táo, ăn 2 quả thì còn 5 - 2 = 3 quả." },
+                        { t: "Bài 3: Các hình học cơ bản", c: "Nhận biết và gọi tên chính xác Hình vuông, Hình tròn, Hình tam giác, Hình chữ nhật xung quanh cuộc sống." }
+                    ],
+                    "Tiếng Anh": [
+                        { t: "Unit 1: Hello & Numbers 1-10", c: "Chào hỏi cơ bản: Hello, Goodbye, What's your name? I am... Đếm số từ 1 đến 10." },
+                        { t: "Unit 2: Colors & Animals", c: "Từ vựng màu sắc (Red, Blue, Green, Yellow) và con vật nuôi quen thuộc (Cat, Dog, Bird, Fish)." }
+                    ]
+                },
+                "Lớp 2": {
+                    "Toán": [
+                        { t: "Bài 1: Bảng nhân 2 và Bảng nhân 5", c: "Học thuộc bảng cửu chương nhân 2 và nhân 5. Tích của bảng nhân 2 là các số chẵn, bảng nhân 5 có tận cùng là 0 hoặc 5." },
+                        { t: "Bài 2: Phép cộng trừ có nhớ trong phạm vi 100", c: "Quy tắc đặt tính rồi tính thẳng cột đơn vị và cột chục, nhớ 1 sang hàng chục khi tổng lớn hơn hoặc bằng 10." },
+                        { t: "Bài 3: Đơn vị đo độ dài Mét, Đề-xi-mét, Xăng-ti-mét", c: "1m = 10dm = 100cm. Dùng thước kẻ có chia vạch để đo độ dài các đoạn thẳng." }
+                    ],
+                    "Tiếng Anh": [
+                        { t: "Unit 1: Family & Home", c: "Từ vựng gia đình (Father, Mother, Brother, Sister) và các phòng trong nhà." },
+                        { t: "Unit 2: School Things", c: "Dụng cụ học tập (Pen, Pencil, Ruler, Book, Eraser) và mẫu câu 'This is my pen'." }
+                    ]
+                },
+                "Lớp 3": {
+                    "Toán": [
+                        { t: "Bài 1: Bảng nhân và chia từ 1 đến 9 toàn diện", c: "Nắm vững toàn bộ 9 bảng cửu chương. Mối liên hệ chặt chẽ giữa phép nhân và phép chia (a x b = c => c : a = b)." },
+                        { t: "Bài 2: Chu vi và Diện tích hình chữ nhật, hình vuông", c: "Chu vi HCN: P = (a + b) x 2 | Diện tích HCN: S = a x b. Chu vi HV: P = a x 4 | Diện tích HV: S = a x a." },
+                        { t: "Bài 3: Đơn vị đo khối lượng Gam và Kilôgam", c: "1kg = 1000g. Sử dụng cân để xác định khối lượng các vật phẩm." }
+                    ],
+                    "Tin học": [
+                        { t: "Bài 1: Làm quen với máy tính và chuột", c: "Các bộ phận của máy tính (Màn hình, Thân máy, Bàn phím, Chuột). Thao tác cầm chuột và nhấp đúp mở ứng dụng." },
+                        { t: "Bài 2: Tập vẽ tranh cùng Paint", c: "Sử dụng các công cụ bút chì, cọ vẽ, hình mẫu và thùng đổ màu để sáng tạo bức tranh." }
+                    ]
+                },
+                "Lớp 4": {
+                    "Toán": [
+                        { t: "Bài 1: Phân số và Các phép tính Phân số", c: "Khái niệm tử số và mẫu số. Quy đồng mẫu số và thực hiện các phép tính cộng, trừ, nhân, chia phân số." },
+                        { t: "Bài 2: Dạng toán Tìm hai số khi biết Tổng và Hiệu", c: "Công thức vàng: Số lớn = (Tổng + Hiệu) : 2; Số bé = (Tổng - Hiệu) : 2." },
+                        { t: "Bài 3: Biểu đồ cột và Số đo diện tích dm², m², km²", c: "Đọc và vẽ biểu đồ cột; 1m² = 100dm² = 10.000cm²; 1km² = 1.000.000m²." }
+                    ],
+                    "Tin học": [
+                        { t: "Bài 1: Lập trình trực quan Scratch", c: "Lắp ghép các khối lệnh chuyển động, hiển thị, âm thanh và sự kiện lá cờ xanh để tạo hoạt hình vui nhộn." }
+                    ]
+                },
+                "Lớp 5": {
+                    "Toán": [
+                        { t: "Bài 1: Số thập phân và Các phép tính Số thập phân", c: "Cấu tạo số thập phân gồm phần nguyên và phần thập phân. Đặt tính thẳng cột dấu phẩy khi cộng trừ nhân chia." },
+                        { t: "Bài 2: Tỉ số phần trăm và Giải toán Tỉ số phần trăm", c: "Cách tính tỉ số phần trăm của hai số: lấy thương nhân với 100 rồi viết thêm kí hiệu %." },
+                        { t: "Bài 3: Chuyển động đều (Vận tốc, Quãng đường, Thời gian)", c: "Công thức liên hệ: s = v x t; v = s : t; t = s : v." }
+                    ],
+                    "Tin học": [
+                        { t: "Bài 1: Lập trình Scratch sáng tạo Minigame", c: "Sử dụng biến số (Variables), câu lệnh rẽ nhánh Nếu - Thì (If - Else) và vòng lặp để lập trình game obby vượt chướng ngại vật." }
+                    ]
+                }
+            };
+
+            const databaseBaiHocTHCS = {
                 "Toán": [
                     { t: "Bài 1: Tập hợp và phần tử của tập hợp", c: "Tập hợp là khái niệm cơ bản trong toán học. Một tập hợp bao gồm các phần tử xác định. Ví dụ A = {1, 2, 3, 4, 5}." },
                     { t: "Bài 2: Các phép tính Cộng, Trừ, Nhân, Chia", c: "Các tính chất giao hoán, kết hợp, phân phối của phép nhân đối với phép cộng: a x (b + c) = a x b + a x c." },
@@ -1584,7 +1661,15 @@
                 ]
             };
 
-            const ds = databaseBaiHoc[mon] || databaseBaiHoc["Toán"];
+            let ds = [];
+            if (databaseBaiHocTieuHoc[lop] && databaseBaiHocTieuHoc[lop][mon]) {
+                ds = databaseBaiHocTieuHoc[lop][mon];
+            } else if (databaseBaiHocTieuHoc[lop] && databaseBaiHocTieuHoc[lop]["Toán"]) {
+                ds = databaseBaiHocTieuHoc[lop]["Toán"];
+            } else {
+                ds = databaseBaiHocTHCS[mon] || databaseBaiHocTHCS["Toán"];
+            }
+
             let html = `<h4 style="color: #F59E0B; font-size: 20px; margin-bottom: 14px; font-weight: 900;">NỘI DUNG SGK TRỌNG TÂM - ${lop.toUpperCase()} - MÔN ${mon.toUpperCase()}</h4>`;
             ds.forEach((b) => {
                 html += `
@@ -1756,6 +1841,182 @@
         function getFallbackPracticeQuestions(lop, mon) {
             lop = lop || "Lớp 6";
             mon = mon || "Toán";
+
+            if (lop === "Lớp 1") {
+                return [
+                    {
+                        cau_hoi: `[Lớp 1 - Môn Toán] Kết quả của phép tính 7 + 8 là bao nhiêu?`,
+                        dap_an: ["A. 15", "B. 14", "C. 16", "D. 13"],
+                        dap_an_dung: "A. 15",
+                        giai_thich: "7 + 8 = 15."
+                    },
+                    {
+                        cau_hoi: `[Lớp 1 - Môn Toán] Số liền sau của số 19 là số nào?`,
+                        dap_an: ["A. 20", "B. 18", "C. 21", "D. 19"],
+                        dap_an_dung: "A. 20",
+                        giai_thich: "Số liền sau số 19 là 19 + 1 = 20."
+                    },
+                    {
+                        cau_hoi: `[Lớp 1 - Môn Tiếng Anh] 'Quả táo' trong tiếng Anh là từ nào?`,
+                        dap_an: ["A. Apple", "B. Banana", "C. Orange", "D. Cat"],
+                        dap_an_dung: "A. Apple",
+                        giai_thich: "Apple nghĩa là quả táo."
+                    },
+                    {
+                        cau_hoi: `[Lớp 1 - Môn Toán] Hình nào sau đây có 3 cạnh?`,
+                        dap_an: ["A. Hình tam giác", "B. Hình vuông", "C. Hình tròn", "D. Hình chữ nhật"],
+                        dap_an_dung: "A. Hình tam giác",
+                        giai_thich: "Hình tam giác là hình học có đúng 3 cạnh và 3 góc."
+                    },
+                    {
+                        cau_hoi: `[Lớp 1 - Môn Tự nhiên & Xã hội] Bộ phận nào trên cơ thể giúp em nhìn thấy màu sắc đồ vật?`,
+                        dap_an: ["A. Đôi mắt", "B. Cái tai", "C. Cái mũi", "D. Cái miệng"],
+                        dap_an_dung: "A. Đôi mắt",
+                        giai_thich: "Đôi mắt là cơ quan thị giác giúp nhìn thấy mọi vật xung quanh."
+                    }
+                ];
+            }
+
+            if (lop === "Lớp 2") {
+                return [
+                    {
+                        cau_hoi: `[Lớp 2 - Môn Toán] Kết quả của phép tính 5 x 7 là:`,
+                        dap_an: ["A. 35", "B. 30", "C. 40", "D. 25"],
+                        dap_an_dung: "A. 35",
+                        giai_thich: "Theo bảng cửu chương nhân 5: 5 x 7 = 35."
+                    },
+                    {
+                        cau_hoi: `[Lớp 2 - Môn Toán] 1 mét (m) bằng bao nhiêu xăng-ti-mét (cm)?`,
+                        dap_an: ["A. 100 cm", "B. 10 cm", "C. 1000 cm", "D. 50 cm"],
+                        dap_an_dung: "A. 100 cm",
+                        giai_thich: "1m = 10dm = 100cm."
+                    },
+                    {
+                        cau_hoi: `[Lớp 2 - Môn Toán] Kết quả của phép cộng có nhớ 48 + 37 là:`,
+                        dap_an: ["A. 85", "B. 75", "C. 84", "D. 95"],
+                        dap_an_dung: "A. 85",
+                        giai_thich: "8 + 7 = 15 (viết 5 nhớ 1); 4 + 3 = 7 thêm 1 là 8 => Kết quả 85."
+                    },
+                    {
+                        cau_hoi: `[Lớp 2 - Môn Tiếng Anh] Số '50' trong tiếng Anh được viết là:`,
+                        dap_an: ["A. Fifty", "B. Fifteen", "C. Five", "D. Forty"],
+                        dap_an_dung: "A. Fifty",
+                        giai_thich: "Fifty là số 50, Fifteen là số 15."
+                    },
+                    {
+                        cau_hoi: `[Lớp 2 - Môn Toán] Một ngày có bao nhiêu giờ?`,
+                        dap_an: ["A. 24 giờ", "B. 12 giờ", "C. 60 giờ", "D. 30 giờ"],
+                        dap_an_dung: "A. 24 giờ",
+                        giai_thich: "Một ngày đêm trọn vẹn gồm 24 giờ."
+                    }
+                ];
+            }
+
+            if (lop === "Lớp 3") {
+                return [
+                    {
+                        cau_hoi: `[Lớp 3 - Môn Toán] Kết quả của phép tính 7 x 8 là:`,
+                        dap_an: ["A. 56", "B. 54", "C. 63", "D. 48"],
+                        dap_an_dung: "A. 56",
+                        giai_thich: "Theo bảng cửu chương 7: 7 x 8 = 56."
+                    },
+                    {
+                        cau_hoi: `[Lớp 3 - Môn Toán] Một hình chữ nhật có chiều dài 8cm, chiều rộng 5cm. Diện tích hình chữ nhật là:`,
+                        dap_an: ["A. 40 cm²", "B. 26 cm", "C. 40 cm", "D. 13 cm²"],
+                        dap_an_dung: "A. 40 cm²",
+                        giai_thich: "Diện tích hình chữ nhật = dài x rộng = 8 x 5 = 40 cm²."
+                    },
+                    {
+                        cau_hoi: `[Lớp 3 - Môn Tin học] Thiết bị nào dùng để điều khiển con trỏ trên màn hình máy tính?`,
+                        dap_an: ["A. Chuột máy tính (Mouse)", "B. Bàn phím", "C. Màn hình", "D. Thân máy"],
+                        dap_an_dung: "A. Chuột máy tính (Mouse)",
+                        giai_thich: "Chuột máy tính giúp điều khiển con trỏ và thao tác nhấp chọn trên màn hình."
+                    },
+                    {
+                        cau_hoi: `[Lớp 3 - Môn Tiếng Anh] 'They are _____ football in the playground.'`,
+                        dap_an: ["A. playing", "B. play", "C. plays", "D. played"],
+                        dap_an_dung: "A. playing",
+                        giai_thich: "Thì Hiện tại tiếp diễn: S + are + V-ing => playing."
+                    },
+                    {
+                        cau_hoi: `[Lớp 3 - Môn Toán] Kết quả của phép chia 72 : 9 là:`,
+                        dap_an: ["A. 8", "B. 9", "C. 7", "D. 6"],
+                        dap_an_dung: "A. 8",
+                        giai_thich: "9 x 8 = 72 nên 72 : 9 = 8."
+                    }
+                ];
+            }
+
+            if (lop === "Lớp 4") {
+                return [
+                    {
+                        cau_hoi: `[Lớp 4 - Môn Toán] Kết quả của phép cộng phân số 2/5 + 1/5 là:`,
+                        dap_an: ["A. 3/5", "B. 3/10", "C. 2/25", "D. 1/5"],
+                        dap_an_dung: "A. 3/5",
+                        giai_thich: "Cộng hai phân số cùng mẫu số: lấy tử cộng tử, giữ nguyên mẫu => (2+1)/5 = 3/5."
+                    },
+                    {
+                        cau_hoi: `[Lớp 4 - Môn Toán] Tìm hai số biết tổng là 40 và hiệu là 10. Số lớn là:`,
+                        dap_an: ["A. 25", "B. 15", "C. 30", "D. 20"],
+                        dap_an_dung: "A. 25",
+                        giai_thich: "Số lớn = (Tổng + Hiệu) : 2 = (40 + 10) : 2 = 25."
+                    },
+                    {
+                        cau_hoi: `[Lớp 4 - Môn Khoa học] Âm thanh truyền qua môi trường nào sau đây nhanh nhất?`,
+                        dap_an: ["A. Chất rắn", "B. Chất lỏng", "C. Chất khí", "D. Chân không"],
+                        dap_an_dung: "A. Chất rắn",
+                        giai_thich: "Tốc độ truyền âm: V_rắn > V_lỏng > V_khí."
+                    },
+                    {
+                        cau_hoi: `[Lớp 4 - Môn Tin học] Trong Scratch, nhân vật mặc định xuất hiện trên sân khấu là nhân vật nào?`,
+                        dap_an: ["A. Chú mèo Scratch", "B. Quả bóng", "C. Chú cún", "D. Ngôi sao"],
+                        dap_an_dung: "A. Chú mèo Scratch",
+                        giai_thich: "Mèo Scratch màu vàng cam là linh vật mặc định của phần mềm Scratch."
+                    },
+                    {
+                        cau_hoi: `[Lớp 4 - Môn Tiếng Anh] Dạng quá khứ (Past Simple) của động từ 'go' là gì?`,
+                        dap_an: ["A. went", "B. goes", "C. goed", "D. gone"],
+                        dap_an_dung: "A. went",
+                        giai_thich: "Go là động từ bất quy tắc, quá khứ đơn là went."
+                    }
+                ];
+            }
+
+            if (lop === "Lớp 5") {
+                return [
+                    {
+                        cau_hoi: `[Lớp 5 - Môn Toán] Số 0.25 viết dưới dạng phân số tối giản là:`,
+                        dap_an: ["A. 1/4", "B. 25/10", "C. 1/2", "D. 2/5"],
+                        dap_an_dung: "A. 1/4",
+                        giai_thich: "0.25 = 25/100 = 1/4."
+                    },
+                    {
+                        cau_hoi: `[Lớp 5 - Môn Toán] Một ô tô đi với vận tốc 60 km/h trong 2.5 giờ. Quãng đường ô tô đi được là:`,
+                        dap_an: ["A. 150 km", "B. 120 km", "C. 180 km", "D. 140 km"],
+                        dap_an_dung: "A. 150 km",
+                        giai_thich: "Quãng đường s = v x t = 60 x 2.5 = 150 km."
+                    },
+                    {
+                        cau_hoi: `[Lớp 5 - Môn Toán] Diện tích hình tam giác có độ dài đáy 10cm và chiều cao tương ứng 6cm là:`,
+                        dap_an: ["A. 30 cm²", "B. 60 cm²", "C. 16 cm²", "D. 20 cm²"],
+                        dap_an_dung: "A. 30 cm²",
+                        giai_thich: "S = (đáy x chiều cao) : 2 = (10 x 6) : 2 = 30 cm²."
+                    },
+                    {
+                        cau_hoi: `[Lớp 5 - Môn Khoa học] Nguồn năng lượng nào sau đây là năng lượng sạch tái tạo?`,
+                        dap_an: ["A. Năng lượng mặt trời và gió", "B. Than đá", "C. Dầu mỏ", "D. Khí đốt tự nhiên"],
+                        dap_an_dung: "A. Năng lượng mặt trời và gió",
+                        giai_thich: "Năng lượng mặt trời và gió vô tận và thân thiện với môi trường."
+                    },
+                    {
+                        cau_hoi: `[Lớp 5 - Môn Tiếng Anh] 'If it rains tomorrow, we _____ stay at home.'`,
+                        dap_an: ["A. will", "B. are", "C. did", "D. were"],
+                        dap_an_dung: "A. will",
+                        giai_thich: "Câu điều kiện loại 1: If + S + V(hiện tại đơn), S + will + V."
+                    }
+                ];
+            }
+
             return [
                 {
                     cau_hoi: `[${lop} - Môn ${mon}] Cho tập hợp A = {2; 4; 6; 8}. Phần tử nào sau đây thuộc tập hợp A?`,
