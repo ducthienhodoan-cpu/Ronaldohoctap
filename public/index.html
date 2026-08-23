@@ -1150,7 +1150,24 @@
             const iframe = document.getElementById('ytIframePlayer');
             if (iframe) {
                 const playlistIds = musicPlaylist.map(t => t.id).join(',');
-                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1`;
+                const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
+                const isMuted = (curVol === 0);
+                const muteParam = isMuted ? '&mute=1' : '';
+                iframe.src = `https://www.youtube.com/embed/${track.id}?playlist=${playlistIds}&loop=1&autoplay=1&enablejsapi=1${muteParam}`;
+                
+                iframe.onload = () => {
+                    setTimeout(() => {
+                        if (iframe && iframe.contentWindow) {
+                            if (isMuted) {
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
+                            } else {
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
+                                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [curVol] }), '*');
+                            }
+                        }
+                    }, 500);
+                };
             }
         }
 
@@ -1192,17 +1209,17 @@
             let curVal = parseInt(slider.value, 10);
             if (curVal > 0) {
                 previousVolumeBeforeMute = curVal;
-                slider.value = 0;
                 setVolume(0);
             } else {
                 let restoreVal = previousVolumeBeforeMute > 0 ? previousVolumeBeforeMute : 30;
-                slider.value = restoreVal;
                 setVolume(restoreVal);
             }
         }
 
         function setVolume(v) {
             const val = parseInt(v, 10) || 0;
+            localStorage.setItem('user_music_volume', val.toString());
+
             const volEl = document.getElementById('volVal');
             const slider = document.getElementById('volSlider');
             const iframe = document.getElementById('ytIframePlayer');
@@ -1236,15 +1253,26 @@
 
             if (iframe && iframe.contentWindow) {
                 if (val === 0) {
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*');
                     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
                 } else {
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
                     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
                     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [val] }), '*');
                 }
             }
         }
+
+        // Tự động kiểm tra và khóa âm lượng 0% liên tục để không phát tiếng khi chuyển bài mới
+        setInterval(() => {
+            const curVol = parseInt(localStorage.getItem('user_music_volume') || '30', 10);
+            if (curVol === 0) {
+                const iframe = document.getElementById('ytIframePlayer');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), '*');
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [0] }), '*');
+                }
+            }
+        }, 1500);
 
         let currentIeltsSkill = 'tu_vung';
         let ieltsQuestions = [];
@@ -3355,6 +3383,10 @@
             loadStats();
             loadSavedGeminiApiKey();
             startBgMusic();
+            const savedVol = localStorage.getItem('user_music_volume');
+            if (typeof setVolume === 'function') {
+                setVolume(savedVol !== null ? parseInt(savedVol, 10) : 30);
+            }
             renderObbyWorlds();
             renderObbyGrid(0);
         };

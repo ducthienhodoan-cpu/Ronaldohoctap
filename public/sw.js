@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc (Cache-First + Stale-While-Revalidate) giup ung dung tai ngay tuc thi trong 0ms
+// Mo ta: Service Worker TURBO toc do sieu toc v32.0 (Khoa am luong 0% ben vung khi chuyen bai hat)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v31.0-turbo';
+const CACHE_NAME = 'sieu-club-hoc-tap-v32.0-turbo';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
