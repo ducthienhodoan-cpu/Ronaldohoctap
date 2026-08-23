@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v35.0 (Cap nhat he thong day du Lop 1 - 12)
+// Mo ta: Service Worker TURBO toc do sieu toc v36.0 (Khac phuc triet de loi am luong 0% va don dep iframe trung lap)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v35.0-grades-1-to-12-complete';
+const CACHE_NAME = 'sieu-club-hoc-tap-v36.0-zero-volume-fix-absolute';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
