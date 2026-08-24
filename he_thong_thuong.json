@@ -1,27 +1,9 @@
 {
-    "xp": 3720,
-    "coin": 764,
-    "level": 19,
-    "danh_hieu": "Chuyên gia EduVerse",
+    "xp": 0,
+    "coin": 0,
+    "level": 1,
+    "danh_hieu": "Tân Thủ Dũng Sĩ",
     "danh_sach_huy_hieu": [
-        "Huy hiệu Khởi đầu",
-        "Huy hiệu Siêng năng",
-        "Huy hiệu Cấp độ 3",
-        "Huy hiệu Cấp độ 4",
-        "Huy hiệu Cấp độ 5",
-        "Huy hiệu Cấp độ 6",
-        "Huy hiệu Cấp độ 7",
-        "Huy hiệu Cấp độ 8",
-        "Huy hiệu Cấp độ 9",
-        "Huy hiệu Cấp độ 10",
-        "Huy hiệu Cấp độ 11",
-        "Huy hiệu Cấp độ 12",
-        "Huy hiệu Cấp độ 13",
-        "Huy hiệu Cấp độ 14",
-        "Huy hiệu Cấp độ 15",
-        "Huy hiệu Cấp độ 16",
-        "Huy hiệu Cấp độ 17",
-        "Huy hiệu Cấp độ 18",
-        "Huy hiệu Cấp độ 19"
+        "Huy hiệu Khởi đầu"
     ]
 }

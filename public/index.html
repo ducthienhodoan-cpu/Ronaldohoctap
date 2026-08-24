@@ -3812,15 +3812,19 @@
         }
 
         async function resetAppGlobal() {
-            if (!confirm("Bạn có chắc chắn muốn reset đặt lại toàn bộ ứng dụng về trạng thái ban đầu?")) return;
+            if (!confirm("Bạn có chắc chắn muốn reset đặt lại toàn bộ ứng dụng về trạng thái mới tinh ban đầu?")) return;
             try {
                 localStorage.clear();
                 sessionStorage.clear();
                 localStorage.setItem('ve_gap', '5');
+                localStorage.setItem('ve_quay', '5');
                 localStorage.setItem('ve_vang', '5');
+                localStorage.setItem('user_xp', '0');
+                localStorage.setItem('user_streak', '0');
+                localStorage.setItem('user_music_volume', '30');
                 await fetch('/api/reset', { method: 'POST' });
             } catch(e) {}
-            alert("Đã reset thành công toàn bộ ứng dụng về trạng thái ban đầu!");
+            alert("Đã reset thành công toàn bộ ứng dụng về trạng thái mới tinh ban đầu!");
             window.location.reload();
         }
 

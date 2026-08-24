@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v43.0 (Da xoa bo 100% tinh nang dieu khien giong noi ca Web va Desktop)
+// Mo ta: Service Worker TURBO toc do sieu toc v44.0 (Trang thai moi tinh 100% ban dau)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v43.0-completely-purged-voice-feature';
+const CACHE_NAME = 'sieu-club-hoc-tap-v44.0-clean-fresh-reset-state';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

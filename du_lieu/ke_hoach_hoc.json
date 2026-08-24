@@ -1,1 +1,23 @@
-[]
+{
+    "streak_ngay": 0,
+    "danh_sach_muc_tieu": [
+        {
+            "id": 1,
+            "noi_dung": "Hoàn thành 1 bài học bất kỳ",
+            "hoan_thanh": false,
+            "xp": 30
+        },
+        {
+            "id": 2,
+            "noi_dung": "Đạt điểm 10 một bài kiểm tra",
+            "hoan_thanh": false,
+            "xp": 50
+        },
+        {
+            "id": 3,
+            "noi_dung": "Quay vòng quay may mắn hoặc gắp thú",
+            "hoan_thanh": false,
+            "xp": 20
+        }
+    ]
+}
