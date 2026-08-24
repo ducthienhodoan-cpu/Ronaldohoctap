@@ -151,17 +151,12 @@ class ManHinhObby(QWidget):
         self.scroll_area.setWidget(self.stadium_frame)
         main_layout.addWidget(self.scroll_area)
 
-        # 5. Thanh Nút Bấm Thao Tác Chạy Nhảy & Nộp Bài & Giọng Nói AI
+        # 5. Thanh Nút Bấm Thao Tác Chạy Nhảy & Nộp Bài
         nav_layout = QHBoxLayout()
         self.btn_action_jump = QPushButton("BẮT ĐẦU VƯỢT MÀN OBBY")
         self.btn_action_jump.setProperty("class", "btn-primary")
         self.btn_action_jump.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 24px; background: linear-gradient(135deg, #EC4899, #A855F7);")
         self.btn_action_jump.clicked.connect(self.bat_dau_man_obby)
-
-        self.btn_voice_obby = QPushButton("ĐIỀU KHIỂN BẰNG GIỌNG NÓI AI")
-        self.btn_voice_obby.setProperty("class", "btn-secondary")
-        self.btn_voice_obby.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 20px; background: linear-gradient(135deg, #10B981, #059669);")
-        self.btn_voice_obby.clicked.connect(self.kich_hoat_giong_noi_ai)
 
         self.btn_submit_obby = QPushButton("NỘP BÀI & CHẠM CHECKPOINT")
         self.btn_submit_obby.setProperty("class", "btn-success")
@@ -169,7 +164,6 @@ class ManHinhObby(QWidget):
         self.btn_submit_obby.clicked.connect(self.tong_ket_man_obby)
 
         nav_layout.addWidget(self.btn_action_jump)
-        nav_layout.addWidget(self.btn_voice_obby)
         nav_layout.addStretch()
         nav_layout.addWidget(self.btn_submit_obby)
 
@@ -293,31 +287,6 @@ class ManHinhObby(QWidget):
             self.tru_luot_choi_obby_neu_can()
         self.tong_ket_man_obby()
 
-    def kich_hoat_giong_noi_ai(self):
-        """Trợ lý nhận diện lệnh giọng nói điều khiển Parkour Obby."""
-        text, ok = QInputDialog.getText(
-            self,
-            "ĐIỀU KHIỂN BẰNG GIỌNG NÓI AI",
-            "Nói lệnh của em (VD: 'Nhảy', 'Đáp án A', 'Bắt đầu', 'Nộp bài'):"
-        )
-        if ok and text:
-            cmd = text.strip().lower()
-            if "nhảy" in cmd or "nhay" in cmd or "parkour" in cmd:
-                QMessageBox.information(self, "Lệnh Giọng Nói AI", f"Đã nhận lệnh 'NHẢY'! Nhân vật thực hiện cú nhảy lên Cục Parkour {self.obby_step + 1}!")
-            elif "bắt đầu" in cmd or "start" in cmd or "chơi" in cmd:
-                self.bat_dau_man_obby()
-            elif "nộp" in cmd or "checkpoint" in cmd:
-                self.tong_ket_man_obby()
-            elif self.cau_hoi_current and "dap_an" in self.cau_hoi_current:
-                opts = self.cau_hoi_current["dap_an"]
-                if "a" in cmd or "1" in cmd:
-                    if len(opts) > 0: self.luu_dap_an_va_nhay(opts[0])
-                elif "b" in cmd or "2" in cmd:
-                    if len(opts) > 1: self.luu_dap_an_va_nhay(opts[1])
-                elif "c" in cmd or "3" in cmd:
-                    if len(opts) > 2: self.luu_dap_an_va_nhay(opts[2])
-                else:
-                    QMessageBox.information(self, "Lệnh Giọng Nói AI", f"Đã nhận dạng câu lệnh: '{text}'. Đã ghi nhận thử thách Obby!")
 
     def cap_nhat_dong_ho(self):
         if self.thoi_gian_con_lai > 0:
