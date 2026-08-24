@@ -215,6 +215,63 @@
             box-shadow: 0 0 25px #FFFFFF;
         }
 
+        /* Volume Slider Smooth 60fps */
+        .neon-volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 140px;
+            height: 8px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #06B6D4 0%, #00FFCC 30%, #334155 30%, #334155 100%);
+            outline: none;
+            cursor: pointer;
+            padding: 0 !important;
+            border: 1px solid rgba(6, 182, 212, 0.4) !important;
+            margin: 0 !important;
+            user-select: none;
+        }
+
+        .neon-volume-slider::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 6px;
+        }
+
+        .neon-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00FFCC;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00FFCC, 0 0 20px rgba(0, 255, 204, 0.6);
+            border: 2px solid #FFFFFF;
+            margin-top: -5px;
+            transition: transform 0.08s ease;
+        }
+
+        .neon-volume-slider::-webkit-slider-thumb:hover,
+        .neon-volume-slider::-webkit-slider-thumb:active {
+            transform: scale(1.25);
+            background: #F59E0B;
+            box-shadow: 0 0 14px #F59E0B, 0 0 25px rgba(245, 158, 11, 0.8);
+        }
+
+        .neon-volume-slider::-moz-range-track {
+            height: 8px;
+            border-radius: 6px;
+        }
+
+        .neon-volume-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00FFCC;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00FFCC;
+            border: 2px solid #FFFFFF;
+        }
+
         /* Glassmorphism Cards */
         .card {
             background: var(--card-bg);
@@ -631,7 +688,7 @@
             <!-- Phải: Thanh Trượt Slider Điều Chỉnh Âm Lượng Siêu Mượt -->
             <div style="display: flex; align-items: center; gap: 10px; background: rgba(2, 6, 23, 0.7); border: 1.5px solid rgba(6, 182, 212, 0.5); padding: 6px 14px; border-radius: 12px;">
                 <button onclick="toggleMuteVolume()" style="background: none; border: none; font-size: 11px; font-weight: 900; color: #F59E0B; cursor: pointer; padding: 0;" title="Bấm để Tắt / Bật nhanh">ÂM LƯỢNG:</button>
-                <input type="range" id="volSlider" class="neon-volume-slider" min="0" max="100" value="30" oninput="setVolume(this.value)" onchange="setVolume(this.value)" title="Kéo để chỉnh âm thanh">
+                <input type="range" id="volSlider" class="neon-volume-slider" min="0" max="100" value="30" oninput="handleVolumeInput(this.value)" onchange="handleVolumeChange(this.value)" title="Kéo để chỉnh âm thanh">
                 <span id="volVal" style="font-size: 13px; font-weight: 900; color: #00FFCC; min-width: 42px; text-align: right;">30%</span>
             </div>
         </div>
@@ -1407,17 +1464,15 @@
             }
         }
 
-        function setVolume(v) {
-            const val = parseInt(v, 10) || 0;
-            localStorage.setItem('user_music_volume', val.toString());
+        let ytVolThrottleTimer = null;
 
+        function updateVolumeUI(val) {
             const volEl = document.getElementById('volVal');
             const slider = document.getElementById('volSlider');
-            const iframe = document.getElementById('ytIframePlayer');
 
             if (volEl) {
                 if (val === 0) {
-                    volEl.innerText = '0% (ĐÃ TẮT TIẾNG)';
+                    volEl.innerText = '0% (TẮT)';
                     volEl.style.color = '#EF4444';
                     volEl.style.textShadow = '0 0 8px rgba(239, 68, 68, 0.8)';
                 } else if (val === 100) {
@@ -1432,16 +1487,35 @@
             }
 
             if (slider) {
-                slider.value = val;
                 if (val === 0) {
                     slider.style.background = '#334155';
-                    slider.style.accentColor = '#EF4444';
                 } else {
-                    slider.style.background = `linear-gradient(90deg, #06B6D4 ${val}%, #334155 ${val}%)`;
-                    slider.style.accentColor = '#00FFCC';
+                    slider.style.background = `linear-gradient(90deg, #06B6D4 0%, #00FFCC ${val}%, #334155 ${val}%, #334155 100%)`;
                 }
             }
+        }
 
+        function handleVolumeInput(v) {
+            const val = Math.max(0, Math.min(100, parseInt(v, 10) || 0));
+            updateVolumeUI(val);
+
+            // Throttle nhe 35ms de keo slider muot ma 60fps tuyet doi khong giat lag
+            if (ytVolThrottleTimer) clearTimeout(ytVolThrottleTimer);
+            ytVolThrottleTimer = setTimeout(() => {
+                applyVolumeToPlayer(val);
+            }, 35);
+        }
+
+        function handleVolumeChange(v) {
+            const val = Math.max(0, Math.min(100, parseInt(v, 10) || 0));
+            if (ytVolThrottleTimer) clearTimeout(ytVolThrottleTimer);
+            localStorage.setItem('user_music_volume', val.toString());
+            updateVolumeUI(val);
+            applyVolumeToPlayer(val);
+        }
+
+        function applyVolumeToPlayer(val) {
+            const iframe = document.getElementById('ytIframePlayer');
             if (iframe && (!iframe.src || iframe.src === '' || iframe.src === 'about:blank')) {
                 const track = musicPlaylist[currentTrackIdx];
                 iframe.src = `https://www.youtube.com/embed/${track.id}?autoplay=1&enablejsapi=1`;
@@ -1462,6 +1536,15 @@
                 sendYtCommand('setVolume', [val]);
                 sendYtCommand('playVideo');
             }
+        }
+
+        function setVolume(v) {
+            const val = Math.max(0, Math.min(100, parseInt(v, 10) || 0));
+            localStorage.setItem('user_music_volume', val.toString());
+            const slider = document.getElementById('volSlider');
+            if (slider) slider.value = val;
+            updateVolumeUI(val);
+            applyVolumeToPlayer(val);
         }
 
         // Tự động mở âm thanh mượt mà khi người dùng tương tác lần đầu
