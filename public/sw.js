@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v41.0 (Thanh truot am luong sieu muot 60fps khong giat)
+// Mo ta: Service Worker TURBO toc do sieu toc v42.0 (Da xoa bo hoan toan thanh dieu khien giong noi)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v41.0-ultra-smooth-60fps-slider';
+const CACHE_NAME = 'sieu-club-hoc-tap-v42.0-removed-voice-control';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
