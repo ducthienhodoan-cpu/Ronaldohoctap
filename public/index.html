@@ -1069,7 +1069,7 @@
                                 <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ THƯỜNG</button>
                                 <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFF; font-weight: 900; cursor: pointer;" onclick="nhan_5_ve_vang_tuan_moi()">+5 VÉ VÀNG/TUẦN</button>
                             </div>
-                            <span id="clawTimerText" style="color: #F59E0B;">20s</span>
+                            <span id="clawTimerText" style="color: #F59E0B;">15s</span>
                         </div>
                         <canvas id="canvasClaw" width="260" height="180" style="margin: 6px 0; border-radius: 16px; border: 2px solid #EC4899;"></canvas><br>
                         
@@ -1086,6 +1086,9 @@
                         <div style="display: flex; gap: 6px; margin-top: 8px; position: relative; z-index: 30;">
                             <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; cursor: pointer; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi(false)">GẮP THƯỜNG (1 VÉ)</button>
                             <button class="btn-primary" style="font-size: 12px; font-weight: 900; padding: 10px; flex: 1; cursor: pointer; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web_moi(true)">GẮP VÀNG (1 VÉ VÀNG)</button>
+                        </div>
+                        <div style="margin-top: 8px; position: relative; z-index: 30;">
+                            <button id="btnDropClawMain" class="btn-danger" style="width: 100%; font-size: 13px; font-weight: 900; padding: 11px; cursor: pointer; background: linear-gradient(135deg, #EF4444, #DC2626); border-radius: 12px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); opacity: 0.5; pointer-events: none;" onclick="ha_tay_gap_ngay()">HẠ TAY GẮP (GẮP NGAY)</button>
                         </div>
                         <div id="clawResult" style="margin-top: 10px; font-weight: 900; color: #10B981; font-size: 13.5px;"></div>
 
@@ -3902,7 +3905,7 @@
                         <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: #10B981; color: #FFF; font-weight: 900; cursor: pointer;" onclick="nap_5_ve_gap_mien_phi()">+5 VÉ THƯỜNG</button>
                         <button style="font-size: 10px; padding: 4px 6px; border-radius: 8px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFF; font-weight: 900; cursor: pointer;" onclick="nhan_5_ve_vang_tuan_moi()">+5 VÉ VÀNG</button>
                     </div>
-                    <span id="modalClawTimerText" style="color: #F59E0B;">20s</span>
+                    <span id="modalClawTimerText" style="color: #F59E0B;">15s</span>
                 </div>
                 <canvas id="canvasModalClaw" width="280" height="190" style="margin: 6px auto; display: block; border-radius: 16px; border: 2px solid #EC4899;"></canvas>
                 
@@ -3919,6 +3922,9 @@
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <button class="btn-primary" style="font-size: 13px; font-weight: 900; padding: 12px; flex: 1; background: linear-gradient(135deg, #EC4899, #A855F7);" onclick="bat_dau_gap_thu_web_moi(false)">GẮP THƯỜNG (1 VÉ)</button>
                     <button class="btn-primary" style="font-size: 13px; font-weight: 900; padding: 12px; flex: 1; background: linear-gradient(135deg, #F59E0B, #D97706);" onclick="bat_dau_gap_thu_web_moi(true)">GẮP VÀNG (1 VÉ VÀNG)</button>
+                </div>
+                <div style="margin-top: 8px;">
+                    <button id="btnDropClawModal" class="btn-danger" style="width: 100%; font-size: 14px; font-weight: 900; padding: 12px; cursor: pointer; background: linear-gradient(135deg, #EF4444, #DC2626); border-radius: 12px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); opacity: 0.5; pointer-events: none;" onclick="ha_tay_gap_ngay()">HẠ TAY GẮP (GẮP NGAY)</button>
                 </div>
                 <div id="modalClawResult" style="margin-top: 12px; font-weight: 900; color: #10B981; font-size: 15px;"></div>
 

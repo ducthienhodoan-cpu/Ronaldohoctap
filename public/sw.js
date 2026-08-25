@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v45.0 (Da them Bai hat 12 - Suc Manh Cua Sao Do | Hau Hoang)
+// Mo ta: Service Worker TURBO toc do sieu toc v46.0 (May Gap Thu 3D: Dem nguoc 15s dieu khien, Nut Ha Tay Gap va Ti le rot 50%)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v45.0-added-track-12-hau-hoang';
+const CACHE_NAME = 'sieu-club-hoc-tap-v46.0-claw-machine-countdown-drop-button-50-percent';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

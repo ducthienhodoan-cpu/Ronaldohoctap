@@ -149,12 +149,22 @@ class ManHinhGapThuMoi(QWidget):
 
         game_layout.addWidget(dpad_widget)
 
-        # Nút GẮP THÚ BẮT ĐẦU
-        self.btn_gap = QPushButton("GẮP THÚ NGAY (1 VÉ GẮP)")
-        self.btn_gap.setProperty("class", "btn-primary")
-        self.btn_gap.setStyleSheet("font-size: 18px; font-weight: bold; color: #FFFFFF; padding: 14px 28px; background: linear-gradient(135deg, #EC4899, #A855F7);")
-        self.btn_gap.clicked.connect(self.bat_dau_gap)
-        game_layout.addWidget(self.btn_gap)
+        # Bảng nút bấm bắt đầu & Hạ tay gắp
+        btn_action_layout = QHBoxLayout()
+        self.btn_start = QPushButton("BẮT ĐẦU LƯỢT GẮP (1 VÉ)")
+        self.btn_start.setProperty("class", "btn-primary")
+        self.btn_start.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; padding: 12px; background: linear-gradient(135deg, #EC4899, #A855F7);")
+        self.btn_start.clicked.connect(self.bat_dau_luot_choi)
+
+        self.btn_ha_gap = QPushButton("HẠ TAY GẮP (GẮP NGAY!)")
+        self.btn_ha_gap.setProperty("class", "btn-danger")
+        self.btn_ha_gap.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; padding: 12px; background: linear-gradient(135deg, #EF4444, #DC2626);")
+        self.btn_ha_gap.setEnabled(False)
+        self.btn_ha_gap.clicked.connect(self.ha_tay_gap_thuc_te)
+
+        btn_action_layout.addWidget(self.btn_start)
+        btn_action_layout.addWidget(self.btn_ha_gap)
+        game_layout.addLayout(btn_action_layout)
 
         # Bảng chú thích Hướng dẫn Điều kiện Kiếm Vé Vàng (Làm nhiệm vụ)
         lbl_huong_dan = QLabel(
@@ -185,7 +195,7 @@ class ManHinhGapThuMoi(QWidget):
         self.lbl_status.setText(f"{may_obj.get('ten', 'Máy Gắp')}: {may_obj.get('mo_ta', '')}")
 
     def dieu_khien_joystick(self, huong):
-        if self.dang_gap:
+        if self.dang_gap and not getattr(self, 'dang_dieu_khien', False):
             return
         huong_map = {
             "up": "Tay gắp di chuyển Tiến lên phía trước",
@@ -201,7 +211,7 @@ class ManHinhGapThuMoi(QWidget):
         self.lbl_ve_vang.setText(f"Vé Vàng: {data.get('ve_vang', 0)} Vé")
         self.lbl_combo.setText(f"Combo: {data.get('combo_streak', 0)}x")
 
-    def bat_dau_gap(self):
+    def bat_dau_luot_choi(self):
         if self.dang_gap:
             return
 
@@ -213,22 +223,35 @@ class ManHinhGapThuMoi(QWidget):
             return
 
         self.dang_gap = True
-        self.btn_gap.setEnabled(False)
+        self.dang_dieu_khien = True
+        self.btn_start.setEnabled(False)
+        self.btn_ha_gap.setEnabled(True)
         self.result_temp = res
         self.progress_value = 0
         self.progress_bar.setValue(0)
-        self.lbl_status.setText("Tay gắp 3D đang từ từ hạ xuống đống thú bông...")
+        self.lbl_status.setText("ĐANG ĐẾM THỜI GIAN (15s): Dùng Joystick chỉnh vị trí rồi bấm [HẠ TAY GẮP]!")
         
-        self.timer_gap.start(40)
-        
-        self.time_remaining = 20
+        self.time_remaining = 15
+        self.lbl_timer.setText(f"Điều khiển: {self.time_remaining}s")
         self.timer_countdown.start(1000)
+
+    def ha_tay_gap_thuc_te(self):
+        if not getattr(self, 'dang_dieu_khien', False):
+            return
+
+        self.dang_dieu_khien = False
+        self.btn_ha_gap.setEnabled(False)
+        self.timer_countdown.stop()
+        self.lbl_timer.setText("Đang gắp...")
+        self.lbl_status.setText("Tay gắp 3D đang từ từ hạ xuống kẹp thú bông...")
+        self.timer_gap.start(40)
 
     def dem_nguoc_thoi_gian(self):
         self.time_remaining -= 1
-        self.lbl_timer.setText(f"Thời gian: {self.time_remaining}s")
+        self.lbl_timer.setText(f"Điều khiển: {self.time_remaining}s")
         if self.time_remaining <= 0:
             self.timer_countdown.stop()
+            self.ha_tay_gap_thuc_te()
 
     def cap_nhat_tien_trinh_gap(self):
         self.progress_value += 2
@@ -240,12 +263,14 @@ class ManHinhGapThuMoi(QWidget):
             self.lbl_status.setText("Tay gắp di chuyển sang khay nhận thưởng...")
         elif self.progress_value >= 100:
             self.timer_gap.stop()
-            self.timer_countdown.stop()
             self.hoan_thanh_gap()
 
     def hoan_thanh_gap(self):
         self.dang_gap = False
-        self.btn_gap.setEnabled(True)
+        self.dang_dieu_khien = False
+        self.btn_start.setEnabled(True)
+        self.btn_ha_gap.setEnabled(False)
+        self.lbl_timer.setText("15s")
         res = self.result_temp
         
         self.lbl_status.setText(res["thong_bao"])

@@ -1,17 +1,16 @@
 // File: public/xu_ly_3d/gap_thu_3d_moi.js
-// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong ho tro Ve Thong & Ve Vang va Chuc nang Quay Vong Quay Co Qua
+// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong: Dem nguoc thoi gian dieu khien, Nut Ha Tay Gap va Ti le rot 50%
 
 let clawScene3D, clawCamera3D;
 let clawRenderer3D_Main = null;
 let clawRenderer3D_Modal = null;
 let clawArm3D, clawPlush3D, prizeChuteMesh;
 let clawIsOperating = false;
-let clawState = 'idle'; // 'idle', 'positioning', 'lowering', 'grabbing', 'lifting', 'slipping', 'moving_to_chute', 'dropping', 'returning'
-let clawTargetTier = 'thuong';
+let clawState = 'idle'; // 'idle', 'controlling', 'lowering', 'lifting', 'slipping', 'moving_to_chute', 'dropping', 'returning'
 let dropY = 0.7;
 let clawPosX = 0;
 let clawPosZ = 0;
-let countdownTimer20s = 20;
+let countdownTimer20s = 15;
 let timerIntervalId = null;
 let willSlipThisTurn = false;
 let isUsingGoldenTicket = false;
@@ -50,6 +49,15 @@ function nap_5_ve_gap_mien_phi() {
     localStorage.setItem('ve_gap', currentV.toString());
     cap_nhat_hien_thi_ve_gap();
     try { playClickSfx(); } catch(e) {}
+}
+
+function nhan_5_ve_vang_tuan_moi() {
+    let currentVV = parseInt(localStorage.getItem('ve_vang') || '5', 10);
+    currentVV += 5;
+    localStorage.setItem('ve_vang', currentVV.toString());
+    cap_nhat_hien_thi_ve_gap();
+    try { playClickSfx(); } catch(e) {}
+    alert("BẠN ĐÃ NHẬN THÀNH CÔNG +5 VÉ VÀNG MIỄN PHÍ CHO TUẦN MỚI!");
 }
 
 function khoi_tao_gap_thu_3d_moi() {
@@ -156,7 +164,8 @@ function khoi_tao_gap_thu_3d_moi() {
 }
 
 function moveJoystickClaw3D(dir) {
-    if (clawIsOperating) return;
+    // Chi cho phep dieu khien khi dang trong luot dieu khien (controlling) hoac trang thai cho (idle)
+    if (clawIsOperating && clawState !== 'controlling') return;
 
     const speed = 0.15;
     if (dir === 'left' && clawPosX > -1.2) clawPosX -= speed;
@@ -168,10 +177,16 @@ function moveJoystickClaw3D(dir) {
         clawArm3D.position.x = clawPosX;
         clawArm3D.position.z = clawPosZ;
     }
+    try { playClickSfx(); } catch(e) {}
 }
 
 function bat_dau_gap_thu_web_moi(suDungVeVang = false) {
-    if (clawIsOperating) return;
+    if (clawIsOperating) {
+        if (clawState === 'controlling') {
+            ha_tay_gap_ngay();
+        }
+        return;
+    }
 
     isUsingGoldenTicket = suDungVeVang;
 
@@ -188,7 +203,7 @@ function bat_dau_gap_thu_web_moi(suDungVeVang = false) {
         }
         veVang -= 1;
         localStorage.setItem('ve_vang', veVang.toString());
-        willSlipThisTurn = Math.random() * 100 < 10; // Chế độ Vé Vàng chỉ có 10% rớt
+        willSlipThisTurn = Math.random() < 0.10; // Chế độ Vé Vàng: 10% rớt, 90% thành công
     } else {
         let veHienTai = lay_ve_gap_hien_tai();
         if (veHienTai <= 0) {
@@ -202,46 +217,113 @@ function bat_dau_gap_thu_web_moi(suDungVeVang = false) {
         }
         veHienTai -= 1;
         localStorage.setItem('ve_gap', veHienTai.toString());
-        willSlipThisTurn = Math.random() * 100 < 60; // Chế độ Vé Thường có 60% rớt
+        willSlipThisTurn = Math.random() < 0.50; // Đúng 50% rớt theo yêu cầu
     }
 
     cap_nhat_hien_thi_ve_gap();
+    try { playClickSfx(); } catch(e) {}
 
     clawIsOperating = true;
+    clawState = 'controlling';
     khoi_tao_gap_thu_3d_moi();
 
-    countdownTimer20s = 20;
+    // Reset vi tri tay gap ve vi tri chuan
+    clawPosX = 0;
+    clawPosZ = 0;
+    if (clawArm3D) {
+        clawArm3D.position.set(0, 1.2, 0);
+    }
+    if (clawPlush3D) {
+        clawPlush3D.position.set(0, -1.3, 0);
+    }
+
+    countdownTimer20s = 15;
     const timerElem = document.getElementById('clawTimerText');
     const modalTimerElem = document.getElementById('modalClawTimerText');
-    if (timerElem) timerElem.innerText = `Thời gian: 20s`;
-    if (modalTimerElem) modalTimerElem.innerText = `Thời gian: 20s`;
+    if (timerElem) timerElem.innerText = `Điều khiển: 15s`;
+    if (modalTimerElem) modalTimerElem.innerText = `Điều khiển: 15s`;
+
+    // Cap nhat trang thai va bat sang nut Ha Tay Gap
+    cap_nhat_trang_thai_nut_ha_gap(true);
 
     const resDiv = document.getElementById('clawResult');
     const resModalDiv = document.getElementById('modalClawResult');
-    const statusMsg = suDungVeVang ? 'VÉ VÀNG KÍCH HOẠT: Tay gắp cường hóa 90% thành công!' : 'Tay gắp đang từ từ hạ xuống kẹp thú bông...';
+    const statusMsg = suDungVeVang ? 
+        'VÉ VÀNG ĐÃ KÍCH HOẠT! Dùng Joystick chỉnh vị trí rồi bấm [HẠ TAY GẮP]!' : 
+        'ĐANG ĐẾM THỜI GIAN: Dùng Joystick/phím mũi tên chỉnh vị trí, rồi bấm [HẠ TAY GẮP]!';
     if (resDiv) { resDiv.style.color = suDungVeVang ? '#F59E0B' : '#00FFCC'; resDiv.innerText = statusMsg; }
     if (resModalDiv) { resModalDiv.style.color = suDungVeVang ? '#F59E0B' : '#00FFCC'; resModalDiv.innerText = statusMsg; }
 
     if (timerIntervalId) clearInterval(timerIntervalId);
     timerIntervalId = setInterval(() => {
         countdownTimer20s--;
-        if (timerElem) timerElem.innerText = `Thời gian: ${countdownTimer20s}s`;
-        if (modalTimerElem) modalTimerElem.innerText = `Thời gian: ${countdownTimer20s}s`;
+        if (timerElem) timerElem.innerText = `Điều khiển: ${countdownTimer20s}s`;
+        if (modalTimerElem) modalTimerElem.innerText = `Điều khiển: ${countdownTimer20s}s`;
+        
         if (countdownTimer20s <= 0) {
             clearInterval(timerIntervalId);
+            ha_tay_gap_ngay();
         }
     }, 1000);
+}
 
-    if (clawScene3D && clawArm3D) {
-        clawState = 'lowering';
+function ha_tay_gap_ngay() {
+    if (clawState !== 'controlling') return;
+
+    if (timerIntervalId) clearInterval(timerIntervalId);
+    try { playClickSfx(); } catch(e) {}
+
+    const timerElem = document.getElementById('clawTimerText');
+    const modalTimerElem = document.getElementById('modalClawTimerText');
+    if (timerElem) timerElem.innerText = `Đang gắp...`;
+    if (modalTimerElem) modalTimerElem.innerText = `Đang gắp...`;
+
+    const resDiv = document.getElementById('clawResult');
+    const resModalDiv = document.getElementById('modalClawResult');
+    const statusMsg = 'TAY GẮP ĐANG HẠ XUỐNG KẸP THÚ BÔNG...';
+    if (resDiv) { resDiv.style.color = '#F59E0B'; resDiv.innerText = statusMsg; }
+    if (resModalDiv) { resModalDiv.style.color = '#F59E0B'; resModalDiv.innerText = statusMsg; }
+
+    cap_nhat_trang_thai_nut_ha_gap(false);
+
+    // Di chuyển vị trí thú bông ở đáy về dưới tay gắp
+    if (clawPlush3D && clawArm3D) {
+        clawPlush3D.position.set(clawArm3D.position.x, -1.3, clawArm3D.position.z);
     }
+
+    clawState = 'lowering';
+}
+
+function cap_nhat_trang_thai_nut_ha_gap(isControlling) {
+    const btnDropMain = document.getElementById('btnDropClawMain');
+    const btnDropModal = document.getElementById('btnDropClawModal');
+
+    [btnDropMain, btnDropModal].forEach(btn => {
+        if (!btn) return;
+        if (isControlling) {
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+            btn.style.animation = 'pulse 1s infinite alternate';
+            btn.innerText = 'HẠ TAY GẮP (GẮP NGAY!)';
+        } else {
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            btn.style.animation = 'none';
+            btn.innerText = 'HẠ TAY GẮP (GẮP NGAY)';
+        }
+    });
 }
 
 function animateGapThu3DMoi() {
     requestAnimationFrame(animateGapThu3DMoi);
     if (!clawScene3D) return;
 
-    if (clawState === 'lowering') {
+    if (clawState === 'controlling') {
+        // Trong che do dieu khien: Tay gap lac lu nhe tu nhien
+        if (clawArm3D) {
+            clawArm3D.rotation.z = Math.sin(Date.now() * 0.003) * 0.03;
+        }
+    } else if (clawState === 'lowering') {
         if (clawArm3D && clawArm3D.position.y > -0.7) {
             clawArm3D.position.y -= 0.04;
         } else {
@@ -295,12 +377,18 @@ function animateGapThu3DMoi() {
             clawIsOperating = false;
 
             if (timerIntervalId) clearInterval(timerIntervalId);
+            cap_nhat_trang_thai_nut_ha_gap(false);
+
+            const timerElem = document.getElementById('clawTimerText');
+            const modalTimerElem = document.getElementById('modalClawTimerText');
+            if (timerElem) timerElem.innerText = `15s`;
+            if (modalTimerElem) modalTimerElem.innerText = `15s`;
             
             const resDiv = document.getElementById('clawResult');
             const resModalDiv = document.getElementById('modalClawResult');
 
             if (willSlipThisTurn) {
-                const msgRot = "Rất tiếc! Tay gắp bị trượt rớt thú giữa chừng (Tỉ lệ rớt 60%). Hãy thử lại lượt sau!";
+                const msgRot = "Rất tiếc! Tay gắp bị trượt rớt thú giữa chừng (Tỉ lệ rớt 50%). Hãy căn chỉnh chuẩn và thử lại nhé!";
                 if (resDiv) { resDiv.style.color = '#EF4444'; resDiv.innerText = msgRot; }
                 if (resModalDiv) { resModalDiv.style.color = '#EF4444'; resModalDiv.innerText = msgRot; }
             } else {
@@ -335,6 +423,11 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveJoystickClaw3D('right');
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') moveJoystickClaw3D('up');
     if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') moveJoystickClaw3D('down');
+    if (e.key === ' ' || e.key === 'Enter') {
+        if (clawState === 'controlling') {
+            ha_tay_gap_ngay();
+        }
+    }
 });
 
 window.addEventListener('DOMContentLoaded', () => {
