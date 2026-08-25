@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v44.0 (Trang thai moi tinh 100% ban dau)
+// Mo ta: Service Worker TURBO toc do sieu toc v45.0 (Da them Bai hat 12 - Suc Manh Cua Sao Do | Hau Hoang)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v44.0-clean-fresh-reset-state';
+const CACHE_NAME = 'sieu-club-hoc-tap-v45.0-added-track-12-hau-hoang';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
