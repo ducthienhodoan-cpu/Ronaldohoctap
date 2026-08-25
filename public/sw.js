@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v47.0 (Them Nut GAP o giua can Joystick D-Pad)
+// Mo ta: Service Worker TURBO toc do sieu toc v48.0 (Da go bo Bai hat 12 do ban quyen YouTube)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v47.0-dpad-center-grab-button';
+const CACHE_NAME = 'sieu-club-hoc-tap-v48.0-removed-track-12-copyright';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
