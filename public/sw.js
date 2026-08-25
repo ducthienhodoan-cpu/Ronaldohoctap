@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v46.0 (May Gap Thu 3D: Dem nguoc 15s dieu khien, Nut Ha Tay Gap va Ti le rot 50%)
+// Mo ta: Service Worker TURBO toc do sieu toc v47.0 (Them Nut GAP o giua can Joystick D-Pad)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v46.0-claw-machine-countdown-drop-button-50-percent';
+const CACHE_NAME = 'sieu-club-hoc-tap-v47.0-dpad-center-grab-button';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

@@ -142,8 +142,15 @@ class ManHinhGapThuMoi(QWidget):
         btn_right.setStyleSheet("font-size: 13px; font-weight: bold; color: #FFFFFF; padding: 8px;")
         btn_right.clicked.connect(lambda: self.dieu_khien_joystick("right"))
 
+        self.btn_dpad_gap = QPushButton("GẮP")
+        self.btn_dpad_gap.setProperty("class", "btn-danger")
+        self.btn_dpad_gap.setStyleSheet("font-size: 13px; font-weight: bold; color: #FFFFFF; padding: 8px; background-color: #EF4444; border-radius: 8px;")
+        self.btn_dpad_gap.setEnabled(False)
+        self.btn_dpad_gap.clicked.connect(self.ha_tay_gap_thuc_te)
+
         dpad_grid.addWidget(btn_up, 0, 1)
         dpad_grid.addWidget(btn_left, 1, 0)
+        dpad_grid.addWidget(self.btn_dpad_gap, 1, 1)
         dpad_grid.addWidget(btn_right, 1, 2)
         dpad_grid.addWidget(btn_down, 2, 1)
 
@@ -151,7 +158,7 @@ class ManHinhGapThuMoi(QWidget):
 
         # Bảng nút bấm bắt đầu & Hạ tay gắp
         btn_action_layout = QHBoxLayout()
-        self.btn_start = QPushButton("BẮT ĐẦU LƯỢT GẮP (1 VÉ)")
+        self.btn_start = QPushButton("BẮT ĐẦU (1 VÉ - BẬT ĐẾM GIỜ)")
         self.btn_start.setProperty("class", "btn-primary")
         self.btn_start.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; padding: 12px; background: linear-gradient(135deg, #EC4899, #A855F7);")
         self.btn_start.clicked.connect(self.bat_dau_luot_choi)
@@ -226,10 +233,12 @@ class ManHinhGapThuMoi(QWidget):
         self.dang_dieu_khien = True
         self.btn_start.setEnabled(False)
         self.btn_ha_gap.setEnabled(True)
+        if hasattr(self, 'btn_dpad_gap'):
+            self.btn_dpad_gap.setEnabled(True)
         self.result_temp = res
         self.progress_value = 0
         self.progress_bar.setValue(0)
-        self.lbl_status.setText("ĐANG ĐẾM THỜI GIAN (15s): Dùng Joystick chỉnh vị trí rồi bấm [HẠ TAY GẮP]!")
+        self.lbl_status.setText("ĐANG ĐẾM THỜI GIAN (15s): Dùng Joystick chỉnh vị trí rồi bấm nút [GẮP]!")
         
         self.time_remaining = 15
         self.lbl_timer.setText(f"Điều khiển: {self.time_remaining}s")
@@ -241,6 +250,8 @@ class ManHinhGapThuMoi(QWidget):
 
         self.dang_dieu_khien = False
         self.btn_ha_gap.setEnabled(False)
+        if hasattr(self, 'btn_dpad_gap'):
+            self.btn_dpad_gap.setEnabled(False)
         self.timer_countdown.stop()
         self.lbl_timer.setText("Đang gắp...")
         self.lbl_status.setText("Tay gắp 3D đang từ từ hạ xuống kẹp thú bông...")
@@ -270,6 +281,8 @@ class ManHinhGapThuMoi(QWidget):
         self.dang_dieu_khien = False
         self.btn_start.setEnabled(True)
         self.btn_ha_gap.setEnabled(False)
+        if hasattr(self, 'btn_dpad_gap'):
+            self.btn_dpad_gap.setEnabled(False)
         self.lbl_timer.setText("15s")
         res = self.result_temp
         

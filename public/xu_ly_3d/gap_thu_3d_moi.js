@@ -1,5 +1,5 @@
 // File: public/xu_ly_3d/gap_thu_3d_moi.js
-// Mo ta: Dong co 3D May Gap Thu tuong tac Joystick 4 huong: Dem nguoc thoi gian dieu khien, Nut Ha Tay Gap va Ti le rot 50%
+// Mo ta: Dong co 3D May Gap Thu: Tra 1 ve bat dem gio 15s, Nut GAP o giua Joystick D-Pad va Ti le rot 50%
 
 let clawScene3D, clawCamera3D;
 let clawRenderer3D_Main = null;
@@ -164,7 +164,7 @@ function khoi_tao_gap_thu_3d_moi() {
 }
 
 function moveJoystickClaw3D(dir) {
-    // Chi cho phep dieu khien khi dang trong luot dieu khien (controlling) hoac trang thai cho (idle)
+    // Cho phep dieu khien khi dang trong luot dieu khien (controlling) hoac trang thai cho (idle)
     if (clawIsOperating && clawState !== 'controlling') return;
 
     const speed = 0.15;
@@ -243,14 +243,14 @@ function bat_dau_gap_thu_web_moi(suDungVeVang = false) {
     if (timerElem) timerElem.innerText = `Điều khiển: 15s`;
     if (modalTimerElem) modalTimerElem.innerText = `Điều khiển: 15s`;
 
-    // Cap nhat trang thai va bat sang nut Ha Tay Gap
+    // Cap nhat trang thai va bat sang nut GAP & Ha Tay Gap
     cap_nhat_trang_thai_nut_ha_gap(true);
 
     const resDiv = document.getElementById('clawResult');
     const resModalDiv = document.getElementById('modalClawResult');
     const statusMsg = suDungVeVang ? 
-        'VÉ VÀNG ĐÃ KÍCH HOẠT! Dùng Joystick chỉnh vị trí rồi bấm [HẠ TAY GẮP]!' : 
-        'ĐANG ĐẾM THỜI GIAN: Dùng Joystick/phím mũi tên chỉnh vị trí, rồi bấm [HẠ TAY GẮP]!';
+        'VÉ VÀNG ĐÃ KÍCH HOẠT! Dùng Joystick chỉnh vị trí rồi bấm nút [GẮP]!' : 
+        'ĐANG ĐẾM THỜI GIAN: Dùng Joystick/phím mũi tên chỉnh vị trí, rồi bấm nút [GẮP]!';
     if (resDiv) { resDiv.style.color = suDungVeVang ? '#F59E0B' : '#00FFCC'; resDiv.innerText = statusMsg; }
     if (resModalDiv) { resModalDiv.style.color = suDungVeVang ? '#F59E0B' : '#00FFCC'; resModalDiv.innerText = statusMsg; }
 
@@ -297,6 +297,8 @@ function ha_tay_gap_ngay() {
 function cap_nhat_trang_thai_nut_ha_gap(isControlling) {
     const btnDropMain = document.getElementById('btnDropClawMain');
     const btnDropModal = document.getElementById('btnDropClawModal');
+    const btnDPadMain = document.getElementById('btnDPadGrabMain');
+    const btnDPadModal = document.getElementById('btnDPadGrabModal');
 
     [btnDropMain, btnDropModal].forEach(btn => {
         if (!btn) return;
@@ -310,6 +312,25 @@ function cap_nhat_trang_thai_nut_ha_gap(isControlling) {
             btn.style.pointerEvents = 'none';
             btn.style.animation = 'none';
             btn.innerText = 'HẠ TAY GẮP (GẮP NGAY)';
+        }
+    });
+
+    [btnDPadMain, btnDPadModal].forEach(btn => {
+        if (!btn) return;
+        if (isControlling) {
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+            btn.style.animation = 'pulse 1s infinite alternate';
+            btn.style.background = 'linear-gradient(135deg, #EF4444, #B91C1C)';
+            btn.style.color = '#FFFFFF';
+            btn.style.boxShadow = '0 0 12px rgba(239, 68, 68, 0.8)';
+        } else {
+            btn.style.opacity = '0.6';
+            btn.style.pointerEvents = 'none';
+            btn.style.animation = 'none';
+            btn.style.background = '#475569';
+            btn.style.color = '#94A3B8';
+            btn.style.boxShadow = 'none';
         }
     });
 }
