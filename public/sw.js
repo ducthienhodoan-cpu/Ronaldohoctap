@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v50.0 (Can chinh moc phat dung tu 'Bam bo bam' 5s)
+// Mo ta: Service Worker TURBO toc do sieu toc v51.0 (Can moc giay thu 6 loai bo hoan toan tu 'that')
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v50.0-refined-bam-bo-start-5s';
+const CACHE_NAME = 'sieu-club-hoc-tap-v51.0-clean-bam-bo-start-6s';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
