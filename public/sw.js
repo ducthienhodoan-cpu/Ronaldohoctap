@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v48.0 (Da go bo Bai hat 12 do ban quyen YouTube)
+// Mo ta: Service Worker TURBO toc do sieu toc v49.0 (Da them Bai hat 12 - Thay Kim Sang Sik Bam Bo Bam Bo Bam)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v48.0-removed-track-12-copyright';
+const CACHE_NAME = 'sieu-club-hoc-tap-v49.0-added-track-12-kim-sang-sik-bam-bo';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',

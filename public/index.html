@@ -675,7 +675,7 @@
         <div id="playlistHeaderBar" style="background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border: 2px solid #06B6D4; border-radius: 18px; padding: 10px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; box-shadow: 0 8px 25px rgba(6, 182, 212, 0.35);">
             <!-- Trái: Tên bài hát -->
             <div style="display: flex; align-items: center; min-width: 240px;">
-                <span id="lblCurrentTrack" style="font-weight: 800; font-size: 14px; color: #00FFCC; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px;">Bài 1/11: Oliver Tree - Life Goes On</span>
+                <span id="lblCurrentTrack" style="font-weight: 800; font-size: 14px; color: #00FFCC; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px;">Bài 1/12: Oliver Tree - Life Goes On</span>
             </div>
 
             <!-- Giữa: Nút điều hướng bài hát -->
@@ -1379,7 +1379,8 @@
             { id: 'ovj8Gb_cVgY', title: 'NO BATIDAO' },
             { id: 'vrY1THC_NQE', title: 'IShowSpeed - World Cup (Champions)' },
             { id: 'V1508wboZXk', title: 'Animaniacs SING-ALONG - Yakko\'s World' },
-            { id: 'ueNY30Cs8Lk', title: 'Betsy, Maria Yankovskaya - Sigma Boy' }
+            { id: 'ueNY30Cs8Lk', title: 'Betsy, Maria Yankovskaya - Sigma Boy' },
+            { id: '6X-kLpFpcfo', title: 'BLV FPT - Thầy Kim Sang Sik (Bam Bồ Bam Bồ Bam)', start: 6 }
         ];
 
         let currentTrackIdx = 0;
@@ -1394,12 +1395,17 @@
             const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
             
             if (iframe) {
-                // 1. Cập nhật URL nhúng chính xác sang bài hát mới
-                const targetSrc = `https://www.youtube.com/embed/${track.id}?autoplay=1&enablejsapi=1`;
+                const startSec = track.start || 0;
+                // 1. Cập nhật URL nhúng chính xác sang bài hát mới kèm mốc thời gian bắt đầu
+                const targetSrc = `https://www.youtube.com/embed/${track.id}?autoplay=1&enablejsapi=1${startSec > 0 ? '&start=' + startSec : ''}`;
                 iframe.src = targetSrc;
 
                 // 2. Gửi lệnh YouTube API chuyển bài ngay lập tức
-                sendYtCommand('loadVideoById', [track.id]);
+                if (startSec > 0) {
+                    sendYtCommand('loadVideoById', [{ videoId: track.id, startSeconds: startSec }]);
+                } else {
+                    sendYtCommand('loadVideoById', [track.id]);
+                }
                 
                 setTimeout(() => {
                     if (curVol === 0) {
