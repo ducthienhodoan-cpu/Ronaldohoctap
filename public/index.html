@@ -664,8 +664,8 @@
                     <canvas id="canvasMascot3D" width="60" height="60" style="width: 60px; height: 60px;"></canvas>
                     <img src="/hinh_anh_3d/roblox_anh_dai_dien_3d.png" alt="Avatar" class="avatar-img" onerror="this.src='/hinh_anh_3d/linh_vat_3d.png'">
                     <div style="display: flex; flex-direction: column;">
-                        <span class="user-name" id="hdrUserName">Học Sinh Roblox</span>
-                        <span class="user-level" id="hdrUserLevel">Level 5 | 1250 XP | 1 Streak</span>
+                        <span class="user-name" id="hdrUserName">Học Sinh EduVerse</span>
+                        <span class="user-level" id="hdrUserLevel">Level 1 | 0 XP | 0 Streak</span>
                     </div>
                 </div>
             </div>
@@ -1336,11 +1336,11 @@
 
         function updateXPDisplay(xpGained) {
             try {
-                let currentXP = parseInt(localStorage.getItem('user_xp') || '1250', 10);
+                let currentXP = parseInt(localStorage.getItem('user_xp') || '0', 10);
                 currentXP += (parseInt(xpGained, 10) || 0);
                 localStorage.setItem('user_xp', currentXP.toString());
                 let level = Math.floor(currentXP / 250) + 1;
-                let streak = parseInt(localStorage.getItem('user_streak') || '1', 10);
+                let streak = parseInt(localStorage.getItem('user_streak') || '0', 10);
                 const hdr = document.getElementById('hdrUserLevel');
                 if (hdr) {
                     hdr.innerText = `Level ${level} | ${currentXP} XP | ${streak} Streak`;
@@ -3845,6 +3845,7 @@
         }
 
         window.onload = () => {
+            updateXPDisplay(0);
             loadStats();
             loadSavedGeminiApiKey();
             startBgMusic();

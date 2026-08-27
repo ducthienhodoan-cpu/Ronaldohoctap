@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v51.0 (Can moc giay thu 6 loai bo hoan toan tu 'that')
+// Mo ta: Service Worker TURBO toc do sieu toc v52.0 (Reset toan bo du lieu ve trang thai moi tinh 100%)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v51.0-clean-bam-bo-start-6s';
+const CACHE_NAME = 'sieu-club-hoc-tap-v52.0-clean-full-reset';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
