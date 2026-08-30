@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v53.0 (Da cap nhat Bai 11: Sao Do Dai Chien va Bai 12: Suc Manh Cua Sao Do)
+// Mo ta: Service Worker TURBO toc do sieu toc v54.0 (Da them Bai 13: Lun Thi Sao - Hau Hoang ft Nhung Phuong)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v53.0-added-sao-do-1-and-2';
+const CACHE_NAME = 'sieu-club-hoc-tap-v54.0-added-track-13-lun-thi-sao';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
