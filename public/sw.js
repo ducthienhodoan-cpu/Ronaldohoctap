@@ -1,7 +1,7 @@
 // File: public/sw.js
-// Mo ta: Service Worker TURBO toc do sieu toc v55.0 (Da them Bai 14: Con Dau Gen Z, Bai 15: Dai Chien Lop Truong, Bai 16: Tet Nha Ba Hoan)
+// Mo ta: Service Worker TURBO toc do sieu toc v56.0 (Da them Bai 17: Doi Bong Bat On - Hau Hoang)
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v55.0-added-tracks-14-15-16';
+const CACHE_NAME = 'sieu-club-hoc-tap-v56.0-added-track-17-doi-bong-bat-on';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
