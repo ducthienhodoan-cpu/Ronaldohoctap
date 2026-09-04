@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhNhacThuGianUI</class>
+ <widget class="QWidget" name="ManHinhNhacThuGianUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>680</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>NHẠC THƯ GIÃN VÀ TIẾP NĂNG LƯỢNG HỌC TẬP</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>NHẠC THƯ GIÃN VÀ TIẾP NĂNG LƯỢNG HỌC TẬP TÍCH CỰC</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 22px; font-weight: bold; color: #06B6D4;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="cardBgMusic">
+     <property name="styleSheet">
+      <string notr="true">background-color: #0F172A; border: 2px solid #06B6D4; border-radius: 16px; padding: 12px 18px;</string>
+     </property>
+     <layout class="QHBoxLayout" name="layoutBg">
+      <item>
+       <widget class="QLabel" name="lblBgTitle">
+        <property name="text">
+         <string>Nhạc nền hệ thống: GUT GENUG - KITSCHKRIEG ft. BLUMENGARTEN &amp; SHIRIN DAVID</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 14px; font-weight: bold; color: #00FFCC;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="spacerBg">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblStatus">
+        <property name="text">
+         <string>Trạng thái: Đang Phát</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #27AE60; font-weight: bold;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnToggleBg">
+        <property name="text">
+         <string>Bật / Tắt Nhạc Nền</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #06B6D4; color: #FFFFFF; font-weight: bold; padding: 6px 14px; border-radius: 8px;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="cardPlaylist">
+     <property name="styleSheet">
+      <string notr="true">background-color: #0F172A; border: 2px solid #06B6D4; border-radius: 16px; padding: 12px 18px;</string>
+     </property>
+     <layout class="QHBoxLayout" name="layoutPlaylist">
+      <item>
+       <widget class="QLabel" name="lblSelectSong">
+        <property name="text">
+         <string>Chọn bài hát (19 bài):</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 14px; font-weight: bold; color: #FFFFFF;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboSongList">
+        <property name="styleSheet">
+         <string notr="true">background-color: #020617; color: #FFFFFF; border: 1.5px solid #06B6D4; border-radius: 8px; padding: 6px 12px; font-weight: bold;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnPrevSong">
+        <property name="text">
+         <string>Bài Trước</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #A855F7; color: #FFFFFF; font-weight: bold; padding: 6px 14px; border-radius: 8px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnNextSong">
+        <property name="text">
+         <string>Bài Sau</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #A855F7; color: #FFFFFF; font-weight: bold; padding: 6px 14px; border-radius: 8px;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="cardVideoPlayer">
+     <property name="styleSheet">
+      <string notr="true">background-color: #091B15; border: 2.5px solid rgba(255, 255, 255, 0.25); border-radius: 20px; padding: 15px;</string>
+     </property>
+     <layout class="QVBoxLayout" name="layoutVideoPlayer"/>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
