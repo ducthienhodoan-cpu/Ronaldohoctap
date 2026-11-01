@@ -767,3 +767,17 @@ KẾT QUẢ SIÊU GÕ PHÍM (MÀN {self.typing_stage}):
         text = self.txt_notes.toPlainText()
         luu_ghi_chu_hoc_tap(text)
         QMessageBox.information(self, "Đã lưu ghi chú", "Ghi chú và lịch học tập cá nhân đã được lưu thành công!")
+
+    def dung_hoat_dong(self):
+        """Dừng tất cả bộ đếm của Gõ phím và Pomodoro khi thoát ra."""
+        if hasattr(self, 'typing_timer') and self.typing_timer.isActive():
+            self.typing_timer.stop()
+            self.typing_running = False
+        if hasattr(self, 'pomo_timer') and self.pomo_timer.isActive():
+            self.pomo_timer.stop()
+            self.pomo_running = False
+
+    def hideEvent(self, event):
+        """Khi chuyển sang màn hình khác, dừng tất cả bộ đếm của Gõ phím và Pomodoro."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)

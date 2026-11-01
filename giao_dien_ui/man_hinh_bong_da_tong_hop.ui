@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManHinhBongDaTongHopUI</class>
+ <widget class="QWidget" name="ManHinhBongDaTongHopUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>960</width>
+    <height>680</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SIÊU SAO BÓNG ĐÁ VÀ ĐỘI HÌNH TRONG MƠ</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>12</number>
+   </property>
+   <property name="leftMargin">
+    <number>16</number>
+   </property>
+   <property name="topMargin">
+    <number>16</number>
+   </property>
+   <property name="rightMargin">
+    <number>16</number>
+   </property>
+   <property name="bottomMargin">
+    <number>16</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="headerFrame">
+     <property name="styleSheet">
+      <string notr="true">background-color: #064E3B; border: 2px solid #10B981; border-radius: 14px; padding: 10px;</string>
+     </property>
+     <layout class="QVBoxLayout" name="headerLayout">
+      <item>
+       <widget class="QLabel" name="lblHeaderTitle">
+        <property name="text">
+         <string>SIÊU SAO BÓNG ĐÁ VÀ ĐỘI HÌNH TRONG MƠ</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 20px; font-weight: bold; color: #FFFFFF;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblHeaderSub">
+        <property name="text">
+         <string>Bách Khoa Huyền Thoại, Sơ Đồ Chiến Thuật 11 Siêu Sao và Mô Phỏng Trận Cầu Đỉnh Cao 90 Phút</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 13px; color: #6EE7B7; font-weight: 500;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidgetBongDa">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QTabWidget::pane { border: 2px solid #10B981; background-color: #022C22; border-radius: 12px; } QTabBar::tab { background-color: #064E3B; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 20px; border-top-left-radius: 8px; border-top-right-radius: 8px; margin-right: 4px; } QTabBar::tab:selected { background-color: #10B981; color: #022C22; }</string>
+     </property>
+     <widget class="QWidget" name="tabHuyenThoai">
+      <attribute name="title">
+       <string>Bách Khoa &amp; Huyền Thoại</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="layoutTab1">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="rowFilterHuyenThoai">
+         <item>
+          <widget class="QLabel" name="lblChonHT">
+           <property name="text">
+            <string>Chọn Huyền Thoại:</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF; font-weight: bold; font-size: 14px;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cboHuyenThoai">
+           <property name="styleSheet">
+            <string notr="true">background-color: #064E3B; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 6px; border-radius: 8px; border: 1px solid #10B981;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnKhaoSatTriThuc">
+           <property name="text">
+            <string>Thử Tài Tri Thức Bóng Đá</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #F59E0B; color: #022C22; font-weight: bold; font-size: 14px; padding: 8px 16px; border-radius: 8px;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QFrame" name="frameChiTietHT">
+         <property name="styleSheet">
+          <string notr="true">background-color: #064E3B; border: 1.5px solid #10B981; border-radius: 10px; padding: 12px;</string>
+         </property>
+         <layout class="QVBoxLayout" name="layoutChiTietHT">
+          <item>
+           <widget class="QLabel" name="lblTenHT">
+            <property name="text">
+             <string>Cristiano Ronaldo (CR7)</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 18px; font-weight: bold; color: #F59E0B;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblThongTinChiTietHT">
+            <property name="text">
+             <string>Quốc tịch, Vị trí, Số áo, CLB nổi tiếng, Kỷ lục bàn thắng...</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 13.5px; color: #FFFFFF; line-height: 1.6;</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frameQuizHT">
+         <property name="styleSheet">
+          <string notr="true">background-color: #042F2E; border: 1.5px solid #06B6D4; border-radius: 10px; padding: 12px;</string>
+         </property>
+         <layout class="QVBoxLayout" name="layoutQuizHT">
+          <item>
+           <widget class="QLabel" name="lblCauHoiQuiz">
+            <property name="text">
+             <string>Bấm 'Thử Tài Tri Thức Bóng Đá' để bắt đầu câu đố!</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 15px; font-weight: bold; color: #06B6D4;</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridDapAnQuiz"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblKetQuaQuiz">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 13px; font-weight: bold; color: #F59E0B;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabDoiHinh">
+      <attribute name="title">
+       <string>Xây Dựng Đội Hình 11 Siêu Sao</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="layoutTab2">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="rowControlDoiHinh">
+         <item>
+          <widget class="QLabel" name="lblSoDo">
+           <property name="text">
+            <string>Sơ đồ chiến thuật:</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF; font-weight: bold; font-size: 14px;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cboSoDo">
+           <property name="styleSheet">
+            <string notr="true">background-color: #064E3B; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 6px; border-radius: 8px; border: 1px solid #10B981;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblDiemDoiHinh">
+           <property name="text">
+            <string>Sức Mạnh Toàn Đội: 90.5 OVR</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #F59E0B; color: #022C22; font-weight: bold; font-size: 14px; padding: 6px 14px; border-radius: 8px;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnLuuDoiHinh">
+           <property name="text">
+            <string>Lưu Đội Hình</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #10B981; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 6px 14px; border-radius: 8px;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollSanCo">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: #064E3B; border: 2px solid #10B981; border-radius: 12px;</string>
+         </property>
+         <widget class="QWidget" name="widgetSanCoContent">
+          <layout class="QGridLayout" name="gridSanCo"/>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowThayDoiCauThu">
+         <item>
+          <widget class="QLabel" name="lblThayViTri">
+           <property name="text">
+            <string>Vị trí đang chọn: ST</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #6EE7B7; font-weight: bold; font-size: 14px;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cboKhoCauThu">
+           <property name="styleSheet">
+            <string notr="true">background-color: #064E3B; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 6px; border-radius: 8px; border: 1px solid #10B981;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnApDungCauThu">
+           <property name="text">
+            <string>Xếp Vào Đội Hình</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: #06B6D4; color: #022C22; font-weight: bold; font-size: 14px; padding: 6px 14px; border-radius: 8px;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabTranDau">
+      <attribute name="title">
+       <string>Trận Cầu Đỉnh Cao 90 Phút</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="layoutTab3">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frameBangTiSo">
+         <property name="styleSheet">
+          <string notr="true">background-color: #022C22; border: 2px solid #F59E0B; border-radius: 12px; padding: 10px;</string>
+         </property>
+         <layout class="QHBoxLayout" name="layoutBangTiSo">
+          <item>
+           <widget class="QLabel" name="lblDoiNha">
+            <property name="text">
+             <string>Dream Team EduVerse</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 16px; font-weight: bold; color: #10B981; text-align: center;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblTiSo">
+            <property name="text">
+             <string>0 - 0</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 26px; font-weight: 900; color: #F59E0B; padding: 4px 16px; background-color: #064E3B; border-radius: 8px;</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblDoiKhach">
+            <property name="text">
+             <string>Siêu Sao Thế Giới All-Stars</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 16px; font-weight: bold; color: #06B6D4; text-align: center;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblThoiGianTranDau">
+            <property name="text">
+             <string>Phút: 00'</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 15px; font-weight: bold; color: #EF4444; background-color: #064E3B; padding: 6px 12px; border-radius: 8px;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frameTinhHuong">
+         <property name="styleSheet">
+          <string notr="true">background-color: #064E3B; border: 2px solid #06B6D4; border-radius: 12px; padding: 14px;</string>
+         </property>
+         <layout class="QVBoxLayout" name="layoutTinhHuong">
+          <item>
+           <widget class="QLabel" name="lblTieuDeTinhHuong">
+            <property name="text">
+             <string>Tình huống thi đấu trực tiếp</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 16px; font-weight: bold; color: #06B6D4;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMoTaTinhHuong">
+            <property name="text">
+             <string>Bấm 'Bắt Đầu Trận Đấu' để bước vào màn so tài chiến thuật đỉnh cao!</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 14px; color: #FFFFFF; line-height: 1.6;</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblCauHoiChienThuat">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 14px; font-weight: bold; color: #F59E0B;</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="layoutOptionsTranDau"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frameBinhLuan">
+         <property name="styleSheet">
+          <string notr="true">background-color: #022C22; border: 1.5px solid #10B981; border-radius: 8px; padding: 8px;</string>
+         </property>
+         <layout class="QHBoxLayout" name="layoutBinhLuan">
+          <item>
+           <widget class="QLabel" name="lblBinhLuanVien">
+            <property name="text">
+             <string>Bình luận viên: Trận đấu sắp bắt đầu, cầu thủ hai đội đang bước ra sân!</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 13.5px; font-style: italic; color: #6EE7B7;</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnKhoiChayTranDau">
+            <property name="text">
+             <string>Bắt Đầu Trận Đấu</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: #10B981; color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 8px 18px; border-radius: 8px;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

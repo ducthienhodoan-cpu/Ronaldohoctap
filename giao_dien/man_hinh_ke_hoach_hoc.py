@@ -90,7 +90,7 @@ class ManHinhKeHoachHoc(QWidget):
             chk.setChecked(hoan_thanh)
             chk.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px;")
             chk.setCursor(Qt.CursorShape.PointingHandCursor)
-            chk.stateChanged.connect(lambda state, idx=m_id: self.thay_doi_muc_tieu(idx, state == 2))
+            chk.toggled.connect(lambda checked, idx=m_id: self.thay_doi_muc_tieu(idx, checked))
 
             card_layout.addWidget(chk)
             self.list_layout.addWidget(card)

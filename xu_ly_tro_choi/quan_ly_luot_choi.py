@@ -4,7 +4,7 @@
 
 import os
 import json
-from PyQt6.QtCore import QDate
+from datetime import date
 
 PATH_LUOT_WC = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "du_lieu", "luot_choi_world_cup.json"))
 PATH_LUOT_CL = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "du_lieu", "luot_choi_champions_league.json"))
@@ -50,7 +50,7 @@ def su_dung_luot_choi_obby():
 
 def doc_luot_choi_world_cup():
     """Doc luot choi World Cup tu file JSON. Reset ve 0 neu sang ngay moi."""
-    hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+    hom_nay = str(date.today())
     if not os.path.exists(PATH_LUOT_WC):
         return {"ngay_choi": hom_nay, "so_luot_hom_nay": 0}
     try:
@@ -74,7 +74,7 @@ def luu_luot_choi_world_cup(date_str, so_luot):
 
 def doc_luot_choi_champions_league():
     """Doc luot choi Champions League tu file JSON. Reset ve 0 neu sang ngay moi."""
-    hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+    hom_nay = str(date.today())
     if not os.path.exists(PATH_LUOT_CL):
         return {"ngay_choi": hom_nay, "so_luot_hom_nay": 0}
     try:

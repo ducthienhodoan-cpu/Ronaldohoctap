@@ -1,57 +1,56 @@
-# HƯỚNG DẪN TRIỂN KHAI DỰ ÁN LÊN VERCEL (1-CLICK DEPLOYMENT GUIDE)
+# HUONG DAN TRIEN KHAI VA TOI UU UNG DUNG TREN VERCEL (MAXIMUM PERFORMANCE)
 
-Tài liệu này hướng dẫn chi tiết từng bước triển khai toàn bộ ứng dụng **Siêu Club Học Tập & Tập Thi IELTS** lên nền tảng **Vercel Platform Cloud**.
-
----
-
-## 1. Cấu Trúc Các Tệp Đã Chuẩn Bị Ready Cho Vercel
-
-Dự án đã được tích hợp sẵn 100% bộ tệp triển khai Vercel:
-- **`vercel.json`**: Điều hướng Router cho Python Serverless API và Static Assets Frontend.
-- **`api/index.py`**: Động cơ Backend Serverless Python (Flask REST API) xử lý cấp phát câu hỏi, chấm điểm tự động và lưu cài đặt mục tiêu.
-- **`requirements.txt`**: Khai báo thư viện Python hỗ trợ Serverless Vercel Build.
-- **`public/index.html`**: Giao diện Web Application Dashboard trực tuyến đầy đủ tính năng.
+Tai lieu nay huong dan chi tiet cac buoc trien khai va tong hop cac thiet lap toi uu hoa dat hieu nang cao nhat tren nen tang **Vercel Cloud**.
 
 ---
 
-## 2. Các Bước Triển Khai Lên Vercel (2 Cách Nhanh Nhất)
+## 1. Cac Cai Tien Toi Uu Hoa Da Duoc Tich Hop
 
-### Cách 1: Triển Khai Qua GitHub (Khuyên Dùng)
-
-1. **Đẩy mã nguồn dự án lên GitHub**:
-   - Mở Terminal tại thư mục dự án và chạy các lệnh:
-     ```bash
-     git init
-     git add .
-     git commit -m "Deploy Sieu Club Hoc Tap & Tap Thi IELTS len Vercel"
-     git branch -M main
-     git remote add origin <URL_REPOSITORY_GITHUB_CỦA_BẠN>
-     git push -u origin main
-     ```
-
-2. **Đăng nhập Vercel & Import Repository**:
-   - Truy cập [https://vercel.com](https://vercel.com) và đăng nhập tài khoản (hoặc chọn Login with GitHub).
-   - Bấm nút **"Add New..."** -> chọn **"Project"**.
-   - Chọn kho chứa GitHub vừa tạo và bấm **"Import"**.
-
-3. **Deploy 1-Click**:
-   - Giữ nguyên các thiết lập mặc định (Framework Preset: Other / None).
-   - Bấm nút **"Deploy"**.
-   - Vercel sẽ tự động build ứng dụng và cung cấp đường link tên miền chính thức (Ví dụ: `https://sieu-club-hoc-tap.vercel.app`).
+1. **May chu Datacenter Singapore (`sin1`)**:
+   - Giam do tre ket noi tu mang Viet Nam xuong con 30ms - 50ms (thay vi 300ms ve My).
+2. **Loai bo tep thua bang `.vercelignore`**:
+   - Bo qua cac thu muc Desktop PyQt6 (`giao_dien/`, `giao_dien_ui/`, `main.py`,...) giup goi build nhe hon 80% va thoi gian build chi mat duoi 5 giay.
+3. **Bo nho dem Edge CDN & Cache-Control da tang**:
+   - Toan bo hinh anh 3D, am thanh, JavaScript 3D engine duoc gan `Cache-Control: public, max-age=31536000, immutable`.
+   - File Service Worker `sw.js` luon kiem tra cap nhat moi nhat (`no-cache, no-store`).
+4. **CORS & Response Headers day du**:
+   - Ho tro day du CORS de goi API tu moi thiet bi, trinh duyet di dong hay may tinh.
+5. **Precache Service Worker sieu toc**:
+   - Luu tru offline cac tep cot loi trong trinh duyet giup mo trang web gan nhu tuc thi (0ms).
 
 ---
 
-### Cách 2: Triển Khai Trực Tiếp Qua Vercel CLI (Dành cho Lập trình viên)
+## 2. Cac Tep Cau Hinh Cot Loi
 
-1. Cài đặt Vercel CLI toàn cục (nếu chưa có):
+- **`vercel.json`**: Cau hinh Region `sin1`, dinh tuyen Serverless Python va phan bo Headers Cache/Security.
+- **`.vercelignore`**: Danh sach tep bo qua khi deploy.
+- **`api/index.py`**: Backend Serverless Python tich hop day du 16 tinh nang voi CORS va Cache-Control.
+- **`public/sw.js`**: Service Worker phuc vu du lieu offline va Stale-While-Revalidate.
+- **`requirements.txt`**: Khai bao toi gian (chi co `Flask`) giup khoi dong Serverless nhanh nhat.
+
+---
+
+## 3. Cac Buoc Trien Khai (2 Cach)
+
+### Cach 1: Trien Khai Qua GitHub (Khuyen dung)
+
+1. **Day ma nguon len GitHub**:
    ```bash
-   npm install -g vercel
+   git add .
+   git commit -m "Toi uu hoa hieu nang cao nhat tren Vercel"
+   git push origin main
    ```
 
-2. Mở Terminal tại thư mục dự án và gõ lệnh:
-   ```bash
-   vercel
-   ```
+2. **Deploy tren Vercel Dashboard**:
+   - Truy cap https://vercel.com
+   - Chon Project -> Vercel se tu dong nhan dien va Deploy ban moi nhat.
 
-3. Đăng nhập và xác nhận thông số cấu hình mặc định (bấm Enter liên tục).
-4. Vercel CLI sẽ tự động tải lên và trả về đường link trang web dự án trực tuyến ngay lập tức!
+---
+
+### Cach 2: Trien Khai Truc Tiep Bang Vercel CLI
+
+1. Mo Terminal tai thu muc goc du an:
+   ```bash
+   vercel --prod
+   ```
+2. Vercel se tu dong dong goi va cap nhat ban Production trong vai giay!

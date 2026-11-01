@@ -207,7 +207,7 @@ def chay_javascript_sinh_de(ten_lop="Lớp 7", ten_mon="Toán", ten_chuong="Bi�
                     opts = [str(N_total), str(N_total + 100), str(N_total - 50), str(N_total + 200)]
                     correct = str(N_total)
                     explain = f"Bài giải chi tiết:\nStep 1: Theo nguyên tắc bổ sung A=T, G=X => N = 2A + 2G.\nStep 2: N = 2 x ({A_nu} + {G_nu}) = 2 x {A_nu + G_nu} = {N_total}.\n-> Đáp số đúng là {N_total}."
-                elif kieu_sinh == 0:
+                elif kieu_sinh == 1:
                     cau_text = f"Bào quan nào được ví là 'Nhà máy năng lượng' cung cấp ATP cho mọi hoạt động của tế bào?"
                     opts = ["Ti thể", "Lưới nội chất", "Nhân tế bào", "Không bào"]
                     correct = "Ti thể"

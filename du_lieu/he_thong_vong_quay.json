@@ -1,9 +1,10 @@
 {
     "ve_quay": 5,
-    "ve_vang": 5,
+    "ve_vang": 10,
     "chuoi_quay": 0,
     "lucky_meter_percent": 0,
     "ngay_nhan_ve": "",
     "kho_do": [],
-    "skin_da_sieu_hien": []
+    "skin_da_sieu_hien": [],
+    "tuan_nhan_ve_vang": "2026-W39"
 }

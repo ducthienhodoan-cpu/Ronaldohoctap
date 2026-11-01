@@ -6,7 +6,7 @@ import json
 import os
 from datetime import datetime, date
 
-FILE_TIEN_DO = "tien_do_hoc_tap.json"
+FILE_TIEN_DO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "tien_do_hoc_tap.json"))
 
 def lay_du_lieu_tien_do():
     """Doc du lieu tien do tu file JSON local."""
@@ -34,6 +34,7 @@ def lay_du_lieu_tien_do():
 def luu_du_lieu_tien_do(du_lieu):
     """Luu du lieu tien do vao file JSON local."""
     try:
+        os.makedirs(os.path.dirname(FILE_TIEN_DO), exist_ok=True)
         with open(FILE_TIEN_DO, "w", encoding="utf-8") as f:
             json.dump(du_lieu, f, ensure_ascii=False, indent=4)
     except Exception as e:
@@ -55,23 +56,33 @@ def kiem_tra_mo_khoa_bai_hoc(ten_bai, phan_tram_diem):
     return mo_khoa
 
 def cap_nhat_streak():
-    """Cap nhat chuoi ngay hoc liên tiep (Streak)."""
+    """Cap nhat chuoi ngay hoc liên tiep (Streak) chuan xac theo ngay."""
     du_lieu = lay_du_lieu_tien_do()
     ngay_hom_nay = date.today()
-    
+    ngay_cuoi_str = str(du_lieu.get("ngay_hoc_cuoi", "")).strip()
+
     try:
-        ngay_cuoi = datetime.strptime(du_lieu.get("ngay_hoc_cuoi", str(ngay_hom_nay)), "%Y-%m-%d").date()
-        khoang_cach = (ngay_hom_nay - ngay_cuoi).days
-        
-        if khoang_cach == 1:
-            du_lieu["streak"] += 1
+        if not ngay_cuoi_str:
+            du_lieu["streak"] = max(1, du_lieu.get("streak", 1))
             du_lieu["ngay_hoc_cuoi"] = str(ngay_hom_nay)
-        elif khoang_cach > 1:
-            du_lieu["streak"] = 1
-            du_lieu["ngay_hoc_cuoi"] = str(ngay_hom_nay)
+        else:
+            ngay_cuoi = datetime.strptime(ngay_cuoi_str, "%Y-%m-%d").date()
+            khoang_cach = (ngay_hom_nay - ngay_cuoi).days
             
+            if khoang_cach == 1:
+                du_lieu["streak"] = du_lieu.get("streak", 0) + 1
+                du_lieu["ngay_hoc_cuoi"] = str(ngay_hom_nay)
+            elif khoang_cach > 1:
+                du_lieu["streak"] = 1
+                du_lieu["ngay_hoc_cuoi"] = str(ngay_hom_nay)
+            elif khoang_cach == 0:
+                if du_lieu.get("streak", 0) <= 0:
+                    du_lieu["streak"] = 1
+                    
         luu_du_lieu_tien_do(du_lieu)
     except Exception:
-        pass
+        du_lieu["streak"] = max(1, du_lieu.get("streak", 1))
+        du_lieu["ngay_hoc_cuoi"] = str(ngay_hom_nay)
+        luu_du_lieu_tien_do(du_lieu)
     
     return du_lieu.get("streak", 1)

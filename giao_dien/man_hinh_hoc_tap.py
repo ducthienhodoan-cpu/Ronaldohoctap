@@ -396,3 +396,15 @@ KẾT QUẢ BÀI LÀM:
 
         if reply == QMessageBox.StandardButton.Yes:
             self.yeu_cau_chuyen_obby.emit()
+
+    def dung_hoat_dong(self):
+        """Dừng đồng hồ và hoạt động học tập khi thoát ra."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        if hasattr(self, 'lbl_dong_ho'):
+            self.lbl_dong_ho.setText("Thời gian: Đã dừng (Chưa bắt đầu)")
+
+    def hideEvent(self, event):
+        """Khi chuyển sang màn hình khác, dừng đồng hồ để ngưng hoạt động phần này."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)

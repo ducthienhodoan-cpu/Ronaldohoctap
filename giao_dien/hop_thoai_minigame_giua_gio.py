@@ -13,6 +13,7 @@ from xu_ly_tro_choi.minigame_giua_gio import (
 )
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
 from giao_dien.man_hinh_gap_thu_moi import ManHinhGapThuMoi
+from giao_dien.hop_thoai_video_penalty import HopThoaiVideoPenalty
 
 class HopThoaiMinigameGiuaGioDialog(QDialog):
     """Hộp thoại Minigame thư giãn giữa giờ học giúp học sinh giải trí và tích lũy XP (Bộ 4 Minigames)."""
@@ -304,8 +305,33 @@ class HopThoaiMinigameGiuaGioDialog(QDialog):
 
     def thuc_hien_sut(self, goc_sut):
         res = xu_ly_sut_phat_penalty(goc_sut)
+        
+        # Hien thi video 3D hoat hoa Penalty
+        res_dict = res.get("res_dict") or {
+            "ket_qua": "ghi_ban" if res["vao"] else "sut_len_troi",
+            "la_ban_thang": res["vao"],
+            "goc_id": res.get("goc_id", "chinh_giua"),
+            "goc_ten": res.get("goc_ten", goc_sut),
+            "mo_ta": res.get("thong_bao", "")
+        }
+        dlg_video = HopThoaiVideoPenalty(res_dict, self)
+        dlg_video.exec()
+
         if res["vao"]:
             self.lbl_penalty_res.setStyleSheet("font-size: 18px; font-weight: bold; color: #00FFCC;")
         else:
             self.lbl_penalty_res.setStyleSheet("font-size: 18px; font-weight: bold; color: #FF6666;")
         self.lbl_penalty_res.setText(res["thong_bao"])
+
+    def dung_hoat_dong(self):
+        """Dừng tất cả đồng hồ và trò chơi bên trong hộp thoại khi thoát ra."""
+        if hasattr(self, 'timer_spin') and self.timer_spin.isActive():
+            self.timer_spin.stop()
+        if hasattr(self, 'tab_gap_thu') and hasattr(self.tab_gap_thu, 'dung_hoat_dong'):
+            self.tab_gap_thu.dung_hoat_dong()
+
+    def closeEvent(self, event):
+        """Dừng hoạt động khi đóng hộp thoại minigame giữa giờ."""
+        self.dung_hoat_dong()
+        super().closeEvent(event)
+

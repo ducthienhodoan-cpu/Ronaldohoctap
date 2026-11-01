@@ -36,7 +36,13 @@ from xu_ly_tro_choi.quan_ly_gap_thu_moi import thuc_hien_luot_gap_moi, lay_du_li
 from xu_ly_tro_choi.quan_ly_vong_quay import thuc_hien_luot_quay_moi, lay_du_lieu_vong_quay
 from du_lieu_giao_duc.co_so_du_lieu_cau_hoi import lay_thong_ke_database, truy_van_cau_hoi
 from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
-# Thong ke module ready
+from xu_ly_bong_da.quan_ly_huyen_thoai import lay_danh_sach_huyen_thoai, lay_cau_hoi_tri_thuc_bong_da
+from xu_ly_bong_da.quan_ly_luat_bong_da import lay_cam_nang_luat_fifa, lay_khoa_hoc_toan_hoc_trong_bong_da, lay_cau_hoi_luat_va_khoa_hoc
+from xu_ly_bong_da.quan_ly_doi_hinh import (
+    lay_danh_sach_so_do, lay_kho_cau_thu_tuyen_chon, doc_doi_hinh_hien_tai,
+    luu_doi_hinh_hien_tai, tinh_suc_manh_tong_hop
+)
+from xu_ly_bong_da.quan_ly_tran_dau import lay_danh_sach_doi_thu, khoi_tao_tran_dau_dinh_cao
 
 app = Flask(__name__)
 
@@ -129,7 +135,13 @@ def submit_exam():
     # Cấp Giấy chứng nhận nếu điểm >= 8.0
     certificate = None
     if result["diem_so"] >= 8.0:
-        certificate = tao_chung_nhan_moi(exam_title, result["diem_so"])
+        certificate = tao_chung_nhan_moi(
+            ten_hoc_sinh="Học sinh Siêu Club",
+            lop_hoc="THCS",
+            ten_chu_de=exam_title,
+            phan_tram_diem=result["phan_tram"],
+            diem_so=result["diem_so"]
+        )
 
     # Cập nhật chuỗi Streak
     cap_nhat_streak()
@@ -161,9 +173,19 @@ def ai_engine():
         ten_mon = req.get('mon', 'Toán')
         muc_do = req.get('muc_do', 'Trung bình')
         chu_de = req.get('chu_de', 'Kiến thức tổng hợp')
-        so_cau = req.get('so_cau', 5)
+        try:
+            so_cau = int(req.get('so_cau', 5))
+        except Exception:
+            so_cau = 5
         api_key = req.get('api_key', '')
-        questions = tao_de_thi_gemini_api(ten_lop, ten_mon, muc_do, chu_de, so_cau, api_key=api_key)
+        questions = tao_de_thi_gemini_api(
+            ten_lop=ten_lop,
+            ten_mon=ten_mon,
+            ten_chuong=chu_de,
+            so_cau=so_cau,
+            muc_do=muc_do,
+            api_key=api_key
+        )
         return jsonify({"status": "success", "total": len(questions), "questions": questions})
 
 # Function 5: All Sports & Racing Tournaments & Minigames
@@ -183,11 +205,17 @@ def games_engine():
             cards = tao_danh_sach_the_lat_tri_nho()
             return jsonify({"status": "success", "cards": cards})
         elif game_type == 'world_cup':
-            vong_idx = req.get('vong', 0)
+            try:
+                vong_idx = int(req.get('vong', 0))
+            except Exception:
+                vong_idx = 0
             match_res = sinh_tran_dau_world_cup(vong_idx, req.get('lop', 'Lớp 6'), req.get('mon', 'Toán'), req.get('doi_user', 'Việt Nam'))
             return jsonify({"status": "success", "match": match_res})
         elif game_type == 'champions_league':
-            vong_idx = req.get('vong', 0)
+            try:
+                vong_idx = int(req.get('vong', 0))
+            except Exception:
+                vong_idx = 0
             match_res = sinh_tran_dau_champions_league(vong_idx, req.get('lop', 'Lớp 6'), req.get('mon', 'Toán'), 'Chủ đề 1', req.get('clb_user', 'Real Madrid'))
             return jsonify({"status": "success", "match": match_res})
         elif game_type == 'racing_obstacle':
@@ -329,13 +357,56 @@ def notebook_engine():
         "study_plan": plan
     })
 
-# Turbo Cache Headers cho phan hoi Edge CDN va Browser
+# Function 8: Football Hub (Legends, Dream Team 11, Live Match Simulator & Science)
+@app.route('/api/football', methods=['GET', 'POST'])
+def football_engine():
+    if request.method == 'POST':
+        req = request.get_json() or {}
+        action = req.get('action', 'save_team')
+        if action == 'save_team':
+            team_data = req.get('team', {})
+            if team_data:
+                luu_doi_hinh_hien_tai(team_data)
+            ovr = tinh_suc_manh_tong_hop(team_data)
+            return jsonify({"status": "success", "ovr": ovr, "team": team_data})
+        elif action == 'start_match':
+            opp_id = req.get('opponent_id', 'opp_allstars')
+            match_data = khoi_tao_tran_dau_dinh_cao(opp_id)
+            return jsonify({"status": "success", "match": match_data})
+        elif action == 'quiz':
+            q_list = lay_cau_hoi_tri_thuc_bong_da() + lay_cau_hoi_luat_va_khoa_hoc()
+            import random
+            q = random.choice(q_list)
+            return jsonify({"status": "success", "quiz": q})
+
+    current_team = doc_doi_hinh_hien_tai()
+    ovr = tinh_suc_manh_tong_hop(current_team)
+    return jsonify({
+        "status": "success",
+        "legends": lay_danh_sach_huyen_thoai(),
+        "rules": lay_cam_nang_luat_fifa(),
+        "science": lay_khoa_hoc_toan_hoc_trong_bong_da(),
+        "formations": lay_danh_sach_so_do(),
+        "players": lay_kho_cau_thu_tuyen_chon(),
+        "current_team": current_team,
+        "team_ovr": ovr,
+        "opponents": lay_danh_sach_doi_thu()
+    })
+
+# Headers toi uu hoa Turbo Cache va CORS cho Vercel Serverless
 @app.after_request
 def add_turbo_cache_headers(response):
     if request.method == 'GET':
         response.headers['Cache-Control'] = 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400'
+    else:
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
 if __name__ == '__main__':
     app.run(debug=True)
+

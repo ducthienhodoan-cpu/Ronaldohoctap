@@ -38,11 +38,12 @@ def quay_vong_quay_may_man():
     cong_phan_thuong(thuong["xp"])
     return thuong
 
+from xu_ly_tro_choi.xu_ly_penalty import sinh_ket_qua_penalty
+
 def xu_ly_sut_phat_penalty(huong_sut):
-    """Xử lý minigame sút phạt penalty 5 góc giải trí chuẩn đồng bộ tên hướng."""
+    """Xử lý minigame sút phạt penalty 5 góc giải trí với tỷ lệ 50% sút lên trời và 50% thủ môn cản phá khi sút hỏng."""
     cac_huong_goc = ["Góc Cao Trái", "Góc Thấp Trái", "Chính Giữa", "Góc Cao Phải", "Góc Thấp Phải"]
     
-    # Chuan hoa ten huong neu tu ban cu truyen sang
     mapping_ten = {
         "Trái": "Góc Thấp Trái", "Giữa": "Chính Giữa", "Phải": "Góc Thấp Phải",
         "Trái Trên": "Góc Cao Trái", "Trái Dưới": "Góc Thấp Trái",
@@ -51,17 +52,17 @@ def xu_ly_sut_phat_penalty(huong_sut):
     huong_sut_chuan = mapping_ten.get(huong_sut, huong_sut)
     huong_thu_mon_bay = random.choice(cac_huong_goc)
     
-    if huong_sut_chuan != huong_thu_mon_bay:
-        xp_thuong = 60
-        cong_phan_thuong(xp_thuong)
-        return {
-            "vao": True,
-            "huong_thu_mon": huong_thu_mon_bay,
-            "thong_bao": f"VÀO OOO! Bạn sút góc '{huong_sut_chuan}', thủ môn bay góc '{huong_thu_mon_bay}'. Nhận ngay +{xp_thuong} XP!"
-        }
-    else:
-        return {
-            "vao": False,
-            "huong_thu_mon": huong_thu_mon_bay,
-            "thong_bao": f"Thủ môn đã đoán đúng góc '{huong_sut_chuan}' và cản phá xuất sắc!"
-        }
+    la_vao = (huong_sut_chuan != huong_thu_mon_bay)
+    res_pen = sinh_ket_qua_penalty(la_tra_loi_dung=la_vao, goc_chi_dinh=huong_sut_chuan)
+    
+    return {
+        "vao": res_pen["la_ban_thang"],
+        "ket_qua": res_pen["ket_qua"],
+        "goc_id": res_pen["goc_id"],
+        "goc_ten": res_pen["goc_ten"],
+        "tieu_de": res_pen["tieu_de"],
+        "huong_thu_mon": huong_thu_mon_bay,
+        "thong_bao": res_pen["mo_ta"],
+        "res_dict": res_pen
+    }
+

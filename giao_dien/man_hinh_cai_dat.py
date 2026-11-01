@@ -5,7 +5,7 @@
 import os
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-    QLineEdit, QPushButton, QFrame, QMessageBox, QSlider, QComboBox
+    QLineEdit, QPushButton, QFrame, QMessageBox, QSlider, QComboBox, QScrollArea
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPixmap
@@ -278,12 +278,12 @@ class ManHinhCaiDat(QWidget):
         self.txt_ten_moi.setText(ten)
 
         # Cập nhật các ô chọn Cài đặt điểm mong muốn
-        if cai_dat_target.get("diem_mong_muon"):
-            self.cbo_diem_target.setCurrentText(cai_dat_target["diem_mong_muon"])
-        if cai_dat_target.get("band_ielts_mong_muon"):
-            self.cbo_band_target.setCurrentText(cai_dat_target["band_ielts_mong_muon"])
-        if cai_dat_target.get("thoi_gian_hoc_ngay"):
-            self.cbo_thoi_gian_target.setCurrentText(cai_dat_target["thoi_gian_hoc_ngay"])
+        if cai_dat_target.get("diem_mong_muon") is not None:
+            self.cbo_diem_target.setCurrentText(str(cai_dat_target["diem_mong_muon"]))
+        if cai_dat_target.get("band_ielts_mong_muon") is not None:
+            self.cbo_band_target.setCurrentText(str(cai_dat_target["band_ielts_mong_muon"]))
+        if cai_dat_target.get("thoi_gian_hoc_ngay") is not None:
+            self.cbo_thoi_gian_target.setCurrentText(str(cai_dat_target["thoi_gian_hoc_ngay"]))
 
         # Cập nhật slider âm lượng
         val = QuanLyAmThanh.get_instance().lay_am_luong_nhac_nen()

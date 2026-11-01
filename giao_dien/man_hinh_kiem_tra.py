@@ -297,10 +297,16 @@ KẾT QUẢ KIỂM TRA:
         # Mở minigame thư giãn giữa giờ sau bài kiểm tra
         self.mo_minigame_giua_gio()
 
-    def hideEvent(self, event):
-        """Khi chuyen sang man hinh khac, dung dong ho dem nguoc de khong tu dong nop bai hay hien thong bao."""
+    def dung_hoat_dong(self):
+        """Dừng đồng hồ đếm ngược và hoạt động kiểm tra khi thoát ra."""
         if hasattr(self, 'timer') and self.timer.isActive():
             self.timer.stop()
+        if hasattr(self, 'lbl_dong_ho'):
+            self.lbl_dong_ho.setText("Thời gian còn lại: Đã dừng (Chưa bắt đầu)")
+
+    def hideEvent(self, event):
+        """Khi chuyển sang màn hình khác, dừng đồng hồ để ngưng hoạt động bài kiểm tra."""
+        self.dung_hoat_dong()
         super().hideEvent(event)
 
 

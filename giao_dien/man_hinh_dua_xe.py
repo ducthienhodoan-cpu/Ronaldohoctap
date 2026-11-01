@@ -607,12 +607,12 @@ class ManHinhDuaXe(QWidget):
 
     def xu_ly_va_cham(self, ten_chong_ngai="Chướng ngại vật"):
         """Xử lý va chạm chướng ngại vật: trừ 1 mạng sống. Đụng 3 lần = THUA."""
+        self.canvas.stop_race()
         self.state["so_mang"] -= 1
         self.lbl_mang_song.setText(f"MẠNG SỐNG: {self.state['so_mang']} / 3 TIM")
 
         if self.state["so_mang"] <= 0:
             self.state["tro_choi_ket_thuc"] = True
-            self.canvas.stop_race()
             QMessageBox.warning(
                 self, 
                 "Kết Quả Giải Đua Xe 3D", 
@@ -628,3 +628,17 @@ class ManHinhDuaXe(QWidget):
                 f"Mạng sống còn lại: {self.state['so_mang']} Tim.\n"
                 f"Gợi ý: Bấm W để Nhảy qua rào thấp, bấm S để Núp chổm qua cây cầu cao!"
             )
+            if not self.state["tro_choi_ket_thuc"]:
+                self.canvas.start_race()
+
+    def dung_hoat_dong(self):
+        """Dừng hoàn toàn vòng lặp đường đua xe 3D và quay về màn hình giới thiệu khi thoát phần đua xe."""
+        if hasattr(self, 'canvas'):
+            self.canvas.stop_race()
+        if hasattr(self, 'stack_racing'):
+            self.stack_racing.setCurrentIndex(0)
+
+    def hideEvent(self, event):
+        """Dừng hoàn toàn vòng lặp đường đua xe 3D khi thoát khỏi phần đua xe."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)

@@ -417,10 +417,16 @@ Gợi ý: Lời giải chi tiết của từng câu hỏi đã được tự đ�
         else:
             self.mo_minigame_giua_gio()
 
-    def hideEvent(self, event):
-        """Khi chuyen sang man hinh khac, dung dong ho dem nguoc de khong tu dong nop bai hay hien thong bao."""
+    def dung_hoat_dong(self):
+        """Dừng đồng hồ đếm ngược và hoạt động luyện tập khi thoát ra."""
         if hasattr(self, 'timer') and self.timer.isActive():
             self.timer.stop()
+        if hasattr(self, 'lbl_dong_ho'):
+            self.lbl_dong_ho.setText("Thời gian còn lại: Đã dừng (Chưa bắt đầu)")
+
+    def hideEvent(self, event):
+        """Khi chuyển sang màn hình khác, dừng đồng hồ để ngưng hoạt động luyện tập."""
+        self.dung_hoat_dong()
         super().hideEvent(event)
 
 

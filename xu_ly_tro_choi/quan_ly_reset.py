@@ -4,7 +4,7 @@
 
 import os
 import json
-from PyQt6.QtCore import QDate
+from datetime import date
 
 PATH_DU_LIEU = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "du_lieu"))
 
@@ -13,7 +13,7 @@ def reset_toan_bo_du_lieu():
     Reset tat ca cac tep JSON du lieu trong thu muc du_lieu ve trang thai khoi tao ban dau.
     """
     os.makedirs(PATH_DU_LIEU, exist_ok=True)
-    hom_nay = QDate.currentDate().toString("yyyy-MM-dd")
+    hom_nay = str(date.today())
 
     # 1. Reset luot choi World Cup (ve 0 luot hom nay)
     path_wc = os.path.join(PATH_DU_LIEU, "luot_choi_world_cup.json")
@@ -41,10 +41,19 @@ def reset_toan_bo_du_lieu():
     with open(path_tien_do_obby, "w", encoding="utf-8") as f:
         json.dump(data_obby, f, ensure_ascii=False, indent=4)
 
-    # 5. Reset Ke hoach hoc tập
+    # 5. Reset Ke hoach hoc tap (chuan cau truc dict)
     path_ke_hoach = os.path.join(PATH_DU_LIEU, "ke_hoach_hoc.json")
+    data_ke_hoach = {
+        "streak_ngay": 0,
+        "ngay_cap_nhat_cuoi": hom_nay,
+        "danh_sach_muc_tieu": [
+            {"id": 1, "noi_dung": "Hoàn thành 1 bài luyện tập Toán Lớp 7", "hoan_thanh": False, "xp": 50},
+            {"id": 2, "noi_dung": "Ôn 10 thẻ ghi nhớ Flashcard Tiếng Anh", "hoan_thanh": False, "xp": 30},
+            {"id": 3, "noi_dung": "Làm 1 bài thi thử Khoa học tự nhiên", "hoan_thanh": False, "xp": 100}
+        ]
+    }
     with open(path_ke_hoach, "w", encoding="utf-8") as f:
-        json.dump([], f, ensure_ascii=False, indent=4)
+        json.dump(data_ke_hoach, f, ensure_ascii=False, indent=4)
 
     # 6. Reset So loi sai
     path_loi_sai = os.path.join(PATH_DU_LIEU, "so_loi_sai.json")
@@ -54,6 +63,6 @@ def reset_toan_bo_du_lieu():
     # 7. Reset Cau hinh diem mong muon (ve 10.0 điểm)
     path_diem = os.path.join(PATH_DU_LIEU, "cau_hinh_diem_mong_muon.json")
     with open(path_diem, "w", encoding="utf-8") as f:
-        json.dump({"diem_mong_muon": 10.0}, f, ensure_ascii=False, indent=4)
+        json.dump({"diem_mong_muon": 10.0, "band_ielts_mong_muon": "Band 7.5+"}, f, ensure_ascii=False, indent=4)
 
     return True

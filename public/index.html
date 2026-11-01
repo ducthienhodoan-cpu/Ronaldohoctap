@@ -18,6 +18,8 @@
     <script src="/xu_ly_3d/linh_vat_3d.js"></script>
     <script src="/xu_ly_3d/gap_thu_3d_moi.js"></script>
     <script src="/xu_ly_3d/vong_quay_3d_moi.js"></script>
+    <script src="/xu_ly_3d/video_penalty_3d.js"></script>
+    <script src="/xu_ly_bong_da/bong_da_dinh_cao.js"></script>
     <style>
         :root {
             --bg-body: #021a12;
@@ -628,6 +630,238 @@
             background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.12) 45%, transparent 70%);
             filter: blur(50px);
         }
+
+        /* --- FOOTBALL HUB 3D GAMING STYLES (NO ICONS) --- */
+        .fb-subtabs-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+            background: rgba(2, 44, 34, 0.7);
+            padding: 10px;
+            border-radius: 18px;
+            border: 1.5px solid #10B981;
+        }
+
+        .fb-subtab-btn {
+            background: rgba(6, 78, 59, 0.8);
+            color: #FFFFFF;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fb-subtab-btn:hover {
+            background: #10B981;
+            color: #022C22;
+            transform: translateY(-2px);
+        }
+
+        .fb-subtab-btn.active {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #FFFFFF;
+            border: 2px solid #00FFCC;
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.6);
+        }
+
+        .fb-pitch-field {
+            position: relative;
+            width: 100%;
+            max-width: 820px;
+            height: 560px;
+            margin: 0 auto 24px auto;
+            border-radius: 20px;
+            background: repeating-linear-gradient(180deg, #15803d 0px, #15803d 40px, #166534 40px, #166534 80px);
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 0 35px rgba(16, 185, 129, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .fb-pitch-half-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.7);
+            transform: translateY(-50%);
+        }
+
+        .fb-pitch-center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 130px;
+            height: 130px;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .fb-pitch-penalty-box-top {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            height: 90px;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-top: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .fb-pitch-penalty-box-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            height: 90px;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-bottom: none;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .fb-player-slot {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            text-align: center;
+            z-index: 5;
+            transition: all 0.2s ease;
+        }
+
+        .fb-player-slot:hover {
+            transform: translate(-50%, -55%) scale(1.1);
+        }
+
+        .fb-player-badge {
+            display: inline-block;
+            background: #F59E0B;
+            color: #022C22;
+            font-weight: 900;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            margin-bottom: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .fb-player-card-mini {
+            background: rgba(15, 23, 42, 0.92);
+            border: 2px solid #10B981;
+            border-radius: 12px;
+            padding: 5px 10px;
+            min-width: 95px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .fb-player-ovr {
+            font-size: 14px;
+            font-weight: 900;
+            color: #00FFCC;
+        }
+
+        .fb-player-name {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #FFFFFF;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
+        .fb-player-sub {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+
+        .fb-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .fb-modal-box {
+            background: #022C22;
+            border: 3px solid #10B981;
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 760px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+        }
+
+        .fb-picker-card {
+            background: rgba(6, 78, 59, 0.7);
+            border: 1.5px solid #10B981;
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fb-picker-card:hover {
+            border-color: #F59E0B;
+            background: rgba(4, 47, 46, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .fb-sit-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            background: rgba(6, 78, 59, 0.8);
+            border: 2px solid #06B6D4;
+            color: #FFFFFF;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .fb-sit-btn:hover {
+            background: #06B6D4;
+            color: #022C22;
+            transform: translateX(4px);
+        }
+
+        .fb-legend-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid #06B6D4;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .fb-rule-box {
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid #06B6D4;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
     </style>
 </head>
 <body>
@@ -703,6 +937,7 @@
             <button class="tab-btn" data-sec="aitao" onclick="switchSection('aitao', this)">Gemini AI Sinh Đề</button>
             <button class="tab-btn" data-sec="worldcup" onclick="switchSection('worldcup', this)">Đấu Trường World Cup</button>
             <button class="tab-btn" data-sec="c1" onclick="switchSection('c1', this)">Cúp C1 Champions League</button>
+            <button class="tab-btn" data-sec="football" onclick="switchSection('football', this)">Siêu Sao &amp; Đội Hình Bóng Đá</button>
             <button class="tab-btn" data-sec="duaxe" onclick="switchSection('duaxe', this)">Giải Đua Xe Grand Prix</button>
             <button class="tab-btn" data-sec="minigames" onclick="switchSection('minigames', this)">Bộ 4 Minigames</button>
             <button class="tab-btn" data-sec="formula" onclick="switchSection('formula', this)">Sổ Tay Công Thức</button>
@@ -719,8 +954,9 @@
                 <img src="/hinh_anh_3d/trang_chao_mung_3d.png" alt="Chào mừng" style="max-height: 270px; margin-bottom: 28px; filter: drop-shadow(0 0 35px rgba(236, 72, 153, 0.8));" onerror="this.style.display='none'">
                 <h2 style="color: #06B6D4; font-size: 32px; margin-bottom: 18px; font-weight: 900;">CHÀO MỪNG EM ĐẾN VỚI SIÊU CLUB HỌC TẬP!</h2>
                 <p style="font-size: 17.5px; max-width: 900px; margin: 0 auto 32px auto; line-height: 1.8; color: #F1F5F9;">Ứng dụng phát nhạc nền GUT GENUG (KITSCHKRIEG feat. BLUMENGARTEN & SHIRIN DAVID) 30% thư giãn, tích hợp 100% tất cả 16 phần tính năng từ bản Desktop: Học tập cốt lõi Lớp 1-12, Gemini AI sinh đề, Đấu trường Thể thao World Cup, Cúp C1, Đua xe Grand Prix và Tập Thi IELTS.</p>
-                <div style="display: flex; gap: 20px; justify-content: center;">
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                     <button class="btn-primary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px;" onclick="switchSection('hoc')">Bắt Đầu Học Ngay</button>
+                    <button class="btn-primary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px; background: linear-gradient(135deg, #10B981, #059669);" onclick="switchSection('football')">Siêu Sao Bóng Đá</button>
                     <button class="btn-secondary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px;" onclick="switchSection('ielts')">Tập Thi IELTS</button>
                 </div>
             </div>
@@ -973,6 +1209,138 @@
                     </div>
                     <div class="question-title" id="lblC1Question">Câu hỏi penalty...</div>
                     <div class="options-group" id="c1OptionsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9b. Siêu Sao Bóng Đá & Đội Hình Trong Mơ 11 Người -->
+        <div id="pane-football" class="section-pane">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+                    <div>
+                        <h3 style="color: #10B981; font-size: 26px; font-weight: 900; letter-spacing: -0.5px;">SIÊU SAO BÓNG ĐÁ VÀ ĐỘI HÌNH TRONG MƠ</h3>
+                        <p style="color: #6EE7B7; font-size: 14px; font-weight: 600;">Bách Khoa Huyền Thoại, Sơ Đồ Chiến Thuật 11 Siêu Sao và Mô Phỏng Trận Cầu Đỉnh Cao 90 Phút</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span id="fbTeamOvrBadge" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: #022C22; padding: 8px 18px; border-radius: 14px; font-weight: 900; font-size: 15px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);">Sức Mạnh Toàn Đội: 91.0 OVR</span>
+                        <button class="btn-primary" style="padding: 10px 20px; border-radius: 12px; font-size: 14px; background: linear-gradient(135deg, #10B981, #059669);" onclick="saveFbDreamTeam()">Lưu Đội Hình</button>
+                    </div>
+                </div>
+
+                <!-- Thanh Chuyển Tab Con Của Phần Bóng Đá -->
+                <div class="fb-subtabs-nav">
+                    <button class="fb-subtab-btn active" onclick="switchFootballSubTab('doi_hinh', this)">11 Siêu Sao Đội Hình</button>
+                    <button class="fb-subtab-btn" onclick="switchFootballSubTab('tran_dau', this)">Mô Phỏng Trận Cầu 90 Phút</button>
+                    <button class="fb-subtab-btn" onclick="switchFootballSubTab('huyen_thoai', this)">Bách Khoa &amp; Thần Đồng Tri Thức</button>
+                    <button class="fb-subtab-btn" onclick="switchFootballSubTab('luat_fifa', this)">Luật FIFA &amp; Khoa Học Bóng Đá</button>
+                </div>
+
+                <!-- Sub-tab 1: Đội Hình 11 Siêu Sao Trong Mơ (Dream Team 11) -->
+                <div id="fb-subpane-doi_hinh" class="fb-subtab-pane">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; background: rgba(15, 23, 42, 0.7); padding: 12px 20px; border-radius: 16px; border: 1.5px solid rgba(16, 185, 129, 0.4);">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="font-weight: 800; color: #FFFFFF; font-size: 14.5px;">Sơ Đồ Chiến Thuật:</label>
+                            <select id="selFbFormation" onchange="onFbFormationChange(this.value)" style="background: #022C22; color: #00FFCC; border: 2px solid #10B981; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer;">
+                                <option value="4-3-3" selected>4-3-3 Tấn Công Rực Lửa</option>
+                                <option value="4-4-2">4-4-2 Cân Bằng Truyền Thống</option>
+                                <option value="3-5-2">3-5-2 Kiểm Soát Trung Tuyến</option>
+                            </select>
+                        </div>
+                        <span style="font-size: 13.5px; color: #94A3B8;">Mẹo: Bấm vào thẻ cầu thủ bất kỳ trên sân cỏ để thay đổi cầu thủ cho vị trí đó!</span>
+                    </div>
+
+                    <!-- Khung Sân Cỏ Bóng Đá 2D Trực Quan -->
+                    <div id="fbPitchContainer" style="position: relative;"></div>
+                </div>
+
+                <!-- Sub-tab 2: Mô Phỏng Trận Cầu Đỉnh Cao 90 Phút -->
+                <div id="fb-subpane-tran_dau" class="fb-subtab-pane" style="display: none;">
+                    <div style="background: rgba(15, 23, 42, 0.85); border: 2px solid #06B6D4; border-radius: 20px; padding: 22px; margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <label style="font-weight: 800; color: #FFFFFF; font-size: 15px;">Chọn Đối Thủ Thách Đấu:</label>
+                                <select id="fbSelectOpponent" style="background: #020617; color: #F59E0B; border: 2px solid #06B6D4; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer;">
+                                </select>
+                            </div>
+                            <button class="btn-primary" style="background: linear-gradient(135deg, #06B6D4, #3B82F6); padding: 12px 28px; font-size: 16px; border-radius: 14px;" onclick="startFbMatchSimulation()">Bắt Đầu Trận Đấu 90 Phút</button>
+                        </div>
+
+                        <!-- Bảng Tỉ Số Điện Tử Sân Vận Động -->
+                        <div id="fbMatchBoard" style="display: none;">
+                            <div style="background: #020617; border: 3px solid #F59E0B; border-radius: 18px; padding: 18px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 17px; font-weight: 900; color: #10B981; margin-bottom: 4px;">Dream Team EduVerse</div>
+                                    <div style="font-size: 13px; color: #94A3B8;">Chủ Nhà</div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <span id="fbScoreDreamTeam" style="font-size: 34px; font-weight: 900; color: #F59E0B; background: #1E1B4B; padding: 6px 18px; border-radius: 12px; border: 2px solid #F59E0B;">0</span>
+                                    <span style="font-size: 26px; font-weight: 900; color: #94A3B8;">-</span>
+                                    <span id="fbScoreOpponent" style="font-size: 34px; font-weight: 900; color: #06B6D4; background: #1E1B4B; padding: 6px 18px; border-radius: 12px; border: 2px solid #06B6D4;">0</span>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div id="fbOpponentName" style="font-size: 17px; font-weight: 900; color: #06B6D4; margin-bottom: 4px;">Siêu Sao Thế Giới All-Stars</div>
+                                    <div style="font-size: 13px; color: #94A3B8;">Đội Khách</div>
+                                </div>
+                                <div id="fbMatchClock" style="background: #EF4444; color: #FFFFFF; font-weight: 900; font-size: 16px; padding: 8px 16px; border-radius: 12px; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);">Phút: 00'</div>
+                            </div>
+
+                            <!-- Khung Diễn Biến Tình Huống Trận Đấu -->
+                            <div style="background: rgba(2, 44, 34, 0.85); border: 2px solid #10B981; border-radius: 18px; padding: 22px; margin-bottom: 20px;">
+                                <h4 id="fbSitTitle" style="color: #00FFCC; font-size: 20px; font-weight: 900; margin-bottom: 12px;">Tình Huống Thi Đấu</h4>
+                                <p id="fbSitDesc" style="font-size: 15px; color: #FFFFFF; line-height: 1.7; margin-bottom: 16px;"></p>
+                                <div id="fbSitQuestion" style="font-size: 15.5px; font-weight: 800; color: #F59E0B; margin-bottom: 18px; background: rgba(0,0,0,0.3); padding: 12px 16px; border-radius: 12px; border-left: 4px solid #F59E0B;"></div>
+                                <div id="fbSitOptions"></div>
+                            </div>
+
+                            <!-- Khung Bình Luận Viên Trực Tiếp -->
+                            <div style="background: rgba(15, 23, 42, 0.9); border: 2px solid #06B6D4; border-radius: 14px; padding: 14px 20px;">
+                                <div id="fbCommentaryBox" style="font-size: 15px; font-weight: 700; color: #6EE7B7; font-style: italic;">Bình luận viên: Trận đấu đã sẵn sàng, tiếng còi khai cuộc vang lên!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 3: Bách Khoa Huyền Thoại & Thần Đồng Tri Thức -->
+                <div id="fb-subpane-huyen_thoai" class="fb-subtab-pane" style="display: none;">
+                    <!-- Phần Thử Tài Tri Thức Bóng Đá -->
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 2px solid #F59E0B; border-radius: 20px; padding: 24px; margin-bottom: 28px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                            <h4 style="color: #F59E0B; font-size: 20px; font-weight: 900;">THỬ TÀI THẦN ĐỒNG TRI THỨC BÓNG ĐÁ</h4>
+                            <button class="btn-primary" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: #022C22; font-weight: 900; padding: 10px 22px; border-radius: 12px;" onclick="loadFootballQuiz()">Câu Đố Mới (+30 XP)</button>
+                        </div>
+                        <div id="fbQuizQuestion" style="font-size: 16px; font-weight: 800; color: #FFFFFF; margin-bottom: 18px; line-height: 1.6; background: rgba(2, 44, 34, 0.6); padding: 14px 18px; border-radius: 12px;">Bấm nút 'Câu Đố Mới' để bắt đầu thử thách kiến thức bóng đá đỉnh cao!</div>
+                        <div id="fbQuizOptions" style="margin-bottom: 16px;"></div>
+                        <div id="fbQuizResult" style="font-size: 14.5px; font-weight: 800; min-height: 24px;"></div>
+                    </div>
+
+                    <!-- Danh Sách Huyền Thoại Bóng Đá Thế Giới & Việt Nam -->
+                    <h4 style="color: #06B6D4; font-size: 20px; font-weight: 900; margin-bottom: 18px;">DANH SÁCH HUYỀN THOẠI BÓNG ĐÁ</h4>
+                    <div class="grid-3" id="fbLegendsGrid"></div>
+                </div>
+
+                <!-- Sub-tab 4: Luật FIFA & Khoa Học Bóng Đá THCS -->
+                <div id="fb-subpane-luat_fifa" class="fb-subtab-pane" style="display: none;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+                        <div>
+                            <h4 style="color: #06B6D4; font-size: 20px; font-weight: 900; margin-bottom: 16px;">CẨM NANG LUẬT BÓNG ĐÁ FIFA CHUẨN</h4>
+                            <div id="fbRulesContainer"></div>
+                        </div>
+                        <div>
+                            <h4 style="color: #10B981; font-size: 20px; font-weight: 900; margin-bottom: 16px;">ỨNG DỤNG KHOA HỌC &amp; TOÁN HỌC THCS TRONG BÓNG ĐÁ</h4>
+                            <div id="fbScienceContainer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Chọn Cầu Thủ Cho Vị Trí -->
+                <div id="fbPlayerPickerModal" class="fb-modal-overlay">
+                    <div class="fb-modal-box">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid rgba(16, 185, 129, 0.4); padding-bottom: 12px;">
+                            <h3 id="fbPickerSlotTitle" style="color: #00FFCC; font-size: 22px; font-weight: 900;">Chọn Cầu Thủ</h3>
+                            <button onclick="closeFbPlayerPicker()" style="background: #EF4444; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: 14px;">Đóng</button>
+                        </div>
+                        <div class="grid-3" id="fbPickerPlayerGrid" style="gap: 12px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1257,6 +1625,7 @@
                         <div id="lblObbyTimer" style="font-size: 16px; font-weight: 900; color: #10B981; background: #002B4D; padding: 8px 16px; border-radius: 10px; border: 2px solid #10B981;">Thời gian còn lại: 00:45</div>
                         <div id="lblObbyLives" style="font-size: 16px; font-weight: 900; color: #EF4444; background: #2B0000; padding: 8px 16px; border-radius: 10px; border: 2px solid #EF4444;">Mạng sống: 3 / 3 mạng</div>
                         <button class="btn-primary" style="background: linear-gradient(135deg, #EC4899, #A855F7); font-size: 16px; padding: 12px 28px;" onclick="startObbyLevelGame()">BẮT ĐẦU VƯỢT MÀN OBBY</button>
+                        <button class="btn-secondary" style="background: #EF4444; color: #FFFFFF; font-size: 16px; padding: 12px 24px; font-weight: bold; border-radius: 10px;" onclick="stopObbyLevelGame()">DỪNG / THOÁT THỬ THÁCH</button>
                     </div>
 
                     <div id="boxObbyQuestion" style="background: #111214; border: 2px solid #A855F7; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
@@ -1636,11 +2005,35 @@
                 isRace3DRunning = false;
             }
             // 6. Dung vong lap Obby neu roi khoi obby
-            if (newSecId !== 'obby' && typeof isObbyRunning !== 'undefined') {
-                isObbyRunning = false;
+            if (newSecId !== 'obby') {
+                if (typeof obbyTimerId !== 'undefined' && obbyTimerId) {
+                    clearInterval(obbyTimerId);
+                    obbyTimerId = null;
+                }
+                if (typeof isObbyRunning !== 'undefined') {
+                    isObbyRunning = false;
+                }
+                const timerEl = document.getElementById('lblObbyTimer');
+                if (timerEl) timerEl.innerText = 'Thời gian còn lại: Đã dừng';
             }
             // 7. Dung am thanh doc tieng Anh / TTS
             try { window.speechSynthesis.cancel(); } catch(e) {}
+
+            // 8. Dung va dong hoat canh Video 3D Penalty neu dang hien thi
+            try {
+                const pOverlay = document.getElementById('penaltyVideoModalOverlay');
+                if (pOverlay && pOverlay.style.display !== 'none') {
+                    pOverlay.style.display = 'none';
+                }
+            } catch(e) {}
+
+            // 9. An bang thi dau World Cup & Cup C1 neu roi khoi tab dau truong
+            if (newSecId !== 'worldcup' && newSecId !== 'c1') {
+                const wcB = document.getElementById('wcPlayBoard');
+                if (wcB) wcB.style.display = 'none';
+                const c1B = document.getElementById('c1PlayBoard');
+                if (c1B) c1B.style.display = 'none';
+            }
         }
 
         function switchSection(secId, btnEl) {
@@ -1696,6 +2089,7 @@
                 }
                 if (secId === 'worldcup') { try { if (typeof renderWcTeams === 'function') renderWcTeams(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyWc3D', 'world_cup'); } catch(e) {} }
                 if (secId === 'c1') { try { if (typeof renderC1Clubs === 'function') renderC1Clubs(); if (typeof khoi_tao_cup_vo_dich_3d === 'function') khoi_tao_cup_vo_dich_3d('canvasTrophyC13D', 'champions_league'); } catch(e) {} }
+                if (secId === 'football') { try { if (typeof initFootballHub === 'function') initFootballHub(); } catch(e) {} }
                 if (secId === 'plan') { try { if (typeof loadPlan === 'function') loadPlan(); } catch(e) {} }
                 if (secId === 'stats') { try { if (typeof loadStats === 'function') loadStats(); } catch(e) {} }
                 if (secId === 'notebook') { try { if (typeof loadNotebook === 'function') loadNotebook(); } catch(e) {} }
@@ -2750,30 +3144,33 @@
                     while (penUser === penOpp) {
                         penOpp = Math.floor(Math.random() * 5) + 1;
                     }
-                    if (penUser > penOpp) {
-                        tourScoreUser++;
-                        alert(`HÒA TRẬN ĐẤU! Hai đội bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thắng ${penUser} - ${penOpp}!`);
+                    const isWinTie = (penUser > penOpp);
+                    if (typeof window.hienThiVideoPenalty3D === 'function') {
+                        window.hienThiVideoPenalty3D({
+                            laTraLoiDung: isWinTie,
+                            onFinished: function() {
+                                if (isWinTie) {
+                                    tourScoreUser++;
+                                    alert(`HÒA TRẬN ĐẤU! Bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} sút thắng ${penUser} - ${penOpp}!`);
+                                } else {
+                                    tourScoreOpponent++;
+                                    alert(`HÒA TRẬN ĐẤU! Bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} sút thua ${penUser} - ${penOpp}!`);
+                                }
+                                finishTournamentMatch(isWc, chosenTeam);
+                            }
+                        });
+                        return;
                     } else {
-                        tourScoreOpponent++;
-                        alert(`HÒA TRẬN ĐẤU! Hai đội bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thua ${penUser} - ${penOpp}!`);
+                        if (isWinTie) {
+                            tourScoreUser++;
+                            alert(`HÒA TRẬN ĐẤU! Bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thắng ${penUser} - ${penOpp}!`);
+                        } else {
+                            tourScoreOpponent++;
+                            alert(`HÒA TRẬN ĐẤU! Bước vào sút Penalty loại trực tiếp sinh tử: ${chosenTeam} thua ${penUser} - ${penOpp}!`);
+                        }
                     }
                 }
-
-                if (tourScoreUser > tourScoreOpponent) {
-                    if (tourVongIdx < 3) {
-                        alert(`VICTORY!\n\nXuất sắc! ${chosenTeam} đã chiến thắng đối thủ!\nEm đã giành vé tiến vào VÒNG TIẾP THEO!\nThưởng +${tourScoreUser * 40} XP!`);
-                        tourVongIdx++;
-                        startTournament(tourTypeCurrent);
-                    } else {
-                        alert(`CHAMMMMMMMMMMMMPION!\n\nCHÚC MỪNG VÔ ĐỊCH!\n${chosenTeam} đã xuất sắc nâng cao CÚP VÔ ĐỊCH!\nTổng Bàn Thắng: ${tourScoreUser}!\nThưởng +500 XP!`);
-                        tourVongIdx = 0;
-                        document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
-                    }
-                } else {
-                    alert(`DEFEAT!\n\nRất tiếc! ${chosenTeam} đã thất bại.\nLượt chơi hôm nay đã kết thúc, hãy quay lại vào ngày mai để thử sức tiếp nhé!`);
-                    tourVongIdx = 0;
-                    document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
-                }
+                finishTournamentMatch(isWc, chosenTeam);
                 return;
             }
 
@@ -2795,18 +3192,55 @@
                 btn.innerHTML = `<span class="option-badge">${letter}</span> <span>${opt}</span>`;
                 btn.onclick = () => {
                     playClickSfx();
-                    if (opt === q.dap_an_dung) {
-                        tourScoreUser++;
-                        alert("VÀOOO! Sút phạt thành công!");
+                    const isCorrect = (String(opt).trim().toLowerCase() === String(q.dap_an_dung).trim().toLowerCase());
+                    
+                    if (typeof window.hienThiVideoPenalty3D === 'function') {
+                        // Kich hoat Hoat canh Video 3D Penalty ngay lap tuc
+                        window.hienThiVideoPenalty3D({
+                            laTraLoiDung: isCorrect,
+                            gocChiDinh: opt,
+                            onFinished: function() {
+                                if (isCorrect) {
+                                    tourScoreUser++;
+                                } else {
+                                    tourScoreOpponent++;
+                                }
+                                tourIndex++;
+                                renderTourQuestion();
+                            }
+                        });
                     } else {
-                        tourScoreOpponent++;
-                        alert(`THỦ MÔN CẢN PHÁ! Đáp án đúng là: ${q.dap_an_dung}`);
+                        if (isCorrect) {
+                            tourScoreUser++;
+                            alert("VÀOOO! Sút phạt thành công!");
+                        } else {
+                            tourScoreOpponent++;
+                            alert(`THỦ MÔN CẢN PHÁ! Đáp án đúng là: ${q.dap_an_dung}`);
+                        }
+                        tourIndex++;
+                        renderTourQuestion();
                     }
-                    tourIndex++;
-                    renderTourQuestion();
                 };
                 container.appendChild(btn);
             });
+        }
+
+        function finishTournamentMatch(isWc, chosenTeam) {
+            if (tourScoreUser > tourScoreOpponent) {
+                if (tourVongIdx < 3) {
+                    alert(`VICTORY!\n\nXuất sắc! ${chosenTeam} đã chiến thắng đối thủ!\nEm đã giành vé tiến vào VÒNG TIẾP THEO!\nThưởng +${tourScoreUser * 40} XP!`);
+                    tourVongIdx++;
+                    startTournament(tourTypeCurrent);
+                } else {
+                    alert(`CHAMPION!\n\nCHÚC MỪNG VÔ ĐỊCH!\n${chosenTeam} đã xuất sắc nâng cao CÚP VÔ ĐỊCH!\nTổng Bàn Thắng: ${tourScoreUser}!\nThưởng +500 XP!`);
+                    tourVongIdx = 0;
+                    document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
+                }
+            } else {
+                alert(`DEFEAT!\n\nRất tiếc! ${chosenTeam} đã thất bại.\nLượt chơi hôm nay đã kết thúc, hãy quay lại vào ngày mai để thử sức tiếp nhé!`);
+                tourVongIdx = 0;
+                document.getElementById(isWc ? 'wcPlayBoard' : 'c1PlayBoard').style.display = 'none';
+            }
         }
 
         // Vong quay 10 o da duoc quan ly trong xu_ly_3d/vong_quay_3d_moi.js
@@ -2848,16 +3282,35 @@
             }
 
             const resBox = document.getElementById('penaltyResult');
-            if (resBox) {
-                if (isVao) {
-                    resBox.style.color = '#10B981';
-                    resBox.innerText = `VÀOOOO! ${msg}`;
-                    if (typeof updateXPDisplay === 'function') updateXPDisplay(100);
-                    alert(`VÀOOOOOO! Bạn đã sút phạt tuyệt đỉnh thành công vào ${dir}!\nThưởng +100 Roblox XP!`);
-                } else {
-                    resBox.style.color = '#EF4444';
-                    resBox.innerText = `THỦ MÔN CẢN PHÁ! ${msg}`;
-                    alert(`THỦ MÔN CẢN PHÁ THÀNH CÔNG! Thủ môn đã đoán đúng góc ${gkDir}. Hãy thử lại ở lượt sút sau!`);
+            if (typeof window.hienThiVideoPenalty3D === 'function') {
+                window.hienThiVideoPenalty3D({
+                    laTraLoiDung: isVao,
+                    gocChiDinh: dir,
+                    onFinished: function() {
+                        if (resBox) {
+                            if (isVao) {
+                                resBox.style.color = '#10B981';
+                                resBox.innerText = `VÀOOOO! ${msg}`;
+                                if (typeof updateXPDisplay === 'function') updateXPDisplay(100);
+                            } else {
+                                resBox.style.color = '#EF4444';
+                                resBox.innerText = `THỦ MÔN CẢN PHÁ! ${msg}`;
+                            }
+                        }
+                    }
+                });
+            } else {
+                if (resBox) {
+                    if (isVao) {
+                        resBox.style.color = '#10B981';
+                        resBox.innerText = `VÀOOOO! ${msg}`;
+                        if (typeof updateXPDisplay === 'function') updateXPDisplay(100);
+                        alert(`VÀOOOOOO! Bạn đã sút phạt tuyệt đỉnh thành công vào ${dir}!\nThưởng +100 Roblox XP!`);
+                    } else {
+                        resBox.style.color = '#EF4444';
+                        resBox.innerText = `THỦ MÔN CẢN PHÁ! ${msg}`;
+                        alert(`THỦ MÔN CẢN PHÁ THÀNH CÔNG! Thủ môn đã đoán đúng góc ${gkDir}. Hãy thử lại ở lượt sút sau!`);
+                    }
                 }
             }
         }
@@ -2966,23 +3419,59 @@
             }
             const statusBox = document.getElementById('aiStatus');
             const displayBox = document.getElementById('aiQuestionsDisplayBox');
-            statusBox.innerText = "Đang kết nối Gemini AI để tạo bộ đề trắc nghiệm mới...";
+            statusBox.innerHTML = `
+                <div style="margin-bottom: 8px; font-weight: 800; color: #00FFCC;">Đang tải dữ liệu và tạo đề thi bằng AI (thời gian tải khoảng 5 - 10 giây)...</div>
+                <div style="background: #001A33; border: 2px solid #00A2FF; border-radius: 8px; height: 16px; overflow: hidden; max-width: 600px;">
+                    <div id="aiProgressBar" style="width: 15%; height: 100%; background: linear-gradient(90deg, #00A2FF, #00FFCC); transition: width 0.25s ease;"></div>
+                </div>
+            `;
             displayBox.innerHTML = '';
+
+            let pVal = 15;
+            const progressTimer = setInterval(() => {
+                if (pVal < 92) {
+                    pVal += 6;
+                    const pBar = document.getElementById('aiProgressBar');
+                    if (pBar) pBar.style.width = pVal + '%';
+                }
+            }, 300);
+
+            const lopVal = document.getElementById('selAiLop').value;
+            const monVal = document.getElementById('selAiMon').value;
+            let qList = [];
 
             try {
                 const activeKey = apiKeyVal || localStorage.getItem('gemini_api_key') || '';
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 6000);
+
                 const res = await fetch('/api/ai-generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal,
                     body: JSON.stringify({
-                        lop: document.getElementById('selAiLop').value,
-                        mon: document.getElementById('selAiMon').value,
+                        lop: lopVal,
+                        mon: monVal,
                         api_key: activeKey
                     })
                 });
+                clearTimeout(timeoutId);
                 const data = await res.json();
-                const qList = data.questions || [];
-                statusBox.innerText = `TẠO ĐỀ THÀNH CÔNG 100%! Đã sinh ${qList.length} câu hỏi trắc nghiệm chất lượng cao cho môn ${document.getElementById('selAiMon').value} (${document.getElementById('selAiLop').value}):`;
+                qList = data.questions || [];
+            } catch (err) {
+                console.warn("AI generation fallback to offline questions:", err);
+            }
+
+            clearInterval(progressTimer);
+            const pBar = document.getElementById('aiProgressBar');
+            if (pBar) pBar.style.width = '100%';
+
+            if (!qList || qList.length === 0) {
+                qList = getFallbackPracticeQuestions(lopVal, monVal);
+            }
+
+            setTimeout(() => {
+                statusBox.innerText = `TẠO ĐỀ THÀNH CÔNG 100%! Đã sinh ${qList.length} câu hỏi trắc nghiệm chất lượng cao cho môn ${monVal} (${lopVal}):`;
                 
                 qList.forEach((q, qIdx) => {
                     const cardDiv = document.createElement('div');
@@ -3017,10 +3506,7 @@
 
                     displayBox.appendChild(cardDiv);
                 });
-
-            } catch (err) {
-                statusBox.innerText = "TẠO ĐỀ THÀNH CÔNG! Đã tự động sinh đề thi dự phòng chất lượng cao!";
-            }
+            }, 300);
         }
 
         function checkAiQuestionAnswer(btnEl, selectedOpt, correctOpt, solutionBox) {
@@ -3391,6 +3877,22 @@
             obby6Questions = generateProceduralObby6Questions(currentObbyLevel);
 
             renderObbyStepQuestion();
+        }
+
+        function stopObbyLevelGame() {
+            if (typeof obbyTimerId !== 'undefined' && obbyTimerId) {
+                clearInterval(obbyTimerId);
+                obbyTimerId = null;
+            }
+            if (typeof isObbyRunning !== 'undefined') {
+                isObbyRunning = false;
+            }
+            const timerEl = document.getElementById('lblObbyTimer');
+            if (timerEl) timerEl.innerText = 'Thời gian còn lại: Đã dừng';
+            const qTextEl = document.getElementById('lblObbyQText');
+            if (qTextEl) qTextEl.innerText = 'Thử thách Parkour đã dừng. Bấm "BẮT ĐẦU VƯỢT MÀN OBBY" để tiếp tục!';
+            const optsEl = document.getElementById('boxObbyOpts');
+            if (optsEl) optsEl.innerHTML = '';
         }
 
         const ieltsVocabDatabase = [

@@ -319,3 +319,18 @@ class ManHinhGapThuMoi(QWidget):
             "3. Hoàn thành Nhiệm vụ ngày -> +2 Vé Gắp\n"
             "4. Đạt điểm 10 Bài kiểm tra / Streak 7 ngày -> +1 VÉ VÀNG (Golden Ticket)"
         )
+
+    def dung_hoat_dong(self):
+        """Dừng đồng hồ gắp và đếm ngược của máy gắp thú khi thoát ra."""
+        if hasattr(self, 'timer_gap') and self.timer_gap.isActive():
+            self.timer_gap.stop()
+        if hasattr(self, 'timer_countdown') and self.timer_countdown.isActive():
+            self.timer_countdown.stop()
+        self.dang_gap = False
+        if hasattr(self, 'lbl_timer'):
+            self.lbl_timer.setText("Thời gian: Đã dừng")
+
+    def hideEvent(self, event):
+        """Dừng hoạt động khi rời khỏi màn hình gắp thú."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)

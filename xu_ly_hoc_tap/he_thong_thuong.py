@@ -5,7 +5,7 @@
 import json
 import os
 
-FILE_THUONG = "he_thong_thuong.json"
+FILE_THUONG = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "he_thong_thuong.json"))
 
 def lay_thong_tin_thuong():
     """Lấy thông tin điểm kinh nghiệm, xu, level và huy hiệu của học sinh chuẩn Tiếng Việt có dấu."""
@@ -35,6 +35,7 @@ def lay_thong_tin_thuong():
 def luu_thong_tin_thuong(du_lieu):
     """Lưu thông tin phần thưởng vào file JSON local."""
     try:
+        os.makedirs(os.path.dirname(FILE_THUONG), exist_ok=True)
         with open(FILE_THUONG, "w", encoding="utf-8") as f:
             json.dump(du_lieu, f, ensure_ascii=False, indent=4)
     except Exception as e:
@@ -45,7 +46,7 @@ def cong_phan_thuong(diem_so=0, so_cau_dung=None):
     du_lieu = lay_thong_tin_thuong()
     
     if so_cau_dung is None or not isinstance(so_cau_dung, (int, float)):
-        # Nếu chỉ truyền 1 tham số (vd: cong_phan_thuong(100)) hoặc so_cau_dung là chuỗi, coi diem_so là XP trực tiếp
+        # Nếu chỉ truyền 1 tham số (vd: cong_phan_thuong(100)), coi diem_so là XP trực tiếp
         try:
             xp_nhan = int(diem_so)
         except Exception:
@@ -55,14 +56,18 @@ def cong_phan_thuong(diem_so=0, so_cau_dung=None):
         xp_nhan = int(so_cau_dung * 10)
         coin_nhan = int(so_cau_dung * 2)
     
-    du_lieu["xp"] += xp_nhan
-    du_lieu["coin"] += coin_nhan
+    du_lieu["xp"] = du_lieu.get("xp", 0) + xp_nhan
+    du_lieu["coin"] = du_lieu.get("coin", 0) + coin_nhan
     
     # Cập nhật level (mỗi 200 XP lên 1 Level)
     level_moi = (du_lieu["xp"] // 200) + 1
-    if level_moi > du_lieu["level"]:
+    if level_moi > du_lieu.get("level", 1):
         du_lieu["level"] = level_moi
-        du_lieu["danh_sach_huy_hieu"].append(f"Huy hiệu Cấp độ {level_moi}")
+        ten_huy_hieu = f"Huy hiệu Cấp độ {level_moi}"
+        if "danh_sach_huy_hieu" not in du_lieu:
+            du_lieu["danh_sach_huy_hieu"] = []
+        if ten_huy_hieu not in du_lieu["danh_sach_huy_hieu"]:
+            du_lieu["danh_sach_huy_hieu"].append(ten_huy_hieu)
         
     # Cập nhật danh hiệu
     if du_lieu["level"] >= 5:
@@ -76,4 +81,3 @@ def cong_phan_thuong(diem_so=0, so_cau_dung=None):
 def cong_xp_truc_tiep(xp_cong, coin_cong=0):
     """Cộng trực tiếp XP và Coin vào tài khoản học sinh."""
     return cong_phan_thuong(diem_so=xp_cong, so_cau_dung=None)
-

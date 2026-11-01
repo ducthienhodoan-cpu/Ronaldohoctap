@@ -29,6 +29,7 @@ from giao_dien.man_hinh_ke_hoach_hoc import ManHinhKeHoachHoc
 from giao_dien.man_hinh_tap_thi_ielts import ManHinhTapThiIELTS
 from giao_dien.man_hinh_obby import ManHinhObby
 from giao_dien.hop_thoai_nhap_ten import HopThoaiNhapTen
+from giao_dien.man_hinh_bong_da_tong_hop import ManHinhBongDaTongHop
 
 from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, kiem_tra_da_co_ten
 from xu_ly_am_thanh.quan_ly_am_thanh import QuanLyAmThanh
@@ -126,7 +127,8 @@ class CuaSoChinh(QMainWindow):
             ("Sổ Lỗi Sai Bài Khó", 14),
             ("Lịch Học & Streak", 15),
             ("Tập Thi IELTS", 16),
-            ("Đấu Trường Obby 100 Màn", 17)
+            ("Đấu Trường Obby 100 Màn", 17),
+            ("Siêu Sao & Đội Hình Bóng Đá", 18)
         ]
 
 
@@ -232,6 +234,7 @@ class CuaSoChinh(QMainWindow):
         self.screen_ke_hoach = ManHinhKeHoachHoc()
         self.screen_tap_thi_ielts = ManHinhTapThiIELTS()
         self.screen_obby = ManHinhObby()
+        self.screen_bong_da = ManHinhBongDaTongHop()
 
         self.screen_cai_dat.ten_da_thay_doi.connect(self.cap_nhat_hien_thi_ten)
         self.screen_luyen_tap.yeu_cau_chuyen_obby.connect(lambda: self.chuyen_man_hinh(17))
@@ -255,6 +258,7 @@ class CuaSoChinh(QMainWindow):
         self.stacked_widget.addWidget(self.screen_ke_hoach)            # 15
         self.stacked_widget.addWidget(self.screen_tap_thi_ielts)       # 16
         self.stacked_widget.addWidget(self.screen_obby)                # 17
+        self.stacked_widget.addWidget(self.screen_bong_da)             # 18
 
 
         right_layout.addWidget(self.stacked_widget)
@@ -349,43 +353,45 @@ class CuaSoChinh(QMainWindow):
         b3.setCursor(Qt.CursorShape.PointingHandCursor)
         b3.clicked.connect(lambda: self.chuyen_man_hinh(2))
 
+        b4 = QPushButton("Siêu Sao & Đội Hình Bóng Đá")
+        b4.setProperty("class", "btn-primary")
+        b4.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; background-color: #10B981;")
+        b4.setCursor(Qt.CursorShape.PointingHandCursor)
+        b4.clicked.connect(lambda: self.chuyen_man_hinh(18))
+
         grid_layout.addWidget(b0)
         grid_layout.addWidget(b1)
         grid_layout.addWidget(b2)
         grid_layout.addWidget(b3)
+        grid_layout.addWidget(b4)
 
         l.addWidget(grid_frame)
         l.addStretch()
         return w
 
     def dung_tat_ca_dong_ho(self):
-        """Dừng tất cả đồng hồ đếm ngược khi chuyển màn hình hoặc chọn mục khác."""
-        try:
-            if hasattr(self, 'screen_hoc_tap') and hasattr(self.screen_hoc_tap, 'timer'):
-                self.screen_hoc_tap.timer.stop()
-                self.screen_hoc_tap.lbl_dong_ho.setText("Thời gian: Chưa bắt đầu")
-            if hasattr(self, 'screen_luyen_tap') and hasattr(self.screen_luyen_tap, 'timer'):
-                self.screen_luyen_tap.timer.stop()
-                self.screen_luyen_tap.lbl_dong_ho.setText("Thời gian còn lại: Chưa bắt đầu")
-            if hasattr(self, 'screen_kiem_tra') and hasattr(self.screen_kiem_tra, 'timer'):
-                self.screen_kiem_tra.timer.stop()
-                self.screen_kiem_tra.lbl_dong_ho.setText("Thời gian còn lại: Chưa bắt đầu")
-            if hasattr(self, 'screen_ai_tao_de') and hasattr(self.screen_ai_tao_de, 'timer'):
-                self.screen_ai_tao_de.timer.stop()
-                self.screen_ai_tao_de.lbl_dong_ho.setText("Thời gian: Chưa bắt đầu")
-            if hasattr(self, 'screen_world_cup') and hasattr(self.screen_world_cup, 'timer'):
-                self.screen_world_cup.timer.stop()
-                self.screen_world_cup.lbl_timer_wc.setText("Thời gian trận đấu: Chưa bắt đầu")
-            if hasattr(self, 'screen_champions_league') and hasattr(self.screen_champions_league, 'timer'):
-                self.screen_champions_league.timer.stop()
-                self.screen_champions_league.lbl_timer_cl.setText("Thời gian trận đấu: Chưa bắt đầu")
-            if hasattr(self, 'screen_tro_choi'):
-                if hasattr(self.screen_tro_choi, 'typing_timer'):
-                    self.screen_tro_choi.typing_timer.stop()
-                if hasattr(self.screen_tro_choi, 'pomo_timer'):
-                    self.screen_tro_choi.pomo_timer.stop()
-        except Exception:
-            pass
+        """Dừng tất cả đồng hồ đếm ngược, vòng lặp game, luồng tạo đề khi chuyển màn hình hoặc thoát phần đó."""
+        danh_sach_man_hinh = [
+            getattr(self, 'screen_hoc_tap', None),
+            getattr(self, 'screen_luyen_tap', None),
+            getattr(self, 'screen_kiem_tra', None),
+            getattr(self, 'screen_ai_tao_de', None),
+            getattr(self, 'screen_world_cup', None),
+            getattr(self, 'screen_champions_league', None),
+            getattr(self, 'screen_dua_xe', None),
+            getattr(self, 'screen_obby', None),
+            getattr(self, 'screen_tap_thi_ielts', None),
+            getattr(self, 'screen_tro_choi', None),
+        ]
+        for screen in danh_sach_man_hinh:
+            if screen is not None:
+                try:
+                    if hasattr(screen, 'dung_hoat_dong'):
+                        screen.dung_hoat_dong()
+                    elif hasattr(screen, 'timer') and screen.timer.isActive():
+                        screen.timer.stop()
+                except Exception:
+                    pass
 
     def cap_nhat_trang_thai_mang(self, is_online):
         """Cập nhật giao diện nhãn thể hiện trạng thái kết nối mạng trên thanh Header bar."""
@@ -452,7 +458,8 @@ class CuaSoChinh(QMainWindow):
             "Sổ Lỗi Sai & Ôn Lại Bài Khó (Mistake Notebook)",
             "Lịch Học Tập & Nhắc Nhở Mục Tiêu (Roblox Streak)",
             "Tập Thi IELTS Tiếng Anh",
-            "Đấu Trường Obby 100 Màn Parkour Glitch World"
+            "Đấu Trường Obby 100 Màn Parkour Glitch World",
+            "Siêu Sao Bóng Đá & Đội Hình Trong Mơ"
         ]
         
         if 0 <= index < len(titles):

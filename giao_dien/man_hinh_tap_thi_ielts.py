@@ -397,9 +397,15 @@ KẾT QUẢ TẬP THI IELTS ({self.phan_mon_hien_tai.upper()} - {band.upper()}):
         # Mở minigame thư giãn sau khi hoàn thành
         self.mo_minigame_giua_gio()
 
-    def hideEvent(self, event):
-        """Khi chuyen sang man hinh khac, dung dong ho dem nguoc de khong tu dong nop bai hay hien thong bao."""
+    def dung_hoat_dong(self):
+        """Dừng đồng hồ đếm ngược và hoạt động bài thi IELTS khi thoát ra."""
         if hasattr(self, 'timer') and self.timer.isActive():
             self.timer.stop()
+        if hasattr(self, 'lbl_timer_ielts'):
+            self.lbl_timer_ielts.setText("Thời gian làm bài: Đã dừng (Chưa bắt đầu)")
+
+    def hideEvent(self, event):
+        """Khi chuyển sang màn hình khác, dừng đồng hồ để ngưng hoạt động bài thi IELTS."""
+        self.dung_hoat_dong()
         super().hideEvent(event)
 

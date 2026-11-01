@@ -1,0 +1,16 @@
+# Loai bo cac tep desktop PyQt6 va tep phat trien cuc bo
+giao_dien/
+giao_dien_ui/
+main.py
+scratch/
+gamemaker/
+.git/
+.agents/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.bak
+.DS_Store
+Thumbs.db

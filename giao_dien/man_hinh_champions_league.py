@@ -24,6 +24,8 @@ from xu_ly_tro_choi.quan_ly_vong_bang import kiem_tra_qua_vong_bang, tao_chuoi_t
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
 from giao_dien.dap_an_tuong_tac import TheDapAnGroup
 from giao_dien.hop_thoai_chung_nhan import HopThoaiChungNhan
+from xu_ly_tro_choi.xu_ly_penalty import sinh_ket_qua_penalty
+from giao_dien.hop_thoai_video_penalty import HopThoaiVideoPenalty
 
 class ManHinhChampionsLeague(QWidget):
     """Màn hình Giải đấu UEFA Champions League Tổng hợp kiến thức 1 Chủ đề của 1 Môn học với TẤT CẢ VĂN BẢN ĐỀU LÀ CHỮ TRẮNG SÁNG."""
@@ -210,6 +212,11 @@ class ManHinhChampionsLeague(QWidget):
         self.btn_truoc.setStyleSheet("color: #FFFFFF; font-weight: bold;")
         self.btn_truoc.clicked.connect(self.luot_sut_truoc)
 
+        self.btn_sut_penalty = QPushButton("Sút Penalty Ngay (Xem Video 3D)")
+        self.btn_sut_penalty.setProperty("class", "btn-primary")
+        self.btn_sut_penalty.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 18px; background-color: #00E676;")
+        self.btn_sut_penalty.clicked.connect(self.thuc_hien_sut_penalty_cau_hoi)
+
         self.btn_sau = QPushButton("Lượt sút tiếp theo")
         self.btn_sau.setProperty("class", "btn-secondary")
         self.btn_sau.setStyleSheet("color: #FFFFFF; font-weight: bold;")
@@ -225,9 +232,17 @@ class ManHinhChampionsLeague(QWidget):
         self.btn_submit_match.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 20px;")
         self.btn_submit_match.clicked.connect(self.tong_ket_tran_dau)
 
+        self.btn_dung_tran = QPushButton("Dừng / Thoát trận Cúp C1")
+        self.btn_dung_tran.setProperty("class", "btn-secondary")
+        self.btn_dung_tran.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 18px; background-color: #DC2626; border-radius: 8px;")
+        self.btn_dung_tran.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_dung_tran.clicked.connect(self.xu_ly_dung_tran)
+
         nav_layout.addWidget(self.btn_truoc)
+        nav_layout.addWidget(self.btn_sut_penalty)
         nav_layout.addWidget(self.btn_sau)
         nav_layout.addWidget(self.btn_giai_thich)
+        nav_layout.addWidget(self.btn_dung_tran)
         nav_layout.addStretch()
         nav_layout.addWidget(self.btn_submit_match)
 
@@ -353,6 +368,46 @@ class ManHinhChampionsLeague(QWidget):
         self.dap_an_user[self.cau_idx] = text
         if text and str(text).strip():
             self.tru_luot_choi_champions_league_neu_can()
+            # Tự động thực hiện cú sút và hiển thị Video hoạt cảnh 3D Penalty ngay khi chọn đáp án
+            self.thuc_hien_sut_penalty_cau_hoi()
+
+    def thuc_hien_sut_penalty_cau_hoi(self):
+        """Thực hiện sút penalty cho câu hỏi Cúp C1 hiện tại và hiển thị video hoạt cảnh 3D."""
+        if not self.cau_hoi_cl:
+            return
+
+        ans = self.dap_an_user.get(self.cau_idx, "")
+        if not ans or not str(ans).strip():
+            QMessageBox.information(
+                self, 
+                "Chưa Chọn Góc Sút", 
+                "Em hãy chọn 1 phương án đáp án góc sút bên trên trước khi thực hiện cú sút Penalty nhé!"
+            )
+            return
+
+        cau_current = self.cau_hoi_cl[self.cau_idx]
+        dap_an_dung = str(cau_current.get("dap_an_dung", "")).strip().lower()
+        ans_user = str(ans).strip().lower()
+
+        la_dung = (ans_user == dap_an_dung)
+        res_pen = sinh_ket_qua_penalty(la_tra_loi_dung=la_dung, goc_chi_dinh=ans)
+
+        # Mở hộp thoại video hoạt cảnh 3D Penalty
+        dlg_video = HopThoaiVideoPenalty(res_pen, self)
+        dlg_video.exec()
+
+        # Cập nhật tỷ số trận đấu trực tiếp
+        ban_thang_hien_tai = sum(
+            1 for i, c in enumerate(self.cau_hoi_cl) 
+            if str(self.dap_an_user.get(i, "")).strip().lower() == str(c.get("dap_an_dung", "")).strip().lower()
+        )
+        clb_ten = self.clb_user["ten"]
+        doi_thu = self.vong_info.get("doi_thu", "Đối thủ")
+        self.lbl_score_board.setText(f"Tỷ số Penalty: {clb_ten} {ban_thang_hien_tai} - 0 {doi_thu} | Tổng Bàn Thắng Cúp C1: {self.so_ban_thang + ban_thang_hien_tai}")
+
+        # Nếu còn câu tiếp theo, tự động chuyển lượt sút tiếp
+        if self.cau_idx < len(self.cau_hoi_cl) - 1:
+            self.luot_sut_sau()
 
     def luot_sut_truoc(self):
         if self.cau_idx > 0:
@@ -403,7 +458,13 @@ class ManHinhChampionsLeague(QWidget):
             sut_opp = random.randint(1, 5)
             while sut_user == sut_opp:
                 sut_opp = random.randint(1, 5)
-            if sut_user > sut_opp:
+
+            la_thang_pen = (sut_user > sut_opp)
+            res_tie = sinh_ket_qua_penalty(la_tra_loi_dung=la_thang_pen)
+            dlg_video = HopThoaiVideoPenalty(res_tie, self)
+            dlg_video.exec()
+
+            if la_thang_pen:
                 ban_thang_tran += 1
                 QMessageBox.information(self, "Penalty Loạt Sút Sinh Tử", f"HÒA TRẬN ĐẤU! Bước vào sút phạt Penalty loại trực tiếp: Câu lạc bộ {clb_ten} sút thắng {sut_user} - {sut_opp} {doi_thu}!")
             else:
@@ -505,3 +566,49 @@ class ManHinhChampionsLeague(QWidget):
                 self.vong_idx = 0
                 self.vong_bang_tran_idx = 0
                 self.vong_bang_results = []
+
+    def dung_hoat_dong(self):
+        """Dừng tất cả đồng hồ và dừng hoạt động trận đấu Cúp C1."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        self.tran_tam_dung = False
+        if hasattr(self, 'lbl_timer_cl'):
+            self.lbl_timer_cl.setText("Thời gian trận đấu: Đã dừng (Chưa bắt đầu)")
+            self.lbl_timer_cl.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #002B4D; padding: 6px 14px; border-radius: 10px; border: 2px solid #00A2FF;")
+        if hasattr(self, 'btn_dung_tran'):
+            self.btn_dung_tran.setText("Dừng / Thoát trận Cúp C1")
+            self.btn_dung_tran.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 18px; background-color: #DC2626; border-radius: 8px;")
+
+    def xu_ly_dung_tran(self):
+        """Học sinh chủ động bấm Tạm dừng / Tiếp tục trận đấu Champions League Cúp C1."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+            self.tran_tam_dung = True
+            m = self.thoi_gian_con_lai // 60
+            s = self.thoi_gian_con_lai % 60
+            if hasattr(self, 'lbl_timer_cl'):
+                self.lbl_timer_cl.setText(f"Thời gian trận đấu: ĐÃ TẠM DỪNG (Còn lại: {m:02d}:{s:02d})")
+                self.lbl_timer_cl.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #B45309; padding: 6px 14px; border-radius: 10px; border: 2px solid #F59E0B;")
+            if hasattr(self, 'btn_dung_tran'):
+                self.btn_dung_tran.setText("Tiếp tục trận đấu")
+                self.btn_dung_tran.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 18px; background-color: #10B981; border-radius: 8px;")
+            QMessageBox.information(
+                self,
+                "ĐÃ TẠM DỪNG TRẬN ĐẤU",
+                f"Đã tạm dừng đồng hồ trận đấu Champions League Cúp C1!\nThời gian còn lại: {m:02d}:{s:02d}.\nBấm 'Tiếp tục trận đấu' để thi đấu tiếp!"
+            )
+        elif getattr(self, 'tran_tam_dung', False) and getattr(self, 'thoi_gian_con_lai', 0) > 0:
+            self.timer.start(1000)
+            self.tran_tam_dung = False
+            if hasattr(self, 'lbl_timer_cl'):
+                self.lbl_timer_cl.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #002B4D; padding: 6px 14px; border-radius: 10px; border: 2px solid #00A2FF;")
+            if hasattr(self, 'btn_dung_tran'):
+                self.btn_dung_tran.setText("Dừng / Thoát trận Cúp C1")
+                self.btn_dung_tran.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 18px; background-color: #DC2626; border-radius: 8px;")
+        else:
+            self.dung_hoat_dong()
+
+    def hideEvent(self, event):
+        """Dừng tất cả đồng hồ và hoạt động khi rời khỏi màn hình Cúp C1."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)

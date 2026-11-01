@@ -5,7 +5,7 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QFrame, QMessageBox, QScrollArea, QGridLayout,
-    QComboBox, QCheckBox
+    QComboBox, QCheckBox, QProgressBar
 )
 
 from PyQt6.QtCore import QTimer, Qt
@@ -194,6 +194,32 @@ class ManHinhAITaoDe(QWidget):
         header_exam.addWidget(self.lbl_dong_ho)
         exam_layout.addLayout(header_exam)
 
+        # Thanh tiến độ tải dữ liệu câu hỏi (Thời gian tải 5 - 10 giây)
+        self.progress_bar_ai = QProgressBar()
+        self.progress_bar_ai.setRange(0, 100)
+        self.progress_bar_ai.setValue(0)
+        self.progress_bar_ai.setTextVisible(True)
+        self.progress_bar_ai.setFormat("Đang tải dữ liệu và tạo đề thi: %p% (Thời gian tải khoảng 5 - 10 giây)")
+        self.progress_bar_ai.setStyleSheet("""
+            QProgressBar {
+                border: 2px solid #00A2FF;
+                border-radius: 8px;
+                text-align: center;
+                color: #FFFFFF;
+                font-weight: bold;
+                font-size: 13px;
+                background-color: #001A33;
+                min-height: 26px;
+                margin: 6px 0px;
+            }
+            QProgressBar::chunk {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #00A2FF, stop:1 #00FFCC);
+                border-radius: 6px;
+            }
+        """)
+        self.progress_bar_ai.hide()
+        exam_layout.addWidget(self.progress_bar_ai)
+
         # Nội dung câu hỏi chữ trắng
         self.lbl_noidung = QLabel("Nội dung câu hỏi sẽ xuất hiện tại đây...")
         self.lbl_noidung.setStyleSheet("font-size: 16px; font-weight: bold; color: #FFFFFF; min-height: 50px;")
@@ -316,10 +342,26 @@ class ManHinhAITaoDe(QWidget):
         self.thong_bao_tam = thong_bao
         self.lbl_giai_thich.hide()
 
-        # Cập nhật giao diện trạng thái đang tải
-        self.lbl_de_info.setText(f"ĐANG KHỞI TẠO BÀI TẬP BẰNG GEMINI AI ({ten_lop} - {ten_mon} - {muc_do})... VUI LÒNG CHỜ TRONG GIÂY LÁT!")
-        self.lbl_noidung.setText("Hệ thống đang kết nối Gemini AI để tự động tạo bộ câu hỏi thông minh. Giao diện vẫn hoạt động mượt mà...")
+        # Cập nhật giao diện trạng thái đang tải (Thời gian tải khoảng 5 - 10 giây)
+        self.lbl_de_info.setText(f"ĐANG KHỞI TẠO BÀI TẬP BẰNG GEMINI AI ({ten_lop} - {ten_mon} - {muc_do})... THỜI GIAN TẢI KHOẢNG 5 - 10 GIÂY!")
+        self.lbl_noidung.setText("Hệ thống đang tải dữ liệu và tạo đề thi thông minh (tầm 5 - 10 giây). Giao diện luôn mượt mà...")
         self.lbl_dong_ho.setText("Thời gian: Đang khởi tạo...")
+
+        # Kích hoạt thanh tiến độ tải 5 - 10 giây
+        self.progress_bar_ai.setValue(8)
+        self.progress_bar_ai.show()
+        self.loading_val = 8
+
+        if hasattr(self, 'timer_loading_ai') and self.timer_loading_ai.isActive():
+            self.timer_loading_ai.stop()
+
+        self.timer_loading_ai = QTimer(self)
+        def tang_tien_do():
+            if self.loading_val < 92:
+                self.loading_val += 3
+                self.progress_bar_ai.setValue(self.loading_val)
+        self.timer_loading_ai.timeout.connect(tang_tien_do)
+        self.timer_loading_ai.start(180)  # Cập nhật mượt mà trong ~5-6 giây
 
         # Vô hiệu hóa nút tạo đề tạm thời để tránh bấm liên tục
         self.btn_tao_de_truc_tiep.setEnabled(False)
@@ -334,6 +376,12 @@ class ManHinhAITaoDe(QWidget):
         """Nhận kết quả từ Luồng QThread ngầm khi hoàn thành."""
         self.btn_tao_de_truc_tiep.setEnabled(True)
         self.btn_tao_de_truc_tiep.setText("Gemini AI Tạo Đề Thi Ngay")
+
+        # Hoàn tất thanh tiến độ 100%
+        if hasattr(self, 'timer_loading_ai') and self.timer_loading_ai.isActive():
+            self.timer_loading_ai.stop()
+        self.progress_bar_ai.setValue(100)
+        QTimer.singleShot(400, lambda: self.progress_bar_ai.hide())
 
         if not danh_sach_de:
             QMessageBox.warning(self, "Thông báo", err_msg if err_msg else "Không thể sinh đề thi. Vui lòng thử lại!")
@@ -456,4 +504,20 @@ KẾT QUẢ BÀI LÀM:
 
         # Mở minigame thư giãn giữa giờ sau bài thi
         self.mo_minigame_giua_gio()
+
+    def dung_hoat_dong(self):
+        """Dừng tất cả đồng hồ và tiến độ tải khi rời khỏi màn hình AI tạo đề."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        if hasattr(self, 'timer_loading_ai') and self.timer_loading_ai.isActive():
+            self.timer_loading_ai.stop()
+        if hasattr(self, 'progress_bar_ai'):
+            self.progress_bar_ai.hide()
+        if hasattr(self, 'lbl_dong_ho'):
+            self.lbl_dong_ho.setText("Thời gian: Đã dừng (Chưa bắt đầu)")
+
+    def hideEvent(self, event):
+        """Dừng tất cả đồng hồ và tiến độ tải khi rời khỏi màn hình AI tạo đề."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)
 

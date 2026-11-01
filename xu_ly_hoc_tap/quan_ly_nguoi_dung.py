@@ -6,7 +6,7 @@ import json
 import os
 from datetime import date
 
-FILE_NGUOI_DUNG = "thong_tin_nguoi_dung.json"
+FILE_NGUOI_DUNG = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "thong_tin_nguoi_dung.json"))
 
 def lay_thong_tin_nguoi_dung():
     """Doc thong tin nguoi dung tu file JSON local."""
@@ -34,6 +34,7 @@ def lay_thong_tin_nguoi_dung():
 def luu_thong_tin_nguoi_dung(du_lieu):
     """Luu thong tin nguoi dung vao file JSON local."""
     try:
+        os.makedirs(os.path.dirname(FILE_NGUOI_DUNG), exist_ok=True)
         with open(FILE_NGUOI_DUNG, "w", encoding="utf-8") as f:
             json.dump(du_lieu, f, ensure_ascii=False, indent=4)
         return True
@@ -51,7 +52,7 @@ def lay_ten_nguoi_dung():
 
 def cap_nhat_ten_nguoi_dung(ten_moi):
     """Cap nhat ten moi cho hoc sinh."""
-    ten_sach = ten_moi.strip()
+    ten_sach = str(ten_moi).strip()
     if not ten_sach:
         return False
     

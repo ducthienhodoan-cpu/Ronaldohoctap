@@ -7,7 +7,7 @@ import random
 import datetime
 from xu_ly_hoc_tap.he_thong_thuong import cong_phan_thuong
 
-DUONG_DAN_VONG_QUAY = os.path.join("du_lieu", "he_thong_vong_quay.json")
+DUONG_DAN_VONG_QUAY = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "du_lieu", "he_thong_vong_quay.json"))
 
 # Danh sach 10 o phan thuong mac dinh (Che do Thuong)
 DANH_SACH_10_O_THUONG = [

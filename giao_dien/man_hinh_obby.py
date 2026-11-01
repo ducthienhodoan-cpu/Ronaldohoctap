@@ -37,6 +37,8 @@ class ManHinhObby(QWidget):
         self.thoi_gian_con_lai = 45
         self.boss_phase = 1
         self.obby_mang = 3 # 3 Mang choi trong 1 luot
+        self.dang_choi = False
+        self.da_tam_dung = False
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.cap_nhat_dong_ho)
@@ -151,19 +153,36 @@ class ManHinhObby(QWidget):
         self.scroll_area.setWidget(self.stadium_frame)
         main_layout.addWidget(self.scroll_area)
 
-        # 5. Thanh Nút Bấm Thao Tác Chạy Nhảy & Nộp Bài
+        # 5. Thanh Nút Bấm Thao Tác Chạy Nhảy, Dừng Lại & Nộp Bài
         nav_layout = QHBoxLayout()
         self.btn_action_jump = QPushButton("BẮT ĐẦU VƯỢT MÀN OBBY")
         self.btn_action_jump.setProperty("class", "btn-primary")
-        self.btn_action_jump.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 24px; background: linear-gradient(135deg, #EC4899, #A855F7);")
-        self.btn_action_jump.clicked.connect(self.bat_dau_man_obby)
+        self.btn_action_jump.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 24px; background: linear-gradient(135deg, #EC4899, #A855F7); border-radius: 8px;")
+        self.btn_action_jump.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_action_jump.clicked.connect(self.xu_ly_nut_chinh_obby)
+
+        self.btn_dung_obby = QPushButton("DỪNG / TẠM DỪNG THỬ THÁCH")
+        self.btn_dung_obby.setProperty("class", "btn-secondary")
+        self.btn_dung_obby.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 20px; background-color: #DC2626; border-radius: 8px;")
+        self.btn_dung_obby.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_dung_obby.clicked.connect(self.xu_ly_dung_thu_thach_parkour)
+
+        self.btn_choi_lai = QPushButton("CHƠI LẠI TỪ ĐẦU MÀN")
+        self.btn_choi_lai.setProperty("class", "btn-secondary")
+        self.btn_choi_lai.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 14px; padding: 10px 18px; background-color: #475569; border-radius: 8px;")
+        self.btn_choi_lai.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_choi_lai.clicked.connect(self.choi_lai_man_tu_dau)
+        self.btn_choi_lai.hide()
 
         self.btn_submit_obby = QPushButton("NỘP BÀI & CHẠM CHECKPOINT")
         self.btn_submit_obby.setProperty("class", "btn-success")
-        self.btn_submit_obby.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 24px;")
+        self.btn_submit_obby.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; padding: 10px 24px; border-radius: 8px;")
+        self.btn_submit_obby.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_submit_obby.clicked.connect(self.tong_ket_man_obby)
 
         nav_layout.addWidget(self.btn_action_jump)
+        nav_layout.addWidget(self.btn_dung_obby)
+        nav_layout.addWidget(self.btn_choi_lai)
         nav_layout.addStretch()
         nav_layout.addWidget(self.btn_submit_obby)
 
@@ -213,12 +232,49 @@ class ManHinhObby(QWidget):
             self.grid_levels_layout.addWidget(btn_lvl)
 
     def chon_man_choi(self, lvl):
+        self.da_tam_dung = False
         self.man_hien_tai = lvl
         self.cap_nhat_luoi_man_choi()
         self.bat_dau_man_obby()
 
+    def xu_ly_nut_chinh_obby(self):
+        """Bấm nút chính: Bắt đầu màn mới hoặc Tiếp tục màn chơi đã tạm dừng."""
+        if getattr(self, 'da_tam_dung', False):
+            self.tiep_tuc_man_obby()
+        else:
+            self.bat_dau_man_obby()
+
+    def tiep_tuc_man_obby(self):
+        """Tiếp tục màn chơi Obby với thời gian và vị trí Cục Parkour đã lưu."""
+        self.dang_choi = True
+        self.da_tam_dung = False
+        self.btn_action_jump.setText("BẮT ĐẦU VƯỢT MÀN OBBY")
+        self.btn_dung_obby.setText("DỪNG / TẠM DỪNG THỬ THÁCH")
+        self.btn_choi_lai.hide()
+        self.btn_submit_obby.setEnabled(True)
+        self.lbl_timer_obby.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #002B4D; padding: 6px 14px; border-radius: 10px; border: 2px solid #00A2FF;")
+        
+        m = self.thoi_gian_con_lai // 60
+        s = self.thoi_gian_con_lai % 60
+        self.lbl_timer_obby.setText(f"Thời gian vượt màn còn lại: {m:02d}:{s:02d}")
+        self.hien_thi_cau_hoi_cuc_parkour()
+        self.timer.start(1000)
+
+    def choi_lai_man_tu_dau(self):
+        """Chơi lại từ đầu màn hiện tại (Cục Parkour 1 và đặt lại thời gian đầy đủ)."""
+        self.da_tam_dung = False
+        self.btn_action_jump.setText("BẮT ĐẦU VƯỢT MÀN OBBY")
+        self.btn_dung_obby.setText("DỪNG / TẠM DỪNG THỬ THÁCH")
+        self.btn_choi_lai.hide()
+        self.btn_submit_obby.setEnabled(True)
+        self.bat_dau_man_obby()
+
     def bat_dau_man_obby(self):
         """Bắt đầu màn chơi Obby hiện tại với cơ chế 6 Cục Parkour (6 Câu hỏi) - Chỉ trừ lượt khi trả lời câu hỏi."""
+        if getattr(self, 'da_tam_dung', False):
+            self.tiep_tuc_man_obby()
+            return
+
         if lay_so_luot_choi_obby() <= 0:
             QMessageBox.warning(
                 self,
@@ -229,9 +285,17 @@ class ManHinhObby(QWidget):
             self.lbl_luot_obby.setText("Số lượt chơi Obby khả dụng: 0 lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
             return
 
+        self.dang_choi = True
+        self.da_tam_dung = False
         self.da_tinh_luot_obby_man_nay = False
         luot_con_lai = lay_so_luot_choi_obby()
         self.lbl_luot_obby.setText(f"Số lượt chơi Obby khả dụng: {luot_con_lai} lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
+
+        self.btn_action_jump.setText("BẮT ĐẦU VƯỢT MÀN OBBY")
+        self.btn_dung_obby.setText("DỪNG / TẠM DỪNG THỬ THÁCH")
+        self.btn_choi_lai.hide()
+        self.btn_submit_obby.setEnabled(True)
+        self.lbl_timer_obby.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #002B4D; padding: 6px 14px; border-radius: 10px; border: 2px solid #00A2FF;")
 
         self.obby_step = 0
         info = lay_thong_tin_man_obby(self.man_hien_tai)
@@ -264,6 +328,82 @@ class ManHinhObby(QWidget):
                 luot_con_lai = lay_so_luot_choi_obby()
                 self.lbl_luot_obby.setText(f"Số lượt chơi Obby khả dụng: {luot_con_lai} lượt (Hoàn thành 1 bài luyện tập để nhận thêm +1 lượt)")
 
+    def dung_hoat_dong(self):
+        """Dừng đồng hồ đếm ngược và bảo lưu trạng thái để học sinh có thể tiếp tục khi quay lại."""
+        if hasattr(self, 'timer') and self.timer.isActive():
+            self.timer.stop()
+        
+        if getattr(self, 'dang_choi', False):
+            # Lưu tiến độ đang chơi dở dang
+            self.da_tam_dung = True
+            self.dang_choi = False
+            m = self.thoi_gian_con_lai // 60
+            s = self.thoi_gian_con_lai % 60
+            if hasattr(self, 'lbl_timer_obby'):
+                self.lbl_timer_obby.setText(f"Thời gian vượt màn: ĐÃ TẠM DỪNG (Còn lại: {m:02d}:{s:02d})")
+                self.lbl_timer_obby.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #B45309; padding: 6px 14px; border-radius: 10px; border: 2px solid #F59E0B;")
+            if hasattr(self, 'lbl_question_text'):
+                self.lbl_question_text.setText(f"Đã tạm dừng thử thách tại Cục Parkour {self.obby_step + 1}/6. Bấm 'TIẾP TỤC VƯỢT MÀN' để nhảy tiếp hoặc 'CHƠI LẠI TỪ ĐẦU MÀN'!")
+            if hasattr(self, 'btn_action_jump'):
+                self.btn_action_jump.setText("TIẾP TỤC VƯỢT MÀN")
+            if hasattr(self, 'btn_dung_obby'):
+                self.btn_dung_obby.setText("THOÁT HẲN MÀN CHƠI")
+            if hasattr(self, 'btn_choi_lai'):
+                self.btn_choi_lai.show()
+            if hasattr(self, 'btn_submit_obby'):
+                self.btn_submit_obby.setEnabled(False)
+        else:
+            if not getattr(self, 'da_tam_dung', False):
+                self.dang_choi = False
+                self.thoi_gian_con_lai = 0
+                if hasattr(self, 'lbl_timer_obby'):
+                    self.lbl_timer_obby.setText("Thời gian vượt màn: Đã dừng (Chưa bắt đầu)")
+                    self.lbl_timer_obby.setStyleSheet("font-size: 15px; font-weight: bold; color: #FFFFFF; background-color: #002B4D; padding: 6px 14px; border-radius: 10px; border: 2px solid #00A2FF;")
+                if hasattr(self, 'lbl_question_text'):
+                    self.lbl_question_text.setText("Thử thách Parkour đã dừng. Bấm 'BẮT ĐẦU VƯỢT MÀN OBBY' để nhận thử thách Parkour!")
+                if hasattr(self, 'btn_action_jump'):
+                    self.btn_action_jump.setText("BẮT ĐẦU VƯỢT MÀN OBBY")
+                if hasattr(self, 'btn_dung_obby'):
+                    self.btn_dung_obby.setText("DỪNG / TẠM DỪNG THỬ THÁCH")
+                if hasattr(self, 'btn_choi_lai'):
+                    self.btn_choi_lai.hide()
+                if hasattr(self, 'btn_submit_obby'):
+                    self.btn_submit_obby.setEnabled(True)
+                
+                # Xóa các thẻ phương án nếu thoát hẳn
+                if hasattr(self, 'vung_options_layout'):
+                    for i in reversed(range(self.vung_options_layout.count())):
+                        w = self.vung_options_layout.itemAt(i).widget()
+                        if w:
+                            w.setParent(None)
+                self.cau_hoi_current = None
+                self.dap_an_user = ""
+
+    def xu_ly_dung_thu_thach_parkour(self):
+        """Học sinh chủ động bấm Dừng / Tạm dừng màn chơi Parkour hiện tại."""
+        if getattr(self, 'dang_choi', False):
+            self.dung_hoat_dong()
+            m = self.thoi_gian_con_lai // 60
+            s = self.thoi_gian_con_lai % 60
+            QMessageBox.information(
+                self,
+                "ĐÃ TẠM DỪNG THỬ THÁCH",
+                f"Đã dừng đồng hồ đếm ngược và tạm dừng màn Parkour {self.man_hien_tai}!\n\n"
+                f"Tiến độ tại Cục Parkour {self.obby_step + 1}/6 và thời gian còn lại ({m:02d}:{s:02d}) được lưu an toàn.\n"
+                f"Em có thể bấm 'TIẾP TỤC VƯỢT MÀN' bất cứ lúc nào!"
+            )
+        elif getattr(self, 'da_tam_dung', False):
+            # Nếu đang tạm dừng mà bấm tiếp nút thoát -> Thoát hẳn màn chơi
+            self.da_tam_dung = False
+            self.dung_hoat_dong()
+            QMessageBox.information(
+                self,
+                "ĐÃ THOÁT MÀN CHƠI",
+                "Đã thoát khỏi màn chơi hiện tại. Khi sẵn sàng, em có thể bấm 'BẮT ĐẦU VƯỢT MÀN OBBY' để thử sức lại từ đầu!"
+            )
+        else:
+            self.dung_hoat_dong()
+
     def hien_thi_cau_hoi_cuc_parkour(self):
         if not hasattr(self, 'danh_sach_6_cau_hoi') or self.obby_step >= len(self.danh_sach_6_cau_hoi):
             return
@@ -282,13 +422,18 @@ class ManHinhObby(QWidget):
         self.vung_options_layout.addWidget(widget_options)
 
     def luu_dap_an_va_nhay(self, text):
+        if not getattr(self, 'dang_choi', False):
+            return
         self.dap_an_user = text
         if text and str(text).strip():
             self.tru_luot_choi_obby_neu_can()
         self.tong_ket_man_obby()
 
-
     def cap_nhat_dong_ho(self):
+        if not getattr(self, 'dang_choi', False):
+            self.timer.stop()
+            return
+
         if self.thoi_gian_con_lai > 0:
             self.thoi_gian_con_lai -= 1
             m = self.thoi_gian_con_lai // 60
@@ -296,6 +441,7 @@ class ManHinhObby(QWidget):
             self.lbl_timer_obby.setText(f"Thời gian vượt màn còn lại: {m:02d}:{s:02d}")
         else:
             self.timer.stop()
+            self.dang_choi = False
             man_checkpoint = tinh_man_checkpoint_gan_nhat(self.man_hien_tai)
             QMessageBox.warning(
                 self,
@@ -310,6 +456,8 @@ class ManHinhObby(QWidget):
             self.bat_dau_man_obby()
 
     def tong_ket_man_obby(self):
+        if not getattr(self, 'dang_choi', False):
+            return
         if not self.cau_hoi_current:
             return
 
@@ -323,6 +471,7 @@ class ManHinhObby(QWidget):
                 self.hien_thi_cau_hoi_cuc_parkour()
             else:
                 self.timer.stop()
+                self.dang_choi = False
                 cong_phan_thuong(10.0, 1)
                 luu_hoan_thanh_man_obby(self.man_hien_tai)
                 self.tai_lai_ban_do()
@@ -375,6 +524,7 @@ class ManHinhObby(QWidget):
                 )
             else:
                 self.timer.stop()
+                self.dang_choi = False
                 man_checkpoint = tinh_man_checkpoint_gan_nhat(self.man_hien_tai)
                 QMessageBox.warning(
                     self,
@@ -386,3 +536,8 @@ class ManHinhObby(QWidget):
                 self.obby_mang = 3
                 self.cap_nhat_luoi_man_choi()
                 self.bat_dau_man_obby()
+
+    def hideEvent(self, event):
+        """Khi chuyển sang màn hình khác hoặc thoát khỏi phần Parkour, dừng ngay đồng hồ và dừng hoạt động."""
+        self.dung_hoat_dong()
+        super().hideEvent(event)
