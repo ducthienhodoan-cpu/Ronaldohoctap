@@ -6,7 +6,15 @@
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": [
+          "du_lieu/**",
+          "du_lieu_giao_duc/**",
+          "xu_ly_*/**",
+          "*.json"
+        ]
+      }
     },
     {
       "src": "public/**",

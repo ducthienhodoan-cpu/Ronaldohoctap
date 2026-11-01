@@ -46,6 +46,14 @@ from xu_ly_bong_da.quan_ly_tran_dau import lay_danh_sach_doi_thu, khoi_tao_tran_
 
 app = Flask(__name__)
 
+@app.errorhandler(Exception)
+def handle_all_exceptions(e):
+    return jsonify({
+        "status": "error",
+        "message": str(e),
+        "type": type(e).__name__
+    }), 200
+
 # Function 1: Health & System Metadata
 @app.route('/', methods=['GET'])
 @app.route('/api/health', methods=['GET'])

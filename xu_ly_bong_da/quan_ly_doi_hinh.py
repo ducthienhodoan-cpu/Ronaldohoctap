@@ -90,20 +90,22 @@ def doc_doi_hinh_hien_tai():
     """Doc du lieu doi hinh tu file JSON, neu chua co thi tao moi."""
     if not os.path.exists(FILE_DOI_HINH):
         du_lieu = khoi_tao_doi_hinh_mac_dinh()
-        luu_doi_hinh_hien_tai(du_lieu)
+        try:
+            luu_doi_hinh_hien_tai(du_lieu)
+        except Exception:
+            pass
         return du_lieu
     try:
         with open(FILE_DOI_HINH, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         du_lieu = khoi_tao_doi_hinh_mac_dinh()
-        luu_doi_hinh_hien_tai(du_lieu)
         return du_lieu
 
 def luu_doi_hinh_hien_tai(du_lieu):
     """Luu du lieu doi hinh xuong file JSON."""
-    os.makedirs(os.path.dirname(FILE_DOI_HINH), exist_ok=True)
     try:
+        os.makedirs(os.path.dirname(FILE_DOI_HINH), exist_ok=True)
         with open(FILE_DOI_HINH, "w", encoding="utf-8") as f:
             json.dump(du_lieu, f, ensure_ascii=False, indent=2)
         return True
