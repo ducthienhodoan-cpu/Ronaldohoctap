@@ -48,6 +48,20 @@ try:
         luu_doi_hinh_hien_tai, tinh_suc_manh_tong_hop
     )
     from xu_ly_bong_da.quan_ly_tran_dau import lay_danh_sach_doi_thu, khoi_tao_tran_dau_dinh_cao
+    from xu_ly_co_tri_tue.quan_ly_co_vua import (
+        lay_danh_sach_quan_co_vua, lay_cac_nuoc_di_dac_biet_co_vua,
+        lay_khai_cuoc_kinh_dien_co_vua, lay_don_chien_thuat_co_vua,
+        lay_danh_nhan_co_vua, lay_kho_cau_do_co_vua
+    )
+    from xu_ly_co_tri_tue.quan_ly_co_tuong import (
+        lay_danh_sach_quan_co_tuong, lay_dac_diem_ban_co_tuong,
+        lay_sat_phap_kinh_dien_co_tuong, lay_the_tran_khai_cuoc_co_tuong,
+        lay_danh_thu_co_tuong, lay_kho_cau_do_co_tuong
+    )
+    from xu_ly_co_tri_tue.quan_ly_ban_co import (
+        khoi_tao_ban_co_vua_mac_dinh, khoi_tao_ban_co_tuong_mac_dinh,
+        lay_danh_sach_the_co_mau, doc_tien_do_co_tri_tue, xu_ly_tra_loi_cau_do
+    )
 except Exception as e:
     import_errors["root_import"] = str(e)
 
@@ -407,6 +421,54 @@ def football_engine():
         "current_team": current_team,
         "team_ovr": ovr,
         "opponents": lay_danh_sach_doi_thu()
+    })
+
+# Function 9: Chess & Xiangqi Intellectual Hub (Rules, Openings, Tactics, Boards & Quizzes)
+@app.route('/api/chess', methods=['GET', 'POST'])
+def chess_engine():
+    if request.method == 'POST':
+        req = request.get_json() or {}
+        action = req.get('action', 'solve_puzzle')
+        if action == 'solve_puzzle':
+            puzzle_id = req.get('puzzle_id', '')
+            answer = req.get('answer', '')
+            res = xu_ly_tra_loi_cau_do(puzzle_id, answer)
+            return jsonify({"status": "success", "result": res})
+        elif action == 'random_puzzle':
+            cat = req.get('category', 'all')
+            if cat == 'co_vua':
+                pool = lay_kho_cau_do_co_vua()
+            elif cat == 'co_tuong':
+                pool = lay_kho_cau_do_co_tuong()
+            else:
+                pool = lay_kho_cau_do_co_vua() + lay_kho_cau_do_co_tuong()
+            import random
+            q = random.choice(pool) if pool else None
+            return jsonify({"status": "success", "puzzle": q})
+
+    progress = doc_tien_do_co_tri_tue()
+    return jsonify({
+        "status": "success",
+        "co_vua": {
+            "pieces": lay_danh_sach_quan_co_vua(),
+            "special_rules": lay_cac_nuoc_di_dac_biet_co_vua(),
+            "openings": lay_khai_cuoc_kinh_dien_co_vua(),
+            "tactics": lay_don_chien_thuat_co_vua(),
+            "masters": lay_danh_nhan_co_vua(),
+            "puzzles": lay_kho_cau_do_co_vua(),
+            "default_board": khoi_tao_ban_co_vua_mac_dinh()
+        },
+        "co_tuong": {
+            "pieces": lay_danh_sach_quan_co_tuong(),
+            "board_features": lay_dac_diem_ban_co_tuong(),
+            "tactics": lay_sat_phap_kinh_dien_co_tuong(),
+            "openings": lay_the_tran_khai_cuoc_co_tuong(),
+            "masters": lay_danh_thu_co_tuong(),
+            "puzzles": lay_kho_cau_do_co_tuong(),
+            "default_board": khoi_tao_ban_co_tuong_mac_dinh()
+        },
+        "sample_positions": lay_danh_sach_the_co_mau(),
+        "progress": progress
     })
 
 # Headers toi uu hoa Turbo Cache va CORS cho Vercel Serverless

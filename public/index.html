@@ -20,6 +20,7 @@
     <script src="/xu_ly_3d/vong_quay_3d_moi.js"></script>
     <script src="/xu_ly_3d/video_penalty_3d.js"></script>
     <script src="/xu_ly_bong_da/bong_da_dinh_cao.js"></script>
+    <script src="/xu_ly_co_tri_tue/co_tri_tue.js"></script>
     <style>
         :root {
             --bg-body: #021a12;
@@ -763,6 +764,170 @@
             backdrop-filter: blur(8px);
         }
 
+        /* Chess and Xiangqi Intellectual Hub Styling */
+        .chess-pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .chess-piece-card {
+            display: flex;
+            gap: 14px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1.5px solid #3B82F6;
+            border-radius: 14px;
+            padding: 14px;
+            align-items: flex-start;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .chess-piece-card:hover {
+            transform: translateY(-3px);
+            border-color: #60A5FA;
+        }
+        .chess-piece-card.xiangqi-card {
+            border-color: #EF4444;
+        }
+        .chess-piece-card.xiangqi-card:hover {
+            border-color: #F87171;
+        }
+        .chess-piece-badge {
+            background: #1D4ED8;
+            color: #FFFFFF;
+            font-size: 20px;
+            font-weight: 900;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        }
+        .xiangqi-piece-badge {
+            background: #DC2626;
+            color: #FFFFFF;
+            font-size: 18px;
+            font-weight: 900;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 2px solid #FCA5A5;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+        }
+        .chess-piece-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+        }
+        .chess-val-pill {
+            background: #F59E0B;
+            color: #022C22;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+        .chess-piece-desc {
+            font-size: 13.5px;
+            color: #CBD5E1;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .chess-piece-note {
+            font-size: 12.5px;
+            color: #34D399;
+            background: rgba(6, 78, 59, 0.5);
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+        .xiangqi-note {
+            color: #FCA5A5;
+            background: rgba(127, 29, 29, 0.5);
+        }
+        .chess-rule-item {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid #3B82F6;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .xiangqi-rule-item {
+            border-color: #EF4444;
+        }
+        .chess-rule-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #60A5FA;
+            margin-bottom: 6px;
+        }
+        .xiangqi-title {
+            color: #F87171;
+        }
+        .chess-rule-desc {
+            font-size: 13.5px;
+            color: #E2E8F0;
+            line-height: 1.5;
+        }
+        .chess-opt-btn {
+            background: #1F2937;
+            color: #FFFFFF;
+            border: 1.5px solid #4B5563;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .chess-opt-btn:hover:not(:disabled) {
+            background: #374151;
+            border-color: #818CF8;
+            transform: translateX(4px);
+        }
+        .chess-opt-btn.correct-btn {
+            background: #059669 !important;
+            border-color: #10B981 !important;
+            color: #FFFFFF !important;
+            font-weight: 800;
+        }
+        .chess-opt-btn.incorrect-btn {
+            background: #DC2626 !important;
+            border-color: #EF4444 !important;
+            color: #FFFFFF !important;
+            font-weight: 800;
+        }
+        .chess-quiz-feedback {
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+        .default-feedback {
+            background: rgba(30, 27, 75, 0.8);
+            color: #FDE68A;
+            border-left: 4px solid #F59E0B;
+        }
+        .correct-feedback {
+            background: #064E3B;
+            color: #34D399;
+            border-left: 4px solid #10B981;
+        }
+        .incorrect-feedback {
+            background: #7F1D1D;
+            color: #FCA5A5;
+            border-left: 4px solid #EF4444;
+        }
+
         .fb-player-ovr {
             font-size: 14px;
             font-weight: 900;
@@ -938,6 +1103,7 @@
             <button class="tab-btn" data-sec="worldcup" onclick="switchSection('worldcup', this)">Đấu Trường World Cup</button>
             <button class="tab-btn" data-sec="c1" onclick="switchSection('c1', this)">Cúp C1 Champions League</button>
             <button class="tab-btn" data-sec="football" onclick="switchSection('football', this)">Siêu Sao &amp; Đội Hình Bóng Đá</button>
+            <button class="tab-btn" data-sec="chess" onclick="switchSection('chess', this)">Đấu Trí Cờ Vua &amp; Cờ Tướng</button>
             <button class="tab-btn" data-sec="duaxe" onclick="switchSection('duaxe', this)">Giải Đua Xe Grand Prix</button>
             <button class="tab-btn" data-sec="minigames" onclick="switchSection('minigames', this)">Bộ 4 Minigames</button>
             <button class="tab-btn" data-sec="formula" onclick="switchSection('formula', this)">Sổ Tay Công Thức</button>
@@ -957,6 +1123,7 @@
                 <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                     <button class="btn-primary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px;" onclick="switchSection('hoc')">Bắt Đầu Học Ngay</button>
                     <button class="btn-primary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px; background: linear-gradient(135deg, #10B981, #059669);" onclick="switchSection('football')">Siêu Sao Bóng Đá</button>
+                    <button class="btn-primary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px; background: linear-gradient(135deg, #4F46E5, #3730A3);" onclick="switchSection('chess')">Đấu Trí Cờ Vua &amp; Cờ Tướng</button>
                     <button class="btn-secondary" style="font-size: 19px; padding: 18px 38px; border-radius: 20px;" onclick="switchSection('ielts')">Tập Thi IELTS</button>
                 </div>
             </div>
@@ -1340,6 +1507,80 @@
                             <button onclick="closeFbPlayerPicker()" style="background: #EF4444; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: 14px;">Đóng</button>
                         </div>
                         <div class="grid-3" id="fbPickerPlayerGrid" style="gap: 12px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9c. Đấu Trí Kỳ Thủ: Cờ Vua & Cờ Tướng -->
+        <div id="pane-chess" class="section-pane">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+                    <div>
+                        <h3 style="color: #818CF8; font-size: 26px; font-weight: 900; letter-spacing: -0.5px;">ĐẤU TRÍ KỲ THỦ - CỜ VUA VÀ CỜ TƯỚNG</h3>
+                        <p style="color: #FDE68A; font-size: 14px; font-weight: 600;">Bách Khoa Cờ Học, Chiến Thuật Khai Cuộc, Thử Thách Sát Pháp và Bàn Cờ Trực Quan</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span id="chess-badge-title" style="background: linear-gradient(135deg, #312E81, #1E1B4B); color: #FBBF24; border: 1.5px solid #F59E0B; padding: 8px 18px; border-radius: 14px; font-weight: 900; font-size: 14px;">Kỳ Thủ Tập Sự</span>
+                        <span id="chess-badge-exp" style="background: linear-gradient(135deg, #064E3B, #022C22); color: #34D399; border: 1.5px solid #10B981; padding: 8px 18px; border-radius: 14px; font-weight: 900; font-size: 14px;">EXP Cờ: 0</span>
+                    </div>
+                </div>
+
+                <!-- Subtabs -->
+                <div class="fb-subtabs-nav" style="border-color: #4F46E5; background: rgba(30, 27, 75, 0.7); margin-bottom: 20px;">
+                    <button class="fb-subtab-btn active" style="background: linear-gradient(135deg, #4F46E5, #3730A3);" onclick="switchChessSubTab('vua', this)">Cờ Vua Thế Giới</button>
+                    <button class="fb-subtab-btn" onclick="switchChessSubTab('tuong', this)">Cờ Tướng Phương Đông</button>
+                    <button class="fb-subtab-btn" onclick="switchChessSubTab('caudo', this)">Thử Thách &amp; Câu Đố Thế Cờ</button>
+                    <button class="fb-subtab-btn" onclick="switchChessSubTab('banco', this)">Bàn Cờ Mẫu &amp; Nước Đi</button>
+                </div>
+
+                <!-- Subpane 1: Cờ Vua -->
+                <div id="chess-subpane-vua" class="chess-subtab-pane">
+                    <h4 style="color: #60A5FA; font-size: 18px; font-weight: 800; margin-bottom: 14px;">6 QUÂN CỜ VUA TIÊU CHUẨN &amp; QUY TẮC DI CHUYỂN</h4>
+                    <div id="chess-vua-pieces-grid" class="chess-pieces-grid"></div>
+                    <h4 style="color: #FBBF24; font-size: 18px; font-weight: 800; margin: 24px 0 14px 0;">CÁC NƯỚC ĐI ĐẶC BIỆT TRONG CỜ VUA</h4>
+                    <div id="chess-vua-special-rules" class="grid-2"></div>
+                </div>
+
+                <!-- Subpane 2: Cờ Tướng -->
+                <div id="chess-subpane-tuong" class="chess-subtab-pane" style="display: none;">
+                    <h4 style="color: #EF4444; font-size: 18px; font-weight: 800; margin-bottom: 14px;">7 QUÂN CỜ TƯỚNG &amp; SỞ HÀ HÁN GIỚI</h4>
+                    <div id="chess-tuong-pieces-grid" class="chess-pieces-grid"></div>
+                    <h4 style="color: #F87171; font-size: 18px; font-weight: 800; margin: 24px 0 14px 0;">SÁT PHÁP KINH ĐIỂN CỜ TƯỚNG</h4>
+                    <div id="chess-tuong-tactics" class="grid-2"></div>
+                </div>
+
+                <!-- Subpane 3: Câu Đố Thế Cờ -->
+                <div id="chess-subpane-caudo" class="chess-subtab-pane" style="display: none;">
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 2px solid #6366F1; border-radius: 20px; padding: 22px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; gap: 8px;">
+                                <button id="chess-filter-all" class="fb-subtab-btn" style="padding: 6px 14px; font-size: 13px;">Tất Cả</button>
+                                <button id="chess-filter-vua" class="fb-subtab-btn" style="padding: 6px 14px; font-size: 13px; background: #2563EB;">Cờ Vua</button>
+                                <button id="chess-filter-tuong" class="fb-subtab-btn" style="padding: 6px 14px; font-size: 13px; background: #DC2626;">Cờ Tướng</button>
+                            </div>
+                            <button id="chess-btn-next-quiz" class="btn-primary" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: #022C22; font-weight: 900; padding: 10px 22px; border-radius: 12px;">Đổi Câu Khác (+30 XP)</button>
+                        </div>
+                        <div id="chess-quiz-situation" style="background: rgba(30, 27, 75, 0.8); color: #FBBF24; padding: 12px 16px; border-radius: 10px; font-weight: bold; font-size: 14.5px; margin-bottom: 14px; border-left: 4px solid #F59E0B;"></div>
+                        <div id="chess-quiz-question" style="color: #FFFFFF; font-size: 16px; font-weight: 800; margin-bottom: 16px;"></div>
+                        <div id="chess-quiz-options" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;"></div>
+                        <div id="chess-quiz-result" class="chess-quiz-feedback default-feedback">Hãy chọn đáp án đúng để nhận +30 XP và +15 Coin!</div>
+                    </div>
+                </div>
+
+                <!-- Subpane 4: Bàn Cờ Mẫu & Nước Đi -->
+                <div id="chess-subpane-banco" class="chess-subtab-pane" style="display: none;">
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 2px solid #F59E0B; border-radius: 20px; padding: 22px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;">
+                            <label style="font-weight: 800; color: #FFFFFF; font-size: 14.5px;">Chọn Thế Cờ Nghiên Cứu:</label>
+                            <select id="chess-select-sample" style="background: #1E1B4B; color: #FDE68A; border: 2px solid #F59E0B; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer;"></select>
+                        </div>
+                        <div style="background: rgba(30, 27, 75, 0.8); border: 1.5px solid #6366F1; border-radius: 14px; padding: 18px; margin-bottom: 16px;">
+                            <h4 id="chess-sample-title" style="color: #F59E0B; font-size: 18px; font-weight: 900; margin-bottom: 10px;">TIÊU ĐỀ THẾ CỜ</h4>
+                            <p id="chess-sample-desc" style="color: #E2E8F0; font-size: 14.5px; line-height: 1.6; margin-bottom: 12px;"></p>
+                            <div id="chess-sample-move" style="background: #0F172A; color: #60A5FA; padding: 10px 14px; border-radius: 8px; font-weight: bold; font-size: 14px; margin-bottom: 10px;"></div>
+                            <div id="chess-sample-tip" style="background: #022C22; color: #34D399; padding: 10px 14px; border-radius: 8px; font-size: 13.5px; font-weight: bold;"></div>
+                        </div>
                     </div>
                 </div>
             </div>

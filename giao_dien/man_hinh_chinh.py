@@ -30,6 +30,7 @@ from giao_dien.man_hinh_tap_thi_ielts import ManHinhTapThiIELTS
 from giao_dien.man_hinh_obby import ManHinhObby
 from giao_dien.hop_thoai_nhap_ten import HopThoaiNhapTen
 from giao_dien.man_hinh_bong_da_tong_hop import ManHinhBongDaTongHop
+from giao_dien.man_hinh_co_tri_tue import ManHinhCoTriTue
 
 from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, kiem_tra_da_co_ten
 from xu_ly_am_thanh.quan_ly_am_thanh import QuanLyAmThanh
@@ -128,7 +129,8 @@ class CuaSoChinh(QMainWindow):
             ("Lịch Học & Streak", 15),
             ("Tập Thi IELTS", 16),
             ("Đấu Trường Obby 100 Màn", 17),
-            ("Siêu Sao & Đội Hình Bóng Đá", 18)
+            ("Siêu Sao & Đội Hình Bóng Đá", 18),
+            ("Đấu Trí Cờ Vua & Cờ Tướng", 19)
         ]
 
 
@@ -235,6 +237,7 @@ class CuaSoChinh(QMainWindow):
         self.screen_tap_thi_ielts = ManHinhTapThiIELTS()
         self.screen_obby = ManHinhObby()
         self.screen_bong_da = ManHinhBongDaTongHop()
+        self.screen_co_tri_tue = ManHinhCoTriTue()
 
         self.screen_cai_dat.ten_da_thay_doi.connect(self.cap_nhat_hien_thi_ten)
         self.screen_luyen_tap.yeu_cau_chuyen_obby.connect(lambda: self.chuyen_man_hinh(17))
@@ -259,6 +262,7 @@ class CuaSoChinh(QMainWindow):
         self.stacked_widget.addWidget(self.screen_tap_thi_ielts)       # 16
         self.stacked_widget.addWidget(self.screen_obby)                # 17
         self.stacked_widget.addWidget(self.screen_bong_da)             # 18
+        self.stacked_widget.addWidget(self.screen_co_tri_tue)          # 19
 
 
         right_layout.addWidget(self.stacked_widget)
@@ -359,11 +363,18 @@ class CuaSoChinh(QMainWindow):
         b4.setCursor(Qt.CursorShape.PointingHandCursor)
         b4.clicked.connect(lambda: self.chuyen_man_hinh(18))
 
+        b5 = QPushButton("Đấu Trí Cờ Vua & Cờ Tướng")
+        b5.setProperty("class", "btn-primary")
+        b5.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; background-color: #4F46E5;")
+        b5.setCursor(Qt.CursorShape.PointingHandCursor)
+        b5.clicked.connect(lambda: self.chuyen_man_hinh(19))
+
         grid_layout.addWidget(b0)
         grid_layout.addWidget(b1)
         grid_layout.addWidget(b2)
         grid_layout.addWidget(b3)
         grid_layout.addWidget(b4)
+        grid_layout.addWidget(b5)
 
         l.addWidget(grid_frame)
         l.addStretch()
