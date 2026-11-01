@@ -3,7 +3,23 @@
 # Mo ta: Module kiem tra ket noi Internet va luong cap nhat trang thai ngam bang QThread
 
 import socket
-from PyQt6.QtCore import QThread, pyqtSignal
+try:
+    from PyQt6.QtCore import QThread, pyqtSignal
+except ImportError:
+    class QThread:
+        def __init__(self, parent=None):
+            self.parent = parent
+        def msleep(self, ms):
+            pass
+        def wait(self):
+            pass
+    class _DummySignal:
+        def emit(self, *args, **kwargs):
+            pass
+        def connect(self, slot):
+            pass
+    def pyqtSignal(*args, **kwargs):
+        return _DummySignal()
 
 def kiem_tra_ket_noi_internet(host="8.8.8.8", port=53, timeout=1.0):
     """
