@@ -396,11 +396,12 @@ class ManHinhChampionsLeague(QWidget):
         dlg_video = HopThoaiVideoPenalty(res_pen, self)
         dlg_video.exec()
 
-        # Cập nhật tỷ số trận đấu trực tiếp
-        ban_thang_hien_tai = sum(
-            1 for i, c in enumerate(self.cau_hoi_cl) 
-            if str(self.dap_an_user.get(i, "")).strip().lower() == str(c.get("dap_an_dung", "")).strip().lower()
-        )
+        # Cập nhật tỷ số trận đấu trực tiếp dựa trên kết quả sút (30% vào, 30% không vào, 40% do câu trả lời)
+        if not hasattr(self, "danh_sach_ban_thang_pen"):
+            self.danh_sach_ban_thang_pen = {}
+        self.danh_sach_ban_thang_pen[self.cau_idx] = res_pen.get("la_ban_thang", False)
+
+        ban_thang_hien_tai = sum(1 for v in self.danh_sach_ban_thang_pen.values() if v)
         clb_ten = self.clb_user["ten"]
         doi_thu = self.vong_info.get("doi_thu", "Đối thủ")
         self.lbl_score_board.setText(f"Tỷ số Penalty: {clb_ten} {ban_thang_hien_tai} - 0 {doi_thu} | Tổng Bàn Thắng Cúp C1: {self.so_ban_thang + ban_thang_hien_tai}")

@@ -355,9 +355,21 @@ class ManHinhBongDaTongHop(QWidget):
         la_dung = opt.get("dung", False)
         td = self.tran_dau_hien_tai
 
-        if la_dung:
+        # Quy tac: 30% chac chan vao, 30% chac chan khong vao, 40% do ban quyet dinh
+        r = random.random()
+        if r < 0.30:
+            la_ban_thang = True
+            ly_do = " (30% sieu pham may man chac chan vao)"
+        elif r < 0.60:
+            la_ban_thang = False
+            ly_do = " (30% bong dap cot doc xa ngang)"
+        else:
+            la_ban_thang = bool(la_dung)
+            ly_do = " (40% do ban quyet dinh chinh xac)" if la_ban_thang else " (40% do phan doan chua dung)"
+
+        if la_ban_thang:
             td["ti_so_nha"] += 1
-            bl = th["binh_luan_dung"]
+            bl = f"{th['binh_luan_dung']}{ly_do}"
             cong_phan_thuong(xp=25)
             try:
                 QuanLyAmThanh.get_instance().phat_am_thanh_chien_thang()
@@ -366,7 +378,7 @@ class ManHinhBongDaTongHop(QWidget):
         else:
             if random.random() < 0.6:
                 td["ti_so_khach"] += 1
-            bl = th["binh_luan_sai"]
+            bl = f"{th['binh_luan_sai']}{ly_do}"
 
         if hasattr(self, "lblBinhLuanVien"):
             self.lblBinhLuanVien.setText(f"Binh luan vien: {bl}")

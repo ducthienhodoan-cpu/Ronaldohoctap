@@ -453,13 +453,32 @@ function handleFbSituationChoice(opt, sit) {
     const isCorrect = opt.dung;
     const sim = fbMatchSim;
 
-    if (isCorrect) {
+    // Quy tac: 30% chac chan vao, 30% chac chan khong vao, 40% do ban quyet dinh
+    const r = Math.random();
+    let isGoal = false;
+    let lyDo = "";
+
+    if (r < 0.30) {
+        // 30% ti le chac chan vao
+        isGoal = true;
+        lyDo = " (30% sieu pham may man chac chan vao)";
+    } else if (r < 0.60) {
+        // 30% ti le chac chan khong vao
+        isGoal = false;
+        lyDo = " (30% bong dap cot doc xa ngang)";
+    } else {
+        // 40% con lai do ban quyet dinh dua vao lua chon chien thuat
+        isGoal = Boolean(isCorrect);
+        lyDo = isGoal ? " (40% do ban quyet dinh chinh xac)" : " (40% do phan doan chua dung)";
+    }
+
+    if (isGoal) {
         sim.ti_so_nha++;
-        document.getElementById('fbCommentaryBox').innerText = `Bình luận viên: ${sit.binh_luan_dung}`;
+        document.getElementById('fbCommentaryBox').innerText = `Bình luận viên: ${sit.binh_luan_dung}${lyDo}`;
         document.getElementById('fbCommentaryBox').style.color = '#10B981';
     } else {
         if (Math.random() < 0.6) sim.ti_so_khach++;
-        document.getElementById('fbCommentaryBox').innerText = `Bình luận viên: ${sit.binh_luan_sai}`;
+        document.getElementById('fbCommentaryBox').innerText = `Bình luận viên: ${sit.binh_luan_sai}${lyDo}`;
         document.getElementById('fbCommentaryBox').style.color = '#EF4444';
     }
 

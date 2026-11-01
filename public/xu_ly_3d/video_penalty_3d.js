@@ -105,7 +105,7 @@
         } catch(e) {}
     }
 
-    // 2. Ham sinh ket qua logic Penalty theo quy tac chuan
+    // 2. Ham sinh ket qua logic Penalty: 30% vao, 30% khong vao, 40% do ban quyet dinh
     function sinhKetQuaPenaltyJs(laTraLoiDung, gocChiDinh) {
         const danhSachGoc = [
             { id: 1, ten: "Góc Cao Trái", tx: -0.65, ty: -0.58 },
@@ -115,14 +115,34 @@
             { id: 5, ten: "Góc Thấp Phải", tx: 0.65, ty: 0.55 }
         ];
 
-        if (laTraLoiDung) {
+        const xacSuat = Math.random();
+        let isGoal = false;
+        let lyDo = "";
+
+        if (xacSuat < 0.30) {
+            // 30% ty le chac chan vao
+            isGoal = true;
+            lyDo = "Cu sut sieu pham khong the can pha (30% ty le chac chan vao)";
+        } else if (xacSuat < 0.60) {
+            // 30% ty le chac chan khong vao
+            isGoal = false;
+            lyDo = "Bong dap xa ngang hoac thu mon xuat than can pha (30% ty le khong vao)";
+        } else {
+            // 40% con lai: Do ban quyet dinh dua vao do chinh xac cua cau tra loi va huong sut
+            isGoal = Boolean(laTraLoiDung);
+            lyDo = isGoal 
+                ? "Ban thang tu su lua chon chinh xac cua ban (40% do ban quyet dinh)"
+                : "Cu sut khong vao do phan doan chua chuan xac (40% do ban quyet dinh)";
+        }
+
+        if (isGoal) {
             let gocChon = danhSachGoc[Math.floor(Math.random() * danhSachGoc.length)];
             if (gocChiDinh) {
                 const timGoc = danhSachGoc.find(g => gocChiDinh.toLowerCase().includes(g.ten.toLowerCase()));
                 if (timGoc) gocChon = timGoc;
             }
 
-            // Thu mon bay huong nguoc lai de dam bao 100% vao luoi
+            // Thu mon bay huong nguoc lai de bong vao luoi
             let huongThuMon = danhSachGoc.filter(g => g.id !== gocChon.id)[Math.floor(Math.random() * 4)];
 
             return {
@@ -135,10 +155,10 @@
                 thu_mon_x: huongThuMon.tx,
                 thu_mon_y: huongThuMon.ty,
                 tieu_de: "VAOOOOOO! BAN THANG TUYET DINH!",
-                mo_ta: `Cu sut cuc ki hiem hoc vao ${gocChon.ten} danh bai thu mon hoan toan!`
+                mo_ta: `${lyDo}! Cu sut vao ${gocChon.ten} danh bai thu mon!`
             };
         } else {
-            // Khi tra loi sai: 50% sut len troi, 50% thu mon can pha
+            // Khi khong vao: 50% sut len troi, 50% thu mon can pha
             const chonKieuTruot = Math.random() < 0.5 ? "sut_len_troi" : "thu_mon_can_pha";
 
             if (chonKieuTruot === "sut_len_troi") {
@@ -153,7 +173,7 @@
                     thu_mon_x: 0,
                     thu_mon_y: 0,
                     tieu_de: "SUT LEN TROI! BONG BAY QUA XA NGANG!",
-                    mo_ta: "Luc sut qua manh dua bong bay vot len khan dai trong su tiec nuoi!"
+                    mo_ta: `${lyDo}! Luc sut qua manh dua bong bay vot len khan dai!`
                 };
             } else {
                 const gocBay = danhSachGoc[Math.floor(Math.random() * danhSachGoc.length)];
@@ -167,7 +187,7 @@
                     thu_mon_x: gocBay.tx, // Thu mon bay dung huong va can pha
                     thu_mon_y: gocBay.ty,
                     tieu_de: "THU MON CAN PHA XUAT SAC!",
-                    mo_ta: `Thu mon da phan doan chinh xac huong ${gocBay.ten} va can pha thanh cong!`
+                    mo_ta: `${lyDo}! Thu mon da phan doan chinh xac huong ${gocBay.ten} va can pha thanh cong!`
                 };
             }
         }

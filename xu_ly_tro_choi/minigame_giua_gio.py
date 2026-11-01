@@ -41,7 +41,7 @@ def quay_vong_quay_may_man():
 from xu_ly_tro_choi.xu_ly_penalty import sinh_ket_qua_penalty
 
 def xu_ly_sut_phat_penalty(huong_sut):
-    """Xử lý minigame sút phạt penalty 5 góc giải trí với tỷ lệ 50% sút lên trời và 50% thủ môn cản phá khi sút hỏng."""
+    """Xu ly minigame sut phat penalty: 30% chac chan vao, 30% chac chan khong vao, 40% con lai do huong sut va quyet dinh cua ban."""
     cac_huong_goc = ["Góc Cao Trái", "Góc Thấp Trái", "Chính Giữa", "Góc Cao Phải", "Góc Thấp Phải"]
     
     mapping_ten = {
