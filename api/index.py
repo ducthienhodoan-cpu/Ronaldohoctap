@@ -7,42 +7,49 @@ import sys
 import os
 
 # Them thu muc goc vao sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
 
-from du_lieu.kho_noi_dung_hoc import lay_danh_sach_lop, lay_danh_sach_mon_hoc, lay_chu_de_theo_lop_va_mon
-from du_lieu.noi_dung_chi_tiet import lay_noi_dung_bai_hoc_chi_tiet
-from du_lieu.ngan_hang_cau_hoi import lay_cau_hoi_luyen_tap
-from du_lieu_giao_duc.kho_cong_thuc import lay_danh_sach_cong_thuc
-from du_lieu_giao_duc.ngan_hang_giai_toan import lay_danh_sach_cau_hoi_toan_giai_chi_tiet
-from xu_ly_ielts.du_lieu_ielts import (
-    lay_danh_sach_tu_vung_ielts, lay_danh_sach_ngu_phap_va_thi,
-    lay_bai_doc_ielts_reading, lay_bai_nghe_ielts_listening,
-    lay_de_thi_ielts_tong_hop
-)
-from xu_ly_gemini.dong_co_gemini import tao_de_thi_gemini_api
-from xu_ly_kiem_tra.bo_cham_diem import cham_bai_lam
-from xu_ly_kiem_tra.cham_bai_anh_ai import phan_tich_anh_bai_lam
-from xu_ly_hoc_tap.he_thong_thuong import lay_thong_tin_thuong, cong_phan_thuong
-from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, cap_nhat_ten_nguoi_dung
-from xu_ly_hoc_tap.quan_ly_tien_do import lay_du_lieu_tien_do, cap_nhat_streak, kiem_tra_mo_khoa_bai_hoc
-from xu_ly_hoc_tap.quan_ly_chung_nhan import lay_danh_sach_chung_nhan, tao_chung_nhan_moi
-from xu_ly_so_tay.quan_ly_so_loi_sai import doc_so_loi_sai, xoa_cau_loi_sai, them_cau_loi_sai
-from xu_ly_so_tay.quan_ly_ke_hoach_hoc import doc_ke_hoach_hoc, ghi_ke_hoach_hoc, cap_nhat_trang_thai_muc_tieu
-from xu_ly_tro_choi.quan_ly_world_cup import lay_danh_sach_doi_tuyen, lay_vong_dau_world_cup, sinh_tran_dau_world_cup
-from xu_ly_tro_choi.quan_ly_champions_league import lay_danh_sach_clb_champions_league, lay_vong_dau_champions_league, sinh_tran_dau_champions_league
-from xu_ly_tro_choi.quan_ly_dua_xe import khoi_tao_duong_dua_xe, sinh_vat_the_duong_dua
-from xu_ly_tro_choi.minigame_giua_gio import tao_danh_sach_the_lat_tri_nho, quay_vong_quay_may_man, xu_ly_sut_phat_penalty
-from xu_ly_tro_choi.quan_ly_gap_thu_moi import thuc_hien_luot_gap_moi, lay_du_lieu_gap_thu
-from xu_ly_tro_choi.quan_ly_vong_quay import thuc_hien_luot_quay_moi, lay_du_lieu_vong_quay
-from du_lieu_giao_duc.co_so_du_lieu_cau_hoi import lay_thong_ke_database, truy_van_cau_hoi
-from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
-from xu_ly_bong_da.quan_ly_huyen_thoai import lay_danh_sach_huyen_thoai, lay_cau_hoi_tri_thuc_bong_da
-from xu_ly_bong_da.quan_ly_luat_bong_da import lay_cam_nang_luat_fifa, lay_khoa_hoc_toan_hoc_trong_bong_da, lay_cau_hoi_luat_va_khoa_hoc
-from xu_ly_bong_da.quan_ly_doi_hinh import (
-    lay_danh_sach_so_do, lay_kho_cau_thu_tuyen_chon, doc_doi_hinh_hien_tai,
-    luu_doi_hinh_hien_tai, tinh_suc_manh_tong_hop
-)
-from xu_ly_bong_da.quan_ly_tran_dau import lay_danh_sach_doi_thu, khoi_tao_tran_dau_dinh_cao
+import_errors = {}
+
+try:
+    from du_lieu.kho_noi_dung_hoc import lay_danh_sach_lop, lay_danh_sach_mon_hoc, lay_chu_de_theo_lop_va_mon
+    from du_lieu.noi_dung_chi_tiet import lay_noi_dung_bai_hoc_chi_tiet
+    from du_lieu.ngan_hang_cau_hoi import lay_cau_hoi_luyen_tap
+    from du_lieu_giao_duc.kho_cong_thuc import lay_danh_sach_cong_thuc
+    from du_lieu_giao_duc.ngan_hang_giai_toan import lay_danh_sach_cau_hoi_toan_giai_chi_tiet
+    from xu_ly_ielts.du_lieu_ielts import (
+        lay_danh_sach_tu_vung_ielts, lay_danh_sach_ngu_phap_va_thi,
+        lay_bai_doc_ielts_reading, lay_bai_nghe_ielts_listening,
+        lay_de_thi_ielts_tong_hop
+    )
+    from xu_ly_gemini.dong_co_gemini import tao_de_thi_gemini_api
+    from xu_ly_kiem_tra.bo_cham_diem import cham_bai_lam
+    from xu_ly_kiem_tra.cham_bai_anh_ai import phan_tich_anh_bai_lam
+    from xu_ly_hoc_tap.he_thong_thuong import lay_thong_tin_thuong, cong_phan_thuong
+    from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, cap_nhat_ten_nguoi_dung
+    from xu_ly_hoc_tap.quan_ly_tien_do import lay_du_lieu_tien_do, cap_nhat_streak, kiem_tra_mo_khoa_bai_hoc
+    from xu_ly_hoc_tap.quan_ly_chung_nhan import lay_danh_sach_chung_nhan, tao_chung_nhan_moi
+    from xu_ly_so_tay.quan_ly_so_loi_sai import doc_so_loi_sai, xoa_cau_loi_sai, them_cau_loi_sai
+    from xu_ly_so_tay.quan_ly_ke_hoach_hoc import doc_ke_hoach_hoc, ghi_ke_hoach_hoc, cap_nhat_trang_thai_muc_tieu
+    from xu_ly_tro_choi.quan_ly_world_cup import lay_danh_sach_doi_tuyen, lay_vong_dau_world_cup, sinh_tran_dau_world_cup
+    from xu_ly_tro_choi.quan_ly_champions_league import lay_danh_sach_clb_champions_league, lay_vong_dau_champions_league, sinh_tran_dau_champions_league
+    from xu_ly_tro_choi.quan_ly_dua_xe import khoi_tao_duong_dua_xe, sinh_vat_the_duong_dua
+    from xu_ly_tro_choi.minigame_giua_gio import tao_danh_sach_the_lat_tri_nho, quay_vong_quay_may_man, xu_ly_sut_phat_penalty
+    from xu_ly_tro_choi.quan_ly_gap_thu_moi import thuc_hien_luot_gap_moi, lay_du_lieu_gap_thu
+    from xu_ly_tro_choi.quan_ly_vong_quay import thuc_hien_luot_quay_moi, lay_du_lieu_vong_quay
+    from du_lieu_giao_duc.co_so_du_lieu_cau_hoi import lay_thong_ke_database, truy_van_cau_hoi
+    from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
+    from xu_ly_bong_da.quan_ly_huyen_thoai import lay_danh_sach_huyen_thoai, lay_cau_hoi_tri_thuc_bong_da
+    from xu_ly_bong_da.quan_ly_luat_bong_da import lay_cam_nang_luat_fifa, lay_khoa_hoc_toan_hoc_trong_bong_da, lay_cau_hoi_luat_va_khoa_hoc
+    from xu_ly_bong_da.quan_ly_doi_hinh import (
+        lay_danh_sach_so_do, lay_kho_cau_thu_tuyen_chon, doc_doi_hinh_hien_tai,
+        luu_doi_hinh_hien_tai, tinh_suc_manh_tong_hop
+    )
+    from xu_ly_bong_da.quan_ly_tran_dau import lay_danh_sach_doi_thu, khoi_tao_tran_dau_dinh_cao
+except Exception as e:
+    import_errors["root_import"] = str(e)
 
 app = Flask(__name__)
 
@@ -62,7 +69,8 @@ def health():
         "status": "ok",
         "app_name": "Sieu Club Hoc Tap & Tap Thi IELTS All-In-One",
         "version": "5.0.0",
-        "total_screens": 16,
+        "total_screens": 17,
+        "import_errors": import_errors,
         "platform": "Vercel Hobby Free Limits Compliant"
     })
 
