@@ -1,6 +1,6 @@
 {
-    "ve_gap": 14,
-    "ve_vang": 8,
+    "ve_gap": 17,
+    "ve_vang": 9,
     "level": 1,
     "combo_streak": 0,
     "super_claw": false,
@@ -15,7 +15,7 @@
         "football": [],
         "galaxy": []
     },
-    "ngay_nhan_ve": "2026-10-15",
+    "ngay_nhan_ve": "2026-11-01",
     "nhiem_vu_ngay": {
         "hoan_thanh_bai_hoc": false,
         "dung_10_cau_lien_tiep": false,

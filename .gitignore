@@ -1,4 +1,7 @@
+**/__pycache__/
 __pycache__/
 *.pyc
+**/*.pyc
 .DS_Store
 scratch/
+.vercel/
