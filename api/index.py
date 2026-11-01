@@ -423,6 +423,10 @@ def add_turbo_cache_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
+# Vercel Serverless Function entrypoint
+handler = app
+
 if __name__ == '__main__':
     app.run(debug=True)
+
 
