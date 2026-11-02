@@ -103,6 +103,16 @@
            </property>
           </widget>
          </item>
+          <item>
+           <widget class="QPushButton" name="btnCamNangKyNang">
+            <property name="text">
+             <string>Ky Nang &amp; The Luc THCS</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: #10B981; color: #022C22; font-weight: bold; font-size: 14px; padding: 8px 16px; border-radius: 8px;</string>
+            </property>
+           </widget>
+          </item>
         </layout>
        </item>
        <item>

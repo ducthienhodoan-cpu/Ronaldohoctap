@@ -1,6 +1,6 @@
 # Thu muc: xu_ly_co_tri_tue
 # File: quan_ly_co_vua.py
-# Mo ta: Quan ly tri thuc co vua, luat choi, gia tri quan co, khai cuoc, don chien thuat va cau do THCS
+# Mo ta: Quan ly tri thuc co vua, luat choi, 8 khai cuoc, 8 don chien thuat, danh nhan va 12 cau do THCS
 
 def lay_danh_sach_quan_co_vua():
     """
@@ -76,8 +76,8 @@ def lay_cac_nuoc_di_dac_biet_co_vua():
         {
             "ten": "Bat tot qua duong (En Passant)",
             "dieu_kien": "Khi Tot doi phuong di 2 o tu vi tri xuat phat va dung ngay ben canh Tot cua ban o hang ngang 5 (voi quan Trang) hoac hang ngang 4 (voi quan Den).",
-            "cach_thuc_hien": "Ban co quyen an Tot do bang cach di cheo ra phia sau quan Tot do giong nhu no chi di 1 o.",
-            "muc_dich": "Ngan chan viec Tot di 2 o de vuot qua vung kiem soat cua Tot doi phuong mot cach de dang. Chi duoc thuc hien ngay o nuoc di lien sau."
+            "cach_thuc_hien": "Ban co quyen an Tot do bang cach di cheo ra phia sau quan Tot do giong nhu no chi di 1 o. Chi duoc thuc hien ngay o nuoc di lien sau.",
+            "muc_dich": "Ngan chan viec Tot di 2 o de vuot qua vung kiem soat cua Tot doi phuong mot cach de dang."
         },
         {
             "ten": "Phong cap (Pawn Promotion)",
@@ -94,7 +94,7 @@ def lay_cac_nuoc_di_dac_biet_co_vua():
     ]
 
 def lay_khai_cuoc_kinh_dien_co_vua():
-    """Tra ve cac he thong khai cuoc co dien va loi the chien thuat."""
+    """Tra ve 8 he thong khai cuoc kinh dien co dien va hien dai."""
     return [
         {
             "ten": "Khai cuoc Y (Italian Game)",
@@ -105,7 +105,7 @@ def lay_khai_cuoc_kinh_dien_co_vua():
         {
             "ten": "Phong thu Sicilia (Sicilian Defense)",
             "nuoc_di": "1. e4 c5",
-            "y_nghia": "Quan Den phan cong bat doi xung ngay tu nuoc dau tien, tao the tran phuc tap o canh hau va danh tranh the chu dong cua Trang.",
+            "y_nghia": "Quan Den phan cong bat doi xung ngay tu nuoc dau tien, tao the tran phuc tap o canh hau va tranh the chu dong cua Trang.",
             "danh_cho": "Danh cho ky thu thich phong cach tan cong sac ben va quyet liet."
         },
         {
@@ -119,11 +119,35 @@ def lay_khai_cuoc_kinh_dien_co_vua():
             "nuoc_di": "1. e4 e5 2. Nf3 Nc6 3. Bb5",
             "y_nghia": "Dua Tuong len b5 tan cong quan Ma dang bao ve o trung tam e5 cua Den, dat nen mong cho the tran kiem soat lau dai.",
             "danh_cho": "Mot trong nhung khai cuoc co dien va phong phu nhat trong lich su co vua quoc te."
+        },
+        {
+            "ten": "Phong thu Phap (French Defense)",
+            "nuoc_di": "1. e4 e6 2. d4 d5",
+            "y_nghia": "Quan Den thiet lap chuoi tot vung chac e6-d5 tan cong ngay vao trung tam e4 cua Trang.",
+            "danh_cho": "Ky thu thich loi choi phong ngu phan cong chac chan, cho doi doi thu ham ho dang cao de phan kich."
+        },
+        {
+            "ten": "Phong thu Caro-Kann (Caro-Kann Defense)",
+            "nuoc_di": "1. e4 c6 2. d4 d5",
+            "y_nghia": "Den chuan bi day tot len d5 ma khong bi chan duong phat trien cua quan Tuong o c8 nhu trong phong thu Phap.",
+            "danh_cho": "Loi choi cuc ky chac chan, kien co, rat kho bi danh bai."
+        },
+        {
+            "ten": "Phong thu An Do cua Vua (King's Indian Defense)",
+            "nuoc_di": "1. d4 Nf6 2. c4 g6 3. Nc3 Bg7",
+            "y_nghia": "Den nhuong trung tam cho Trang dang tot len, sau do phat trien Tuong canh vua (fianchetto) va phan cong bao luc vao canh Vua cua Trang.",
+            "danh_cho": "Duoc hai nha vo dich the gioi Garry Kasparov va Bobby Fischer cuc ky yeu thich."
+        },
+        {
+            "ten": "He thong London (London System)",
+            "nuoc_di": "1. d4 d5 2. Bf4",
+            "y_nghia": "Trang phat trien Tuong den f4 som truoc khi khoa chuoi tot bang e3, tao the tran linh hoat va an toan cao.",
+            "danh_cho": "Hoc sinh THCS rat de ghi nho vi cau truc quan co dinh va it rui ro bi bat ngo."
         }
     ]
 
 def lay_don_chien_thuat_co_vua():
-    """Tra ve cac don chien thuat can ban giup hoc sinh rinh bat quan doi thu."""
+    """Tra ve 8 don chien thuat can ban va nang cao giup hoc sinh rinh bat quan doi thu."""
     return [
         {
             "ten": "Don chia doi (Fork)",
@@ -144,11 +168,31 @@ def lay_don_chien_thuat_co_vua():
             "ten": "Don chieu mo (Discovered Attack)",
             "mo_ta": "Khi ban di chuyen mot quan co cua minh, hanh dong do mo ra duong tan cong cho mot quan co khac phia sau len doi phuong.",
             "vi_du": "Ma nhay di mo duong cho Tuong chieu Vua doi thu, tao nen the tan cong kep vo cung nguy hiem."
+        },
+        {
+            "ten": "Don chieu nghet (Smothered Mate)",
+            "mo_ta": "Quan Ma chieu Vua doi phuong khi Vua bi chinh cac quan dong doi cua minh vay kin xung quanh khong con o thoat.",
+            "vi_du": "Hau thi sinh chieu buoc Xe doi phuong phai an chan cua thoat cua Vua, Ma nhay den f7 hoac h6 ket lieu van dau."
+        },
+        {
+            "ten": "Don du do va Danh lac huong (Decoy & Deflection)",
+            "mo_ta": "Thi quan de buoc quan chu luc cua doi phuong phai roi khoi vi tri phong thu then chot.",
+            "vi_du": "Chieu thi Xe de keo Vua ra khoi goc bao ve quan Hau, sau do an Hau doi phuong."
+        },
+        {
+            "ten": "Don coi xay gio (Windmill)",
+            "mo_ta": "Su phoi hop lien hoan giua Xe va Tuong thuc hien cac don chieu mo lien tuc de an sach cac quan cua doi thu.",
+            "vi_du": "Xe vua an quan vua chieu mo bang Tuong, Vua doi phuong phai chay qua chay lai trong bat luc."
+        },
+        {
+            "ten": "Don chieu het hang day (Back-rank Mate)",
+            "mo_ta": "Xe hoac Hau chieu het Vua doi phuong o hang ngang so 8 (hoac hang 1) vi Vua bi 3 quan Tot phia truoc chan duong chay.",
+            "vi_du": "Xe lao xuong o e8 chieu het khi hang tot f7-g7-h7 chua di chuyen."
         }
     ]
 
 def lay_danh_nhan_co_vua():
-    """Tra ve danh sach cac Dai kien tuong tieu bieu the gioi va Viet Nam."""
+    """Tra ve danh sach 5 Dai kien tuong tieu bieu the gioi va Viet Nam."""
     return [
         {
             "ten": "Le Quang Liem",
@@ -170,11 +214,25 @@ def lay_danh_nhan_co_vua():
             "danh_hieu": "Vua co huyen thoai the ky 20",
             "thanh_tich": "Giu ngoi vo dich the gioi 15 nam lien tiep (1985 - 2000), tham gia tran dau the ky voi sieu may tinh Deep Blue.",
             "loi_khuyen": "Co vua la nghe thuat cua su phan tich. Khi hieu ro vi sao minh di mot nuoc co, ban da vuot len doi thu."
+        },
+        {
+            "ten": "Bobby Fischer",
+            "quoc_tich": "My",
+            "danh_hieu": "Thien tai co vua the ky 20",
+            "thanh_tich": "Vo dich the gioi nam 1972 sau tran dau lich su voi Boris Spassky tai Reykjavik, dat nen mong cho co vua the thao hien dai.",
+            "loi_khuyen": "Toi khong tin vao tam ly hoc trong co vua, toi chi tin vao nhung nuoc di tot nhat."
+        },
+        {
+            "ten": "Judit Polgar",
+            "quoc_tich": "Hungary",
+            "danh_hieu": "Nu ky thu vi dai nhat moi thoi dai",
+            "thanh_tich": "Nu ky thu duy nhat tung lot vao Top 10 the gioi giua cac ky thu nam, tung danh bai Garry Kasparov va Magnus Carlsen.",
+            "loi_khuyen": "Khong co gioi han nao cho tri tue phu nu. Su kien tri va quyet tam se vuot qua moi ranh gioi."
         }
     ]
 
 def lay_kho_cau_do_co_vua():
-    """Tra ve danh sach cac cau hoi the co va cau do chien thuat cho hoc sinh THCS."""
+    """Tra ve danh sach 12 cau hoi the co va cau do chien thuat cho hoc sinh THCS."""
     return [
         {
             "id": "cv_1",
@@ -240,5 +298,96 @@ def lay_kho_cau_do_co_vua():
             ],
             "dap_an_dung": "C",
             "giai_thich": "Khi mot ben khong bi chieu nhung khong con nuoc di hop le nao thi van co ket thuc hoa ngay lap tuc theo luat Co hoa Pat (Stalemate)."
+        },
+        {
+            "id": "cv_6",
+            "the_co": "Vua Den o g8 bi bao quanh boi Tot f7, Tot g7 va Xe h8. Ma Trang nhay vao f7 chieu Vua.",
+            "cau_hoi": "Don chieu het khi Vua bi chinh cac quan cua minh vay chat khong the di chuyen duoc goi la gi?",
+            "cac_lua_chon": [
+                "A. Don chieu nghet (Smothered Mate)",
+                "B. Don coi xay gio",
+                "C. Don ghim quan tuyet doi",
+                "D. Don du do Vua"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Don chieu nghet la don dac trung cua quan Ma, khi Vua doi thu bi quan nha bao chat, khong con o nao de thao chay."
+        },
+        {
+            "id": "cv_7",
+            "the_co": "Trang di 1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7# chieu het trong 4 nuoc.",
+            "cau_hoi": "The chieu het 4 nuoc danh vao o yeu f7 cua Den duoc goi la gi va Den nen phong thu nhu the nao?",
+            "cac_lua_chon": [
+                "A. The chieu het hoc gia (Scholar's Mate) - Den nen day Tot g6 hoac dua Ma len f6 som",
+                "B. The chieu het Ngu ngo (Fool's Mate)",
+                "C. The Gambit Vua",
+                "D. The phong thu Sicilia"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Chieu het hoc gia danh vao o f7 chi duoc Vua bao ve. Den chi can phat trien Ma len f6 chan Hau hoac day Tot g6 la phong thu de dang."
+        },
+        {
+            "id": "cv_8",
+            "the_co": "Tuong Trang dung o c4 chieu Ma Den o d5, phia sau Ma Den la quan Hau Den o e6.",
+            "cau_hoi": "Don chien thuat ma quan Tuong Trang dang su dung len Ma Den duoc goi la don gi?",
+            "cac_lua_chon": [
+                "A. Don ghim tuong doi (Relative Pin)",
+                "B. Don chieu het hang day",
+                "C. Don chia doi ba quan",
+                "D. Don thi quan bat buoc"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Don ghim tuong doi la khi quan bi ghim (Ma) van co the di chuyen ve mat luat, nhung neu di chuyen thi quan Hau gia tri cao phia sau se bi an mat."
+        },
+        {
+            "id": "cv_9",
+            "the_co": "Vua Den dung o hang 8 voi 3 quan Tot o f7, g7, h7 chua di chuyen. Xe Trang lao xuong d8 chieu Vua.",
+            "cau_hoi": "Vua Den khong the buoc len vi bi vuong 3 quan Tot va bi chieu het. Day la vi du dien hinh cua don gi?",
+            "cac_lua_chon": [
+                "A. Don chieu het hang day (Back-rank Mate)",
+                "B. Don Phong cap bat ngo",
+                "C. Don Bat tot qua duong",
+                "D. Don xien quan doc"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Don chieu het hang day xay ra khi Vua khong co o thoat (lo thoat khi) vi bi cac quan Tot cua minh chan phia truoc."
+        },
+        {
+            "id": "cv_10",
+            "the_co": "Trang muon phong cap quan Tot o hang 7. Khi Tot di xuong hang 8, luat cho phep phong thanh nhung quan nao?",
+            "cau_hoi": "Theo luat co vua quoc te FIDE, Tot co the duoc doi thanh nhung quan nao sau day?",
+            "cac_lua_chon": [
+                "A. Hau, Xe, Tuong hoac Ma (Khong duoc phong thanh Vua hoac giu nguyen Tot)",
+                "B. Chi duoc phep phong thanh Hau duy nhat",
+                "C. Chi duoc phong thanh nhung quan da bi an mat",
+                "D. Co the phong thanh mot quan Vua thu hai"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Khi Tot xuong hang 8, nguoi choi co the chon bien thanh Hau, Xe, Tuong hoac Ma ngay lap tuc, bat ke tren ban co con nhung quan do hay khong."
+        },
+        {
+            "id": "cv_11",
+            "the_co": "Trong khai cuoc Gambit Hau (1. d4 d5 2. c4), muc dich chien thuat cua quan Trang khi day Tot c4 la gi?",
+            "cau_hoi": "Tai sao Trang lai chu dong moi Den an Tot c4 o nuoc thu hai?",
+            "cac_lua_chon": [
+                "A. De doi Tot bien lay Tot trung tam cua Den va chiem linh cac o trung tam",
+                "B. Do Trang bi di nham nuoc",
+                "C. De phong thu an toan cho Vua",
+                "D. De cho Vua Trang nhap thanh nhanh"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Gambit Hau thi Tot canh de doi Tot trung tam d5 cua Den, giup Trang dua Tot e len e4 chiem toan bo trung tam ban co."
+        },
+        {
+            "id": "cv_12",
+            "the_co": "Xe Trang chieu Vua Den o cot e, Vua Den buoc phai thao chay de lo quan Hau Den dung phia sau bi Xe Trang an.",
+            "cau_hoi": "Don chien thuat ma quan gia tri cao o phia truoc phai chay lam lo quan phia sau duoc goi la gi?",
+            "cac_lua_chon": [
+                "A. Don xien (Skewer)",
+                "B. Don ghim quan (Pin)",
+                "C. Don chia doi (Fork)",
+                "D. Don chieu mo (Discovered Attack)"
+            ],
+            "dap_an_dung": "A",
+            "giai_thich": "Don xien (Skewer) nguoc voi don ghim: quan gia tri cao hon (Vua) dung truoc bi chieu phai chay, khien quan gia tri phia sau (Hau) bi an."
         }
     ]

@@ -12,7 +12,10 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6 import uic
 
 from xu_ly_bong_da.quan_ly_huyen_thoai import lay_danh_sach_huyen_thoai, lay_cau_hoi_tri_thuc_bong_da
-from xu_ly_bong_da.quan_ly_luat_bong_da import lay_cam_nang_luat_fifa, lay_cau_hoi_luat_va_khoa_hoc
+from xu_ly_bong_da.quan_ly_luat_bong_da import (
+    lay_cam_nang_luat_fifa, lay_cau_hoi_luat_va_khoa_hoc,
+    lay_cam_nang_ky_nang_va_phong_ngua_chan_thuong
+)
 from xu_ly_bong_da.quan_ly_doi_hinh import (
     lay_danh_sach_so_do, lay_kho_cau_thu_tuyen_chon, doc_doi_hinh_hien_tai,
     luu_doi_hinh_hien_tai, tinh_suc_manh_tong_hop
@@ -49,6 +52,8 @@ class ManHinhBongDaTongHop(QWidget):
             self.cboHuyenThoai.currentIndexChanged.connect(self.khi_chon_huyen_thoai)
         if hasattr(self, "btnKhaoSatTriThuc"):
             self.btnKhaoSatTriThuc.clicked.connect(self.khoi_tao_cau_hoi_quiz)
+        if hasattr(self, "btnCamNangKyNang"):
+            self.btnCamNangKyNang.clicked.connect(self.xem_cam_nang_ky_nang)
 
         # Ket noi su kien Tab 2: Doi hinh
         if hasattr(self, "cboSoDo"):
@@ -111,6 +116,17 @@ class ManHinhBongDaTongHop(QWidget):
             )
             self.lblThongTinChiTietHT.setText(nd)
 
+    def xem_cam_nang_ky_nang(self):
+        """Hien thi cam nang ky nang thuc chien va phong ngua chan thuong cho hoc sinh THCS."""
+        kn_list = lay_cam_nang_ky_nang_va_phong_ngua_chan_thuong()
+        nd = "CAM NANG KY NANG VA SUC KHOE BONG DA THCS:\n\n"
+        for i, kn in enumerate(kn_list, 1):
+            loai_tag = "[KY NANG]" if kn["loai"] == "ky_nang" else "[PHONG NGUA CHAN THUONG]"
+            nd += f"{i}. {loai_tag} {kn['ten_ky_nang']}\n"
+            nd += f"   - Thuc hien: {kn['cach_thuc_hien']}\n"
+            nd += f"   - Tac dung: {kn['hieu_qua']}\n\n"
+        QMessageBox.information(self, "Cam Nang Ky Nang & Phong Ngua Chan Thuong", nd)
+
     def khoi_tao_cau_hoi_quiz(self):
         cau_hoi_list = lay_cau_hoi_tri_thuc_bong_da() + lay_cau_hoi_luat_va_khoa_hoc()
         self.cau_hoi_quiz_hien_tai = random.choice(cau_hoi_list)
@@ -122,50 +138,65 @@ class ManHinhBongDaTongHop(QWidget):
             self.lblKetQuaQuiz.setText("")
 
         if hasattr(self, "gridDapAnQuiz"):
-            # Xoa cac button cu
             while self.gridDapAnQuiz.count():
                 item = self.gridDapAnQuiz.takeAt(0)
                 w = item.widget()
                 if w:
                     w.deleteLater()
 
-            # Tao 4 button lua chon
-            for idx, opt in enumerate(self.cau_hoi_quiz_hien_tai["dap_an"]):
-                btn = QPushButton(opt)
+            dap_an_list = self.cau_hoi_quiz_hien_tai.get("dap_an", [])
+            for i, da in enumerate(dap_an_list):
+                btn = QPushButton(da)
                 btn.setStyleSheet(
                     "background-color: #064E3B; color: #FFFFFF; font-weight: bold; font-size: 13.5px; "
-                    "padding: 8px 12px; border-radius: 8px; border: 1.5px solid #06B6D4;"
+                    "padding: 8px 12px; border-radius: 6px; border: 1px solid #10B981; text-align: left;"
                 )
                 btn.setCursor(Qt.CursorShape.PointingHandCursor)
-                btn.clicked.connect(lambda checked, o=opt: self.kiem_tra_dap_an_quiz(o))
-                r = idx // 2
-                c = idx % 2
-                self.gridDapAnQuiz.addWidget(btn, r, c)
+                btn.clicked.connect(lambda checked, ans=da: self.kiem_tra_dap_an_quiz(ans))
+                row = i // 2
+                col = i % 2
+                self.gridDapAnQuiz.addWidget(btn, row, col)
 
-    def kiem_tra_dap_an_quiz(self, lua_chon):
+    def kiem_tra_dap_an_quiz(self, dap_an_nguoi_dung):
         if not self.cau_hoi_quiz_hien_tai:
             return
-        dung = (lua_chon == self.cau_hoi_quiz_hien_tai["dap_an_dung"])
-        gt = self.cau_hoi_quiz_hien_tai.get("giai_thich", "")
 
+        dung = (dap_an_nguoi_dung == self.cau_hoi_quiz_hien_tai["dap_an_dung"])
         if hasattr(self, "lblKetQuaQuiz"):
             if dung:
-                self.lblKetQuaQuiz.setText(f"CHINH XAC! Ban da tra loi dung va nhan +30 XP! Giai thich: {gt}")
-                self.lblKetQuaQuiz.setStyleSheet("font-size: 13.5px; font-weight: bold; color: #10B981;")
-                cong_phan_thuong(xp=30)
+                self.lblKetQuaQuiz.setText(f"Chinh xac! {self.cau_hoi_quiz_hien_tai['giai_thich']}")
+                self.lblKetQuaQuiz.setStyleSheet("color: #10B981; font-weight: bold; font-size: 13px;")
+                cong_phan_thuong(xp=20)
                 try:
-                    QuanLyAmThanh.get_instance().phat_am_thanh_chien_thang()
+                    QuanLyAmThanh.get_instance().phat_am_thanh_chinh_xac()
                 except Exception:
                     pass
             else:
-                self.lblKetQuaQuiz.setText(f"CHUA CHINH XAC! Dap an dung la: {self.cau_hoi_quiz_hien_tai['dap_an_dung']}. Giai thich: {gt}")
-                self.lblKetQuaQuiz.setStyleSheet("font-size: 13.5px; font-weight: bold; color: #EF4444;")
+                self.lblKetQuaQuiz.setText(f"Chua chinh xac. Dap an dung: {self.cau_hoi_quiz_hien_tai['dap_an_dung']}. {self.cau_hoi_quiz_hien_tai['giai_thich']}")
+                self.lblKetQuaQuiz.setStyleSheet("color: #EF4444; font-weight: bold; font-size: 13px;")
+                try:
+                    QuanLyAmThanh.get_instance().phat_am_thanh_that_bai()
+                except Exception:
+                    pass
 
-    # --- TAB 2: XAY DUNG DOI HINH 11 SIEU SAO ---
+    # --- TAB 2: DOI HINH TRONG MO ---
     def khi_thay_doi_so_do(self, index):
         if hasattr(self, "cboSoDo") and index >= 0:
             sd_id = self.cboSoDo.itemData(index)
             self.du_lieu_doi_hinh["so_do"] = sd_id
+            so_do_list = lay_danh_sach_so_do()
+            sd_info = next((s for s in so_do_list if s["id"] == sd_id), so_do_list[0])
+            vi_tri_moi = sd_info["vi_tri"]
+
+            da_chinh = self.du_lieu_doi_hinh.get("danh_sach_da_chinh", {})
+            moi_da_chinh = {}
+            for i, v in enumerate(vi_tri_moi):
+                if v in da_chinh:
+                    moi_da_chinh[v] = da_chinh[v]
+                else:
+                    moi_da_chinh[v] = self.kho_cau_thu[i % len(self.kho_cau_thu)]["id"]
+
+            self.du_lieu_doi_hinh["danh_sach_da_chinh"] = moi_da_chinh
             self.ve_san_co_doi_hinh()
             self.cap_nhat_diem_doi_hinh()
 
@@ -173,7 +204,6 @@ class ManHinhBongDaTongHop(QWidget):
         if not hasattr(self, "gridSanCo"):
             return
 
-        # Xoa widgets cu
         while self.gridSanCo.count():
             item = self.gridSanCo.takeAt(0)
             w = item.widget()
@@ -184,23 +214,9 @@ class ManHinhBongDaTongHop(QWidget):
         da_chinh = self.du_lieu_doi_hinh.get("danh_sach_da_chinh", {})
         kho_dict = {c["id"]: c for c in self.kho_cau_thu}
 
-        # Danh sach vi tri theo so do
         so_do_list = lay_danh_sach_so_do()
         sd_info = next((s for s in so_do_list if s["id"] == sd_id), so_do_list[0])
         cac_vi_tri = sd_info["vi_tri"]
-
-        # Chia 11 vi tri thanh 4 hang tren san (Tien dao, Tien ve, Hau ve, Thu mon)
-        hang_map = {
-            # Hang 0: Tien dao
-            "LW": (0, 0), "ST": (0, 1), "RW": (0, 2), "ST1": (0, 0), "ST2": (0, 2),
-            # Hang 1: Tien ve
-            "CAM": (1, 1), "CM": (1, 1), "CM1": (1, 0), "CM2": (1, 2), "CDM": (2, 1),
-            "LM": (1, 0), "RM": (1, 2), "LWB": (1, 0), "RWB": (1, 2),
-            # Hang 2: Hau ve
-            "LB": (2, 0), "CB1": (2, 0), "CB2": (2, 1), "CB3": (2, 2), "RB": (2, 2),
-            # Hang 3: Thu mon
-            "GK": (3, 1)
-        }
 
         row_counts = [0, 0, 0, 0]
         for v in cac_vi_tri:
@@ -237,7 +253,6 @@ class ManHinhBongDaTongHop(QWidget):
             btn_sel.clicked.connect(lambda checked, pos=v: self.khi_click_vi_tri(pos))
             vbox.addWidget(btn_sel)
 
-            # Phan phoi len grid
             target_row = 1
             if v == "GK":
                 target_row = 3
@@ -250,6 +265,7 @@ class ManHinhBongDaTongHop(QWidget):
 
             target_col = row_counts[target_row]
             row_counts[target_row] += 1
+
             self.gridSanCo.addWidget(card, target_row, target_col)
 
     def khi_click_vi_tri(self, vi_tri):
@@ -264,26 +280,26 @@ class ManHinhBongDaTongHop(QWidget):
         if not cid:
             return
 
-        if "danh_sach_da_chinh" not in self.du_lieu_doi_hinh:
-            self.du_lieu_doi_hinh["danh_sach_da_chinh"] = {}
+        da_chinh = self.du_lieu_doi_hinh.get("danh_sach_da_chinh", {})
+        da_chinh[self.vi_tri_dang_chon] = cid
+        self.du_lieu_doi_hinh["danh_sach_da_chinh"] = da_chinh
 
-        self.du_lieu_doi_hinh["danh_sach_da_chinh"][self.vi_tri_dang_chon] = cid
         self.ve_san_co_doi_hinh()
         self.cap_nhat_diem_doi_hinh()
 
     def cap_nhat_diem_doi_hinh(self):
-        diem = tinh_suc_manh_tong_hop(self.du_lieu_doi_hinh)
+        ovr = tinh_suc_manh_tong_hop(self.du_lieu_doi_hinh)
         if hasattr(self, "lblDiemDoiHinh"):
-            self.lblDiemDoiHinh.setText(f"Suc Manh Toan Doi: {diem} OVR")
+            self.lblDiemDoiHinh.setText(f"Suc Manh Toan Doi: {ovr} OVR")
 
     def luu_doi_hinh(self):
         ok = luu_doi_hinh_hien_tai(self.du_lieu_doi_hinh)
         if ok:
-            QMessageBox.information(self, "Thanh Cong", "Da luu doi hinh trong mo 11 sieu sao thanh cong vao he thong!")
+            QMessageBox.information(self, "Thanh Cong", "Doi hinh trong mo da duoc luu thanh cong!")
         else:
-            QMessageBox.warning(self, "Loi", "Khong the luu doi hinh xuong file du lieu.")
+            QMessageBox.warning(self, "Loi", "Khong the luu doi hinh vao bo nho.")
 
-    # --- TAB 3: TRAN CAU DINH CAO 90 PHUT ---
+    # --- TAB 3: MO PHONG TRAN DAU 90 PHUT ---
     def bat_dau_tran_dau_dinh_cao(self):
         self.tran_dau_hien_tai = khoi_tao_tran_dau_dinh_cao("opp_allstars")
         self.tinh_huong_idx = 0
@@ -297,7 +313,6 @@ class ManHinhBongDaTongHop(QWidget):
         tinh_huong_list = td.get("tinh_huong_list", [])
 
         if self.tinh_huong_idx >= len(tinh_huong_list):
-            # Ket thuc tran dau 90 phut
             ti_so_nha = td["ti_so_nha"]
             ti_so_khach = td["ti_so_khach"]
             msg = f"HET GIO! TRAN DAU KET THUC!\nTi so chung cuoc: Dream Team {ti_so_nha} - {ti_so_khach} {td['doi_thu']['ten']}\n"
@@ -333,7 +348,6 @@ class ManHinhBongDaTongHop(QWidget):
         if hasattr(self, "lblCauHoiChienThuat"):
             self.lblCauHoiChienThuat.setText(f"Thu thach chien thuat: {th['cau_hoi']}")
 
-        # Hien thi cac nut lua chon
         if hasattr(self, "layoutOptionsTranDau"):
             while self.layoutOptionsTranDau.count():
                 item = self.layoutOptionsTranDau.takeAt(0)

@@ -42,12 +42,18 @@ try:
     from du_lieu_giao_duc.co_so_du_lieu_cau_hoi import lay_thong_ke_database, truy_van_cau_hoi
     from xu_ly_cai_dat.quan_ly_diem_mong_muon import lay_cai_dat_diem_mong_muon, luu_cai_dat_diem_mong_muon
     from xu_ly_bong_da.quan_ly_huyen_thoai import lay_danh_sach_huyen_thoai, lay_cau_hoi_tri_thuc_bong_da
-    from xu_ly_bong_da.quan_ly_luat_bong_da import lay_cam_nang_luat_fifa, lay_khoa_hoc_toan_hoc_trong_bong_da, lay_cau_hoi_luat_va_khoa_hoc
+    from xu_ly_bong_da.quan_ly_luat_bong_da import (
+        lay_cam_nang_luat_fifa, lay_khoa_hoc_toan_hoc_trong_bong_da,
+        lay_cau_hoi_luat_va_khoa_hoc, lay_cam_nang_ky_nang_va_phong_ngua_chan_thuong
+    )
     from xu_ly_bong_da.quan_ly_doi_hinh import (
         lay_danh_sach_so_do, lay_kho_cau_thu_tuyen_chon, doc_doi_hinh_hien_tai,
         luu_doi_hinh_hien_tai, tinh_suc_manh_tong_hop
     )
-    from xu_ly_bong_da.quan_ly_tran_dau import lay_danh_sach_doi_thu, khoi_tao_tran_dau_dinh_cao
+    from xu_ly_bong_da.quan_ly_tran_dau import (
+        lay_danh_sach_doi_thu, khoi_tao_tran_dau_dinh_cao,
+        lay_danh_sach_chien_thuat_tran, tinh_xac_suat_sut_bong
+    )
     from xu_ly_co_tri_tue.quan_ly_co_vua import (
         lay_danh_sach_quan_co_vua, lay_cac_nuoc_di_dac_biet_co_vua,
         lay_khai_cuoc_kinh_dien_co_vua, lay_don_chien_thuat_co_vua,
@@ -60,7 +66,8 @@ try:
     )
     from xu_ly_co_tri_tue.quan_ly_ban_co import (
         khoi_tao_ban_co_vua_mac_dinh, khoi_tao_ban_co_tuong_mac_dinh,
-        lay_danh_sach_the_co_mau, doc_tien_do_co_tri_tue, xu_ly_tra_loi_cau_do
+        lay_danh_sach_the_co_mau, doc_tien_do_co_tri_tue,
+        xu_ly_tra_loi_cau_do, lay_danh_sach_vong_dau_ky_thu
     )
 except Exception as e:
     import_errors["root_import"] = str(e)
@@ -403,6 +410,10 @@ def football_engine():
             opp_id = req.get('opponent_id', 'opp_allstars')
             match_data = khoi_tao_tran_dau_dinh_cao(opp_id)
             return jsonify({"status": "success", "match": match_data})
+        elif action == 'shoot':
+            is_corr = req.get('is_correct', False)
+            res = tinh_xac_suat_sut_bong(is_corr)
+            return jsonify({"status": "success", "shoot_result": res})
         elif action == 'quiz':
             q_list = lay_cau_hoi_tri_thuc_bong_da() + lay_cau_hoi_luat_va_khoa_hoc()
             import random
@@ -415,12 +426,14 @@ def football_engine():
         "status": "success",
         "legends": lay_danh_sach_huyen_thoai(),
         "rules": lay_cam_nang_luat_fifa(),
+        "skills_health": lay_cam_nang_ky_nang_va_phong_ngua_chan_thuong(),
         "science": lay_khoa_hoc_toan_hoc_trong_bong_da(),
         "formations": lay_danh_sach_so_do(),
         "players": lay_kho_cau_thu_tuyen_chon(),
         "current_team": current_team,
         "team_ovr": ovr,
-        "opponents": lay_danh_sach_doi_thu()
+        "opponents": lay_danh_sach_doi_thu(),
+        "tactical_modes": lay_danh_sach_chien_thuat_tran()
     })
 
 # Function 9: Chess & Xiangqi Intellectual Hub (Rules, Openings, Tactics, Boards & Quizzes)
@@ -468,6 +481,7 @@ def chess_engine():
             "default_board": khoi_tao_ban_co_tuong_mac_dinh()
         },
         "sample_positions": lay_danh_sach_the_co_mau(),
+        "tournament_rounds": lay_danh_sach_vong_dau_ky_thu(),
         "progress": progress
     })
 

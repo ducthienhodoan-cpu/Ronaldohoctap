@@ -84,8 +84,9 @@ class ManHinhCoTriTue(QWidget):
         tien_do = doc_tien_do_co_tri_tue()
         danh_hieu = tien_do.get("danh_hieu", "Ky Thu Tap Su")
         exp = tien_do.get("tong_diem_exp", 0)
+        cups = tien_do.get("cup_dat_duoc", ["Cup Dong Ky Thu"])
         if hasattr(self, "lblDanhHieu"):
-            self.lblDanhHieu.setText(danh_hieu)
+            self.lblDanhHieu.setText(f"{danh_hieu} (Cup: {len(cups)})")
         if hasattr(self, "lblExpCo"):
             self.lblExpCo.setText(f"EXP Co: {exp}")
 
