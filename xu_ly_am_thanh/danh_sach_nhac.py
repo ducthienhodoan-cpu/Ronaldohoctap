@@ -78,6 +78,10 @@ DANH_SACH_BAI_HAT = [
     {
         "id": "9E6eup3OSDg",
         "ten": "bai hat TAI SINH theo phong cach TINH SAI"
+    },
+    {
+        "id": "VaExN-H5vCc",
+        "ten": "LEMON TREE ANIMATION VOI LYRICS"
     }
 ]
 

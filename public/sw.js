@@ -1,7 +1,7 @@
 // File: public/sw.js
 // Mo ta: Service Worker TURBO toc do sieu toc - Bo nho dem offline tuc thi
 
-const CACHE_NAME = 'sieu-club-hoc-tap-v61.0-deep-football-chess-edition';
+const CACHE_NAME = 'sieu-club-hoc-tap-v62.0-lemon-tree-track-edition';
 const ASSETS_TO_PRECACHE = [
     './',
     './index.html',
