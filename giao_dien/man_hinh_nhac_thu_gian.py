@@ -69,12 +69,12 @@ class ManHinhNhacThuGian(QWidget):
         main_layout.addWidget(card_bg_music)
         self.cap_nhat_trang_thai_nhac()
 
-        # Khung chon bai hat trong danh sach 18 bai
+        # Khung chon bai hat trong danh sach 20 bai
         card_selector = QFrame()
         card_selector.setStyleSheet("background-color: #0F172A; border: 2px solid #A855F7; border-radius: 14px; padding: 10px 15px;")
         layout_sel = QHBoxLayout(card_selector)
 
-        lbl_chon = QLabel("Chon bai hat:")
+        lbl_chon = QLabel("Chon bai hat (20 bai):")
         lbl_chon.setStyleSheet("font-size: 14px; font-weight: bold; color: #FFFFFF;")
         layout_sel.addWidget(lbl_chon)
 

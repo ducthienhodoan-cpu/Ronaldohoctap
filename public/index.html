@@ -1072,9 +1072,12 @@
 
         <!-- Thanh Điều Khiển Âm Thanh & Playlist Siêu Gọn Dạng Slider -->
         <div id="playlistHeaderBar" style="background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border: 2px solid #06B6D4; border-radius: 18px; padding: 10px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; box-shadow: 0 8px 25px rgba(6, 182, 212, 0.35);">
-            <!-- Trái: Tên bài hát -->
-            <div style="display: flex; align-items: center; min-width: 240px;">
+            <!-- Trái: Tên bài hát & Chọn nhanh 20 bài -->
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 280px;">
                 <span id="lblCurrentTrack" style="font-weight: 800; font-size: 14px; color: #00FFCC; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px;">Bài 1/20: Oliver Tree - Life Goes On</span>
+                <select id="selMusicTrack" onchange="selectMusicTrack(this.value)" style="background: #020617; color: #F59E0B; border: 1.5px solid #06B6D4; border-radius: 10px; padding: 5px 10px; font-weight: 800; font-size: 12.5px; max-width: 250px; cursor: pointer;" title="Chọn trực tiếp bài hát trong danh sách 20 bài">
+                </select>
+                <button id="btnQuickTrack20" class="btn-primary" style="font-size: 12px; padding: 6px 14px; border-radius: 10px; background: linear-gradient(135deg, #10B981, #059669); border: 1.5px solid #34D399; font-weight: 900; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);" onclick="selectMusicTrack(19)" title="Mở nghe ngay Bài 20: Lemon Tree">Bài 20: Lemon Tree</button>
             </div>
 
             <!-- Giữa: Nút điều hướng bài hát -->
@@ -2016,11 +2019,42 @@
 
         let currentTrackIdx = 0;
 
+        function populateMusicDropdown() {
+            const sel = document.getElementById('selMusicTrack');
+            if (!sel) return;
+            sel.innerHTML = '';
+            musicPlaylist.forEach((t, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `Bài ${i + 1}: ${t.title}`;
+                if (i === currentTrackIdx) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+
+        function selectMusicTrack(idx) {
+            try { playClickSfx(); } catch(e) {}
+            currentTrackIdx = parseInt(idx, 10);
+            updateTrackDisplay();
+            const playerBox = document.getElementById('ytPlaylistContainer');
+            const btn = document.getElementById('btnToggleMusic');
+            if (playerBox) {
+                playerBox.style.display = 'block';
+                if (btn) btn.innerText = 'Đóng Khung Nhạc';
+            }
+        }
+
+        setTimeout(populateMusicDropdown, 50);
+
         function updateTrackDisplay() {
             const track = musicPlaylist[currentTrackIdx];
             const lbl = document.getElementById('lblCurrentTrack');
             if (lbl) {
                 lbl.innerText = `Bài ${currentTrackIdx + 1}/${musicPlaylist.length}: ${track.title}`;
+            }
+            const sel = document.getElementById('selMusicTrack');
+            if (sel && parseInt(sel.value, 10) !== currentTrackIdx) {
+                sel.value = currentTrackIdx;
             }
             const iframe = document.getElementById('ytIframePlayer');
             const curVol = parseInt(localStorage.getItem('user_music_volume') !== null ? localStorage.getItem('user_music_volume') : (document.getElementById('volSlider')?.value || '30'), 10);
@@ -4809,6 +4843,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            populateMusicDropdown();
             const playerBox = document.getElementById('ytPlaylistContainer');
             const playerHeader = document.getElementById('ytPlaylistHeader');
             if (playerBox && playerHeader) {

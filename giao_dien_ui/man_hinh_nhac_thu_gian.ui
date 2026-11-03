@@ -100,7 +100,7 @@
       <item>
        <widget class="QLabel" name="lblSelectSong">
         <property name="text">
-         <string>Chọn bài hát (19 bài):</string>
+         <string>Chọn bài hát (20 bài):</string>
         </property>
         <property name="styleSheet">
          <string notr="true">font-size: 14px; font-weight: bold; color: #FFFFFF;</string>

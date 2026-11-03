@@ -3,6 +3,12 @@
 # Mo ta: Man hinh chinh ung dung Sieu Club Hoc Tap phong cach Roblox Gaming Edition tich hop Giai Dua Xe Sieu Cap phim A/D/W/S sang Tieng Viet co dau
 
 import os
+
+try:
+    from PyQt6.QtWebEngineWidgets import QWebEngineView
+except ImportError:
+    pass
+
 from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
     QLabel, QPushButton, QFrame, QStackedWidget, QScrollArea, QSlider, QMessageBox
@@ -31,6 +37,7 @@ from giao_dien.man_hinh_obby import ManHinhObby
 from giao_dien.hop_thoai_nhap_ten import HopThoaiNhapTen
 from giao_dien.man_hinh_bong_da_tong_hop import ManHinhBongDaTongHop
 from giao_dien.man_hinh_co_tri_tue import ManHinhCoTriTue
+from giao_dien.man_hinh_nhac_thu_gian import ManHinhNhacThuGian
 
 from xu_ly_hoc_tap.quan_ly_nguoi_dung import lay_ten_nguoi_dung, kiem_tra_da_co_ten
 from xu_ly_am_thanh.quan_ly_am_thanh import QuanLyAmThanh
@@ -130,7 +137,8 @@ class CuaSoChinh(QMainWindow):
             ("Tập Thi IELTS", 16),
             ("Đấu Trường Obby 100 Màn", 17),
             ("Siêu Sao & Đội Hình Bóng Đá", 18),
-            ("Đấu Trí Cờ Vua & Cờ Tướng", 19)
+            ("Đấu Trí Cờ Vua & Cờ Tướng", 19),
+            ("Nhạc Thư Giãn (20 Bài)", 20)
         ]
 
 
@@ -190,6 +198,12 @@ class CuaSoChinh(QMainWindow):
         btn_nhac_nen.setCursor(Qt.CursorShape.PointingHandCursor)
         btn_nhac_nen.clicked.connect(self.bat_tat_nhac_nen)
 
+        btn_xem_danh_sach_nhac = QPushButton("DS Nhạc (20 bài)")
+        btn_xem_danh_sach_nhac.setProperty("class", "btn-primary")
+        btn_xem_danh_sach_nhac.setStyleSheet("color: #FFFFFF; font-weight: bold; background-color: #06B6D4;")
+        btn_xem_danh_sach_nhac.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_xem_danh_sach_nhac.clicked.connect(lambda: self.chuyen_man_hinh(20))
+
         lbl_vol_hdr = QLabel("Âm lượng:")
         lbl_vol_hdr.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 13px; margin-left: 8px;")
 
@@ -206,6 +220,7 @@ class CuaSoChinh(QMainWindow):
         header_layout.addWidget(self.lbl_user)
         header_layout.addWidget(btn_doi_ten_nhanh)
         header_layout.addWidget(btn_nhac_nen)
+        header_layout.addWidget(btn_xem_danh_sach_nhac)
         header_layout.addWidget(lbl_vol_hdr)
         header_layout.addWidget(self.slider_vol_header)
 
@@ -238,6 +253,7 @@ class CuaSoChinh(QMainWindow):
         self.screen_obby = ManHinhObby()
         self.screen_bong_da = ManHinhBongDaTongHop()
         self.screen_co_tri_tue = ManHinhCoTriTue()
+        self.screen_nhac = ManHinhNhacThuGian()
 
         self.screen_cai_dat.ten_da_thay_doi.connect(self.cap_nhat_hien_thi_ten)
         self.screen_luyen_tap.yeu_cau_chuyen_obby.connect(lambda: self.chuyen_man_hinh(17))
@@ -263,6 +279,7 @@ class CuaSoChinh(QMainWindow):
         self.stacked_widget.addWidget(self.screen_obby)                # 17
         self.stacked_widget.addWidget(self.screen_bong_da)             # 18
         self.stacked_widget.addWidget(self.screen_co_tri_tue)          # 19
+        self.stacked_widget.addWidget(self.screen_nhac)                # 20
 
 
         right_layout.addWidget(self.stacked_widget)
@@ -369,12 +386,19 @@ class CuaSoChinh(QMainWindow):
         b5.setCursor(Qt.CursorShape.PointingHandCursor)
         b5.clicked.connect(lambda: self.chuyen_man_hinh(19))
 
+        b6 = QPushButton("Nhạc Thư Giãn (20 Bài Tuyển Chọn)")
+        b6.setProperty("class", "btn-primary")
+        b6.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 15px; background-color: #06B6D4;")
+        b6.setCursor(Qt.CursorShape.PointingHandCursor)
+        b6.clicked.connect(lambda: self.chuyen_man_hinh(20))
+
         grid_layout.addWidget(b0)
         grid_layout.addWidget(b1)
         grid_layout.addWidget(b2)
         grid_layout.addWidget(b3)
         grid_layout.addWidget(b4)
         grid_layout.addWidget(b5)
+        grid_layout.addWidget(b6)
 
         l.addWidget(grid_frame)
         l.addStretch()
@@ -470,7 +494,9 @@ class CuaSoChinh(QMainWindow):
             "Lịch Học Tập & Nhắc Nhở Mục Tiêu (Roblox Streak)",
             "Tập Thi IELTS Tiếng Anh",
             "Đấu Trường Obby 100 Màn Parkour Glitch World",
-            "Siêu Sao Bóng Đá & Đội Hình Trong Mơ"
+            "Siêu Sao Bóng Đá & Đội Hình Trong Mơ",
+            "Đấu Trí Cờ Vua & Cờ Tướng (24 Thế Cờ & Cup Kỳ Thủ)",
+            "Nhạc Thư Giãn & Tiếp Năng Lượng (20 Bài Tuyển Chọn)"
         ]
         
         if 0 <= index < len(titles):
